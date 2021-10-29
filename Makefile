@@ -1,11 +1,11 @@
 install:
-	cd validation && npm install
+	npm install
 
 test:
-	cd validation && npm test
+	npm test
 
 configure-validation:
-	cd validation && npm start
+	npm start
 
 run-validator:
 	cd validation-service-fhir-r4  && nohup mvn spring-boot:run &
