@@ -1,5 +1,5 @@
 .idea
-validation/node_modules
+node_modules
 package
 .DS_Store# Logs
 logs

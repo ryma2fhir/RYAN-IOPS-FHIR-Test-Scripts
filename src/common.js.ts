@@ -107,19 +107,26 @@ function errorsCheck(resource) {
     const operationOutcome: OperationOutcome = resource;
     let success=true;
     let warn=0;
-    for (const issue of  operationOutcome.issue) {
-        if (issue.severity == "error") success =false
-        switch(issue.severity) {
-            case "error":
-            case "fatal":
-                throw new Error(issue.diagnostics)
-                break;
-            case "warning":
-                warn++;
-                break;
+    if (operationOutcome.issue !== undefined) {
+        for (const issue of operationOutcome.issue) {
+            if (issue.severity == "error") success = false
+            switch (issue.severity) {
+                case "error":
+                case "fatal":
+                    if (raiseError(issue.diagnostics)) throw new Error(issue.diagnostics)
+                    break;
+                case "warning":
+                    warn++;
+                    break;
+            }
         }
     }
    // if (warn>5) console.log("Warnings "+warn);
 
+}
+
+function raiseError(description: string) : boolean {
+    if (description.includes('could not be resolved, so has not been checked')) return false;
+    return true;
 }
 

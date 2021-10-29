@@ -31,7 +31,7 @@ function testFolder(dir) {
             });
         })
     }
-};
+}
 
 
 describe('Parsing folder CapabilityStatement', () => {
