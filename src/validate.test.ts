@@ -38,33 +38,42 @@ describe('Parsing folder CapabilityStatement', () => {
     testFolder('../CapabilityStatement');
 });
 
-describe('Parsing folder Examples', () => {
-    testFolder('../Examples');
-});
-
 describe('Parsing folder CodeSystem', () => {
     testFolder('../CodeSystem');
+});
+
+
+describe('Parsing folder ConceptMap', () => {
+    testFolder('../ConceptMap');
+});
+
+describe('Parsing folder Examples', () => {
+    testFolder('../Examples');
 });
 
 describe('Parsing folder MessageDefinition', () => {
     testFolder('../MessageDefinition');
 });
 
-
-describe('Parsing folder ValueSett', () => {
-    testFolder('../ValueSet');
+describe('Parsing folder NamingSystem', () => {
+    testFolder('../NamingSystem');
 });
 
-describe('Parsing folder ConceptMap', () => {
-    testFolder('../ConceptMap');
-});
-
-describe('Parsing folder SearchParameter', () => {
-    testFolder('../SearchParameter');
+describe('Parsing folder ObservationDefinition', () => {
+    testFolder('../ObservationDefinition');
 });
 
 describe('Parsing folder OperationDefinition', () => {
     testFolder('../OperationDefinition');
+});
+
+describe('Parsing folder Questionnaire', () => {
+    testFolder('../Questionnaire');
+});
+
+
+describe('Parsing folder SearchParameter', () => {
+    testFolder('../SearchParameter');
 });
 
 describe('Parsing folder StructureDefinition', () => {
@@ -72,6 +81,9 @@ describe('Parsing folder StructureDefinition', () => {
 });
 
 
+describe('Parsing folder ValueSet', () => {
+    testFolder('../ValueSet');
+});
 
 
 describe('Testing validation api is functioning', () => {

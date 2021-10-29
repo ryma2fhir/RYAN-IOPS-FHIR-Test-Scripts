@@ -51,23 +51,30 @@ if (fs.existsSync(fileNamw)) {
                 return console.error(err);
             }
         });
-        copyFolder('../StructureDefinition');
+
 
         copyFolder('../CapabilityStatement');
+
+        copyFolder('../ConceptMap');
 
         copyFolder('../CodeSystem');
 
         copyFolder('../MessageDefinition');
 
-        copyFolder('../ValueSet');
+        copyFolder('../NamingSystem');
 
-        copyFolder('../ConceptMap');
-
-        copyFolder('../SearchParameter');
+        copyFolder('../ObservationDefinition');
 
         copyFolder('../OperationDefinition');
 
+        copyFolder('../Questionnaire');
+
+        copyFolder('../SearchParameter');
+
         copyFolder('../StructureDefinition');
+
+        copyFolder('../ValueSet');
+
         console.log('Creating temporary package ' + pkg.name +'-' + pkg.version);
         TarMe.main(path.join(__dirname, '../package'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
 
