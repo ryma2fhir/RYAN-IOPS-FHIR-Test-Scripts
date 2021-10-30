@@ -41,7 +41,7 @@ if (fs.existsSync(fileNamw)) {
             }
         }
 
-        fs.mkdirSync(path.join(__dirname, '../temp/package'),{ recursive: true });
+        fs.mkdirSync(path.join(__dirname, '../temp/package/examples'),{ recursive: true });
         fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
         fs.writeFile(path.join(__dirname,destinationPath + '/manifest.json'), JSON.stringify(manifest),  function(err) {
             if (err) {
@@ -78,9 +78,27 @@ if (fs.existsSync(fileNamw)) {
         copyFolder('../ValueSet');
 
         console.log('Creating temporary package ' + pkg.name +'-' + pkg.version);
+        console.log('Deleting temporary files');
+        deleteFile('temp/package/.DS_Store.json');
+        deleteFile('temp/package/examples/.DS_Store.json');
         TarMe.main(path.join(__dirname, '../temp'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
 
     }
+}
+
+function deleteFile(file) {
+    fs.stat(file, function (err, stats) {
+        console.log(stats);//here we got all information of file in stats variable
+
+        if (err) {
+            return console.error(err);
+        }
+
+        fs.unlink(file,function(err){
+            if(err) return console.log(err);
+            console.log('file deleted successfully ' + file);
+        });
+    });
 }
 
 async function downloadPackage(name,version ) {
@@ -114,7 +132,10 @@ function copyFolder(dir) {
 
             let ext: string = path.extname(file)
             let root: string = file.substring(0, file.length - ext.length)
-            const destination = 'temp/package/' + root + '.json';
+            let destination = 'temp/package/' + root + '.json';
+            if (dir == '../MessageDefinition' || dir == '../ObservationDefinition') {
+                destination = 'temp/package/examples/' + root + '.json';
+            }
             file = dir + "/" + file;
             const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
             const json = getJson(file,resource);

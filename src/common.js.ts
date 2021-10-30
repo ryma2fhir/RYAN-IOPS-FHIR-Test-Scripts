@@ -1,5 +1,5 @@
 import axios from "axios";
-import {OperationOutcome, Patient} from "fhir/r4";
+import {OperationOutcome, OperationOutcomeIssue, Patient} from "fhir/r4";
 
 export const basePath = "/FHIR/R4"
 
@@ -113,7 +113,7 @@ function errorsCheck(resource) {
             switch (issue.severity) {
                 case "error":
                 case "fatal":
-                    if (raiseError(issue.diagnostics)) throw new Error(issue.diagnostics)
+                    if (raiseError(issue.diagnostics)) throw new Error(getErrorFull(issue))
                     break;
                 case "warning":
                     warn++;
@@ -123,6 +123,16 @@ function errorsCheck(resource) {
     }
    // if (warn>5) console.log("Warnings "+warn);
 
+}
+
+function getErrorFull(issue: OperationOutcomeIssue) {
+    let error = issue.diagnostics;
+    if (issue.location != undefined) {
+        for(let location of issue.location) {
+            error += ' [ Location - ' + location + ']'
+        }
+    }
+    return error;
 }
 
 function raiseError(description: string) : boolean {

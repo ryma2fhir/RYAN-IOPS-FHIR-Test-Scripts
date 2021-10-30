@@ -15,6 +15,7 @@ function testFolder(dir) {
     if (fs.existsSync(dir)) {
         const list = fs.readdirSync(dir);
         list.forEach(function (file) {
+            if (file.includes('.DS_Store')) return;
             file = dir + "/" + file;
             const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
 
