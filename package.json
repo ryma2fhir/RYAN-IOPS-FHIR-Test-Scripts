@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "jest",
-    "start":"ts-node src/configureValidator.ts"
+    "start": "ts-node src/configureValidator.ts"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

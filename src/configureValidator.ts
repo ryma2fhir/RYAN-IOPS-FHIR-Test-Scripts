@@ -2,10 +2,14 @@ import * as fs from "fs";
 import path from "path";
 import {getJson, resourceChecks} from "./common.js";
 import { tar } from 'zip-a-folder';
+import axios from "axios";
+
 
 
 var jsonminify = require("jsonminify");
 const fileNamw = '../package.json';
+
+const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
 class TarMe {
     static async main(src, destination) {
@@ -31,22 +35,20 @@ if (fs.existsSync(fileNamw)) {
                     "version": pkg.dependencies[key]
                 };
                 console.log('Using package '+ key + '-' + pkg.dependencies[key])
+
+                downloadPackage(key,pkg.dependencies[key] );
                 manifest.push(entry);
             }
         }
-        fs.mkdir(path.join(__dirname, '../package'), (err) => {
-            if (err) {
-                //return console.error(err);
-            }
-        });
-        const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
+
+        fs.mkdirSync(path.join(__dirname, '../temp/package'),{ recursive: true });
         fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
         fs.writeFile(path.join(__dirname,destinationPath + '/manifest.json'), JSON.stringify(manifest),  function(err) {
             if (err) {
                 return console.error(err);
             }
         });
-        fs.writeFile('package/package.json', JSON.stringify(pkg),  function(err) {
+        fs.writeFile('temp/package/package.json', JSON.stringify(pkg),  function(err) {
             if (err) {
                 return console.error(err);
             }
@@ -76,11 +78,30 @@ if (fs.existsSync(fileNamw)) {
         copyFolder('../ValueSet');
 
         console.log('Creating temporary package ' + pkg.name +'-' + pkg.version);
-        TarMe.main(path.join(__dirname, '../package'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
+        TarMe.main(path.join(__dirname, '../temp'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
 
     }
 }
 
+async function downloadPackage(name,version ) {
+    const url = 'https://packages.simplifier.net/' + name + '/' + version;
+    console.log('Download from ' + url);
+    try {
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+
+        // @ts-ignore
+        const buffer = Buffer.from(response.data, 'binary');
+
+        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+        fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
+        console.log('Updated dependency ' + url);
+    } catch (exception) {
+        process.stderr.write(`ERROR received from ${url}: ${exception}\n`);
+        throw new Error('Unable to download package '+url);
+    }
+}
 
 
 function copyFolder(dir) {
@@ -93,7 +114,7 @@ function copyFolder(dir) {
 
             let ext: string = path.extname(file)
             let root: string = file.substring(0, file.length - ext.length)
-            const destination = 'package/' + root + '.json';
+            const destination = 'temp/package/' + root + '.json';
             file = dir + "/" + file;
             const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
             const json = getJson(file,resource);
