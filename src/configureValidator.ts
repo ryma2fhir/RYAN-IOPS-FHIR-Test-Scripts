@@ -98,14 +98,14 @@ if (fs.existsSync(fileNamw)) {
 
 function deleteFile(file) {
     fs.stat(file, function (err, stats) {
-        console.log(stats);//here we got all information of file in stats variable
-
+        //console.log(stats);//here we got all information of file in stats variable
         if (err) {
-            return console.error(err);
+            //return console.error(err);
         }
-
         fs.unlink(file,function(err){
-            if(err) return console.log(err);
+            if(err) {
+                return;
+            }
             console.log('file deleted successfully ' + file);
         });
     });
