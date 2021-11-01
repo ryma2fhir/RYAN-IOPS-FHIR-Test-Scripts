@@ -23,12 +23,8 @@ const client = () => {
     return supertest(url)
 }
 
-function testFolder(dir) {
-    testFolderWorker(dir)
-    testFolderWorker(dir + 's')
-}
 
-function testFolderWorker(dir) {
+function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
         const list = fs.readdirSync(dir);
@@ -107,6 +103,33 @@ describe('Parsing folder ValueSet', () => {
     testFolder(path+'ValueSet');
 });
 
+// Begin UK Core folder names
+
+describe('Parsing folder codesystems', () => {
+    testFolder(path+'codesystems');
+});
+
+describe('Parsing folder conceptmaps', () => {
+    testFolder(path+'conceptmaps');
+});
+
+describe('Parsing folder examples', () => {
+    testFolder(path+'examples');
+});
+
+describe('Parsing folder examples', () => {
+    testFolder(path+'examples');
+});
+
+describe('Parsing folder structuredefinitions', () => {
+    testFolder(path+'structuredefinitions');
+});
+
+describe('Parsing folder valuesets', () => {
+    testFolder(path+'valuesets');
+});
+
+// End UK Core folder names
 
 describe('Testing validation api is functioning', () => {
     it('validation functionality test', async () => {

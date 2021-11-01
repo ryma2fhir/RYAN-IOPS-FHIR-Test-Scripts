@@ -131,12 +131,8 @@ async function downloadPackage(name,version ) {
     }
 }
 
-function copyFolder(dir) {
-    copyFolderSub(dir)
-    copyFolderSub(dir + 's')
-}
 
-function copyFolderSub(dir) {
+function copyFolder(dir) {
 
     console.log('Processing '+dir);
     if (fs.existsSync(dir)) {
