@@ -77,6 +77,16 @@ if (fs.existsSync(fileNamw)) {
 
         copyFolder('../ValueSet');
 
+        // Begin UK Core folder names
+
+        copyFolder('../codesystems');
+        copyFolder('../conceptmaps');
+        copyFolder('../structuredefinitions');
+        copyFolder('../valuesets');
+
+        // End UK Core folder names
+
+
         console.log('Creating temporary package ' + pkg.name +'-' + pkg.version);
         console.log('Deleting temporary files');
         deleteFile('temp/package/.DS_Store.json');
