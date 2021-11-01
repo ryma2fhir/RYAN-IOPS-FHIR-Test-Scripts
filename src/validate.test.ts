@@ -23,8 +23,12 @@ const client = () => {
     return supertest(url)
 }
 
-
 function testFolder(dir) {
+    testFolderWorker(dir)
+    testFolderWorker(dir + 's')
+}
+
+function testFolderWorker(dir) {
 
     if (fs.existsSync(dir)) {
         const list = fs.readdirSync(dir);
