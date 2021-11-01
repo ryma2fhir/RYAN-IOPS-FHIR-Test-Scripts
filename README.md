@@ -6,6 +6,7 @@ The configuration and setup of this service is not covered here.
 ## Prerequisite 
 
 Install [node-js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
 Running instance of the `validation-service-fhir-r4`
 
 ## Basic Tests
