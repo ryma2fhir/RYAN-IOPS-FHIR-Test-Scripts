@@ -3,6 +3,20 @@ import { defaultBaseUrl, getJson, patient, resourceChecks } from "./common.js";
 import * as fs from "fs";
 import supertest from "supertest"
 
+const args = require('minimist')(process.argv.slice(2))
+//const args = process.argv
+
+let path = '../'
+let folder: string
+
+if (args!= undefined) {
+    if (args['path']!= undefined) {
+        path = args['path'];
+    }
+    if (args['folder']!= undefined) {
+        folder = args['folder'];
+    }
+}
 
 const client = () => {
     const url = defaultBaseUrl
@@ -17,7 +31,7 @@ function testFolder(dir) {
         list.forEach(function (file) {
             if (file.includes('.DS_Store')) return;
             file = dir + "/" + file;
-            const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+            const resource: any = fs.readFileSync(file, 'utf8');
 
             it('Validate ' + file, async () => {
                 await client()
@@ -34,56 +48,59 @@ function testFolder(dir) {
     }
 }
 
+describe('Parsing supplied folder ', () => {
+    if (folder != undefined) testFolder(folder);
+});
 
 describe('Parsing folder CapabilityStatement', () => {
-    testFolder('../CapabilityStatement');
+    testFolder(path+'CapabilityStatement');
 });
 
 describe('Parsing folder CodeSystem', () => {
-    testFolder('../CodeSystem');
+    testFolder(path+'CodeSystem');
 });
 
 
 describe('Parsing folder ConceptMap', () => {
-    testFolder('../ConceptMap');
+    testFolder(path+'ConceptMap');
 });
 
 describe('Parsing folder Examples', () => {
-    testFolder('../Examples');
+    testFolder(path+'Examples');
 });
 
 describe('Parsing folder MessageDefinition', () => {
-    testFolder('../MessageDefinition');
+    testFolder(path+'MessageDefinition');
 });
 
 describe('Parsing folder NamingSystem', () => {
-    testFolder('../NamingSystem');
+    testFolder(path+'NamingSystem');
 });
 
 describe('Parsing folder ObservationDefinition', () => {
-    testFolder('../ObservationDefinition');
+    testFolder(path+'ObservationDefinition');
 });
 
 describe('Parsing folder OperationDefinition', () => {
-    testFolder('../OperationDefinition');
+    testFolder(path+'OperationDefinition');
 });
 
 describe('Parsing folder Questionnaire', () => {
-    testFolder('../Questionnaire');
+    testFolder(path+'Questionnaire');
 });
 
 
 describe('Parsing folder SearchParameter', () => {
-    testFolder('../SearchParameter');
+    testFolder(path+'SearchParameter');
 });
 
 describe('Parsing folder StructureDefinition', () => {
-    testFolder('../StructureDefinition');
+    testFolder(path+'StructureDefinition');
 });
 
 
 describe('Parsing folder ValueSet', () => {
-    testFolder('../ValueSet');
+    testFolder(path+'ValueSet');
 });
 
 
