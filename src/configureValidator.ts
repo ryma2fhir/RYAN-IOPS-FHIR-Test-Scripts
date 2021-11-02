@@ -4,9 +4,6 @@ import {getJson, resourceChecks} from "./common.js";
 import { tar } from 'zip-a-folder';
 import axios from "axios";
 import {URLSearchParams} from "url";
-import {res} from "pino-std-serializers";
-
-
 
 var jsonminify = require("jsonminify");
 const fileNamw = '../package.json';
