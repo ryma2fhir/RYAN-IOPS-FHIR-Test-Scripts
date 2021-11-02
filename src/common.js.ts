@@ -148,6 +148,8 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         if (issue.diagnostics.includes('could not be resolved, so has not been checked')) {
             return false;
         }
+        // fault with current 5.5.1 validation
+        if ( issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return true;
     }
     return true;
 }
