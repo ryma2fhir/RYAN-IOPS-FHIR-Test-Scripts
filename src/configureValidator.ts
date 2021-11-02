@@ -26,6 +26,7 @@ if (args!= undefined) {
     var clientSecret: string = process.env.ONTO_CLIENT_SECRET
 
     if (clientId != undefined && clientSecret != undefined) {
+        console.log('Configuring NHS Onto Server connection')
         const params = new URLSearchParams();
         params.append('grant_type', 'client_credentials');
         params.append('client_id', clientId);
