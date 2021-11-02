@@ -8,3 +8,4 @@ module.exports = {
     verbose: true
 };
 
+jest.setTimeout(10000)
