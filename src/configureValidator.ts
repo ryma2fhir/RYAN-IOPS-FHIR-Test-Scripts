@@ -12,7 +12,7 @@ const args = require('minimist')(process.argv.slice(2))
 
 const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
-var ontoServer = 'https://ontology.nhs.uk/staging/fhir'
+var ontoServer = 'https://ontology.nhs.uk/production1/fhir'
 
 if (args!= undefined) {
     if (args['ontoServer'] != undefined) {
