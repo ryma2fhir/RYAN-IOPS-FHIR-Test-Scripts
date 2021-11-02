@@ -3,6 +3,7 @@ import {basePath, defaultBaseUrl, getJson, patient, resourceChecks} from "./comm
 import * as fs from "fs";
 import supertest from "supertest"
 import axios from "axios";
+import {jest} from "@jest/globals";
 
 const args = require('minimist')(process.argv.slice(2))
 //const args = process.argv
@@ -49,6 +50,7 @@ function testFolder(dir) {
             const resource: any = fs.readFileSync(file, 'utf8');
 
             it('Validate ' + file, async () => {
+                jest.setTimeout(10000)
                 await client()
                     .post('/$validate')
                     .set("Content-Type", 'application/fhir+xml')
