@@ -113,9 +113,10 @@ function errorsCheck(resource) {
             switch (issue.severity) {
                 case "error":
                 case "fatal":
-                    if (raiseError(issue.diagnostics)) throw new Error(getErrorFull(issue))
+                    if (raiseError(issue)) throw new Error(getErrorFull(issue))
                     break;
                 case "warning":
+                    if (raiseWarning(issue)) throw new Error(getErrorFull(issue))
                     warn++;
                     break;
             }
@@ -134,9 +135,20 @@ function getErrorFull(issue: OperationOutcomeIssue) {
     }
     return error;
 }
-
-function raiseError(description: string) : boolean {
-    if (description.includes('could not be resolved, so has not been checked')) return false;
+function raiseWarning(issue: OperationOutcomeIssue): boolean {
+    if (issue != undefined && issue.diagnostics != undefined) {
+        if (issue.diagnostics.includes('incorrect type for element')) {
+            return true;
+        }
+    }
+    return false;
+}
+function raiseError(issue: OperationOutcomeIssue) : boolean {
+    if (issue != undefined && issue.diagnostics != undefined) {
+        if (issue.diagnostics.includes('could not be resolved, so has not been checked')) {
+            return false;
+        }
+    }
     return true;
 }
 
