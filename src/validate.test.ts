@@ -2,7 +2,6 @@ import {basePath, defaultBaseUrl, getJson, patient, resourceChecks} from "./comm
 
 import * as fs from "fs";
 import supertest from "supertest"
-import axios from "axios";
 import {jest} from "@jest/globals";
 
 const args = require('minimist')(process.argv.slice(2))
@@ -10,7 +9,6 @@ const args = require('minimist')(process.argv.slice(2))
 
 let path = '../'
 let folder: string
-let waitAttempts = 10;
 
 function wait(ms) {
     var start = Date.now(),

@@ -14,10 +14,8 @@ const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
 var ontoServer = 'https://ontology.nhs.uk/production1/fhir'
 
-if (args!= undefined) {
-    if (args['ontoServer'] != undefined) {
-        ontoServer = args['ontoServer'];
-    }
+if (process.env.ONTO_CLIENT_ID!= undefined) {
+    ontoServer = process.env.ONTO_CLIENT_ID;
 }
     var clientId: string = process.env.ONTO_CLIENT_ID
     var clientSecret: string = process.env.ONTO_CLIENT_SECRET
