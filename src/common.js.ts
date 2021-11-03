@@ -1,5 +1,7 @@
 import axios from "axios";
 import {OperationOutcome, OperationOutcomeIssue, Patient} from "fhir/r4";
+import fs from "fs";
+import path from "path";
 
 export const basePath = "/FHIR/R4"
 
@@ -102,6 +104,27 @@ export function getJson(file, resource) {
     }
 
 }
+
+export async function downloadPackage(destinationPath, name,version ) {
+    const url = 'https://packages.simplifier.net/' + name + '/' + version;
+    console.log('Download from ' + url);
+    try {
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+
+        // @ts-ignore
+        const buffer = Buffer.from(response.data, 'binary');
+
+        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+        fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
+        console.log('Updated dependency ' + url);
+    } catch (exception) {
+        process.stderr.write(`ERROR received from ${url}: ${exception}\n`);
+        throw new Error('Unable to download package '+url);
+    }
+}
+
 
 function errorsCheck(resource) {
     const operationOutcome: OperationOutcome = resource;

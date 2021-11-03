@@ -1,17 +1,17 @@
 import * as fs from "fs";
 import path from "path";
-import {getJson, resourceChecks} from "./common.js";
+import {downloadPackage, getJson, resourceChecks} from "./common.js";
 import { tar } from 'zip-a-folder';
-import axios from "axios";
+
 
 var jsonminify = require("jsonminify");
-const fileNamw = '../package.json';
+const fileName = '../package.json';
 
 const args = require('minimist')(process.argv.slice(2))
 
 const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
-var ontoServer = 'https://ontology.nhs.uk/production1/fhir'
+var ontoServer = 'https://ontology.nhs.uk/authoring/fhir'
 
 if (process.env.ONTO_CLIENT_ID!= undefined) {
     ontoServer = process.env.ONTO_CLIENT_ID;
@@ -43,8 +43,8 @@ class TarMe {
     }
 }
 
-if (fs.existsSync(fileNamw)) {
-    const file = fs.readFileSync(fileNamw, 'utf-8');
+if (fs.existsSync(fileName)) {
+    const file = fs.readFileSync(fileName, 'utf-8');
     const pkg = JSON.parse(file);
     pkg.version = '0.0.0-prerelease';
     var manifest = [
@@ -62,7 +62,7 @@ if (fs.existsSync(fileNamw)) {
                 };
                 console.log('Using package '+ key + '-' + pkg.dependencies[key])
 
-                downloadPackage(key,pkg.dependencies[key] );
+                downloadPackage(destinationPath,key,pkg.dependencies[key] );
                 manifest.push(entry);
             }
         }
@@ -137,25 +137,6 @@ function deleteFile(file) {
     });
 }
 
-async function downloadPackage(name,version ) {
-    const url = 'https://packages.simplifier.net/' + name + '/' + version;
-    console.log('Download from ' + url);
-    try {
-        const response = await axios.get(url, {
-            responseType: 'arraybuffer'
-        });
-
-        // @ts-ignore
-        const buffer = Buffer.from(response.data, 'binary');
-
-        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
-        fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
-        console.log('Updated dependency ' + url);
-    } catch (exception) {
-        process.stderr.write(`ERROR received from ${url}: ${exception}\n`);
-        throw new Error('Unable to download package '+url);
-    }
-}
 
 
 function copyFolder(dir) {
