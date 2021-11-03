@@ -48,7 +48,8 @@ function testFolder(dir) {
             const resource: any = fs.readFileSync(file, 'utf8');
 
             it('Validate ' + file, async () => {
-                jest.setTimeout(10000)
+                // Initial terminology queries can take a long time to process - cached responses are much more responsive
+                jest.setTimeout(30000)
                 await client()
                     .post('/$validate')
                     .set("Content-Type", 'application/fhir+xml')
