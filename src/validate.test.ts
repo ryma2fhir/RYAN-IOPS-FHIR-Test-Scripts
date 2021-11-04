@@ -10,13 +10,7 @@ const args = require('minimist')(process.argv.slice(2))
 let path = '../'
 let folder: string
 
-function wait(ms) {
-    var start = Date.now(),
-        now = start;
-    while (now - start < ms) {
-        now = Date.now();
-    }
-}
+
 
 if (args!= undefined) {
     if (args['path']!= undefined) {

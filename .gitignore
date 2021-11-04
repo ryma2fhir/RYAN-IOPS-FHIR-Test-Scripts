@@ -1,6 +1,9 @@
 .idea
 node_modules
 package
+src/*.tgz
+src/hl7*
+src/nhs*
 .DS_Store# Logs
 logs
 *.log

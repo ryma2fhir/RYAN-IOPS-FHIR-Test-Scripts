@@ -149,6 +149,18 @@ function errorsCheck(resource) {
 
 }
 
+export function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
+export function wait(ms) {
+    var start = Date.now(),
+        now = start;
+    while (now - start < ms) {
+        now = Date.now();
+    }
+}
+
 function getErrorFull(issue: OperationOutcomeIssue) {
     let error = issue.diagnostics;
     if (issue.location != undefined) {

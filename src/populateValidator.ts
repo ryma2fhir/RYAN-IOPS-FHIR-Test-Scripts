@@ -3,7 +3,8 @@ import axios from "axios";
 import {URLSearchParams} from "url";
 import fs from "fs";
 import path from "path";
-import {getJson, resourceChecks} from "./common.js";
+import {delay, getJson, resourceChecks, wait} from "./common.js";
+import {err} from "pino-std-serializers";
 
 
 
@@ -22,9 +23,18 @@ if (process.env.ONTO_CLIENT_ID!= undefined) {
 }
 var clientId: string //process.env.ONTO_CLIENT_ID
 var clientSecret: string //process.env.ONTO_CLIENT_SECRET
-
+var fileNo = 0;
+var postNo = 0;
 const destinationPath = '/';
 
+if (args!= undefined) {
+    if (args['clientId']!= undefined) {
+        clientId = args['clientId'];
+    }
+    if (args['clientSecret']!= undefined) {
+        clientSecret = args['clientSecret'];
+    }
+}
 
     if (clientId != undefined && clientSecret != undefined) {
         console.log('Configuring NHS Onto Server connection')
@@ -35,7 +45,6 @@ const destinationPath = '/';
         axios.post('https://ontology.nhs.uk/authorisation/auth/realms/nhs-digital-terminology/protocol/openid-connect/token',
             params.toString()).then(response => {
             const data: any = response.data
-            console.log(data.access_token)
             accessToken = data.access_token
             processPackages()
         },err =>{
@@ -70,7 +79,7 @@ async function dldPackage(destinationPath, name,version ) {
         // @ts-ignore
         const buffer = Buffer.from(response.data, 'binary');
 
-        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+        await fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
         await fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
         decompress(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), path.join(__dirname,destinationPath + '/' + name +'-' + version)).then(files => {
             processPkg(path.join(__dirname,destinationPath + '/' + name +'-' + version + '/package'))
@@ -95,64 +104,60 @@ function processPkg( dir) {
             const resource = JSON.parse(getJson(file,data))
 
             if (resource.resourceType =='CodeSystem') {
-                console.log('Processing CodeSystem '+  resource.url);
-
-                axios.get(ontoServer + '/CodeSystem?url=' + resource.url, {
-                    headers: {
-                        'Authorization': 'Bearer '+accessToken
-                    }
-                }).then( response => {
-                    const bundle: any = response.data
-
-                    // @ts-ignore
-                    if (bundle.resourceType == 'Bundle')
-                        if ((bundle.entry == undefined || bundle.entry.length == 0 )) {
-                            console.log('Posting CodeSystem '+  resource.url);
-                            axios.post(ontoServer + '/CodeSystem', resource, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + accessToken
-                                }
-                            }).then(result => {
-                                console.log('Updated - ' + resource.url)
-                            }, err => {
-                                console.log('Error - ' + resource.url)
-                            })
-
-                        } else {
-                            if (bundle.entry != undefined && bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
-                        }
-                })
+                checkResource(resource)
             }
             if (resource.resourceType =='ValueSet') {
-                console.log('Processing ValueSet '+  resource.url);
-
-                axios.get(ontoServer + '/ValueSet?url=' + resource.url, {
-                    headers: {
-                        'Authorization': 'Bearer '+accessToken
-                    }
-                }).then( response => {
-                    const bundle: any = response.data
-
-                    // @ts-ignore
-                    if (bundle.resourceType == 'Bundle')
-                        if ((bundle.entry == undefined || bundle.entry.length == 0 )) {
-                            console.log('Posting ValueSet '+  resource.url);
-                            axios.post(ontoServer + '/ValueSet', resource, {
-                                headers: {
-                                    'Authorization': 'Bearer ' + accessToken
-                                }
-                            }).then(result => {
-                                console.log('Updated - ' + resource.url)
-                            }, err => {
-                                console.log('Error - ' + resource.url)
-                            })
-
-                        } else {
-                            if (bundle.entry != undefined && bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
-                        }
-                })
+                checkResource(resource)
             }
         })
     }
-
 }
+
+
+async function  checkResource(resource : any) {
+    fileNo++
+    // throttle requests
+    var localFiledNo = fileNo
+    await delay( fileNo * 50)
+    console.log(localFiledNo + ' - Checking '+ resource.resourceType + ' url ' + resource.url);
+    await axios.get(ontoServer + '/'+resource.resourceType+'?url=' + resource.url, {
+        headers: {
+            'Authorization': 'Bearer '+accessToken
+        }
+    }).then( response => {
+        const bundle: any = response.data
+
+        if (bundle.resourceType == 'Bundle')
+            if ((bundle.entry == undefined || bundle.entry.length == 0 )) {
+                console.log(localFiledNo + ' - Not found, adding ' + resource.url)
+                postResource(localFiledNo, resource)
+            } else {
+                console.log(localFiledNo + ' - Found ' + resource.url)
+                if (bundle.entry != undefined && bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
+            }
+    },
+        error => {
+            console.log(localFiledNo + ' - Search failed for '+ resource.resourceType + ' url=' + resource.url + ' failed with ' + error.message)
+            //console.log(error)
+        }
+        )
+}
+    async function postResource(localFileNo, resource) {
+
+        // start 2 seconds after query
+        postNo++;
+        const localPostNo = postNo
+        await delay(500*postNo)
+        console.log(localFileNo + '-'+ localPostNo +' Posting '+  resource.url);
+        await axios.post(ontoServer + '/'+resource.resourceType, resource, {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        }).then(result => {
+            console.log(localFileNo + ' - Posted - ' + resource.url)
+        }, err => {
+            console.log(localFileNo + ' - Post for ' + resource.url + ' failed with ' + err.message)
+            if (err.data != undefined) console.log(err.data)
+
+        })
+    }
