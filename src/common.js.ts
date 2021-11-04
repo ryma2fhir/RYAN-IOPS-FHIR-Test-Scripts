@@ -87,6 +87,7 @@ export function getContentType(file) {
 export function resourceChecks(response: any, file) {
 
     const resource: any = response.body;
+    console.log(resource);
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(errorsCheck(resource))
 }
@@ -128,11 +129,10 @@ export async function downloadPackage(destinationPath, name,version ) {
 
 function errorsCheck(resource) {
     const operationOutcome: OperationOutcome = resource;
-    let success=true;
     let warn=0;
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
-            if (issue.severity == "error") success = false
+
             switch (issue.severity) {
                 case "error":
                 case "fatal":
