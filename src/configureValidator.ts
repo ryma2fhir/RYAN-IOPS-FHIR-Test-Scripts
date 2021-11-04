@@ -11,37 +11,37 @@ const args = require('minimist')(process.argv.slice(2))
 
 const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
-var ontoServer = 'https://ontology.nhs.uk/authoring/fhir'
+var ontoServer = 'https://ontology.nhs.uk/authoring/fhir/'
 
 if (process.env.ONTO_CLIENT_ID!= undefined) {
     ontoServer = process.env.ONTO_CLIENT_ID;
 }
-    var clientId: string = process.env.ONTO_CLIENT_ID
-    var clientSecret: string = process.env.ONTO_CLIENT_SECRET
-
-    if (clientId != undefined && clientSecret != undefined) {
-        console.log('Configuring NHS Onto Server connection')
-
-        var config = {
-            "terminologyServer": ontoServer,
-            "useRemoteTerminology" : true,
-            "clientId" : clientId,
-            "clientSecret": clientSecret
-        }
-        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
-        fs.writeFile(path.join(__dirname,destinationPath + '/validation.json'), JSON.stringify(config),  function(err) {
-            if (err) {
-                return console.error(err);
-            }
-        });
-    }
-
+var clientId: string = process.env.ONTO_CLIENT_ID
+var clientSecret: string = process.env.ONTO_CLIENT_SECRET
 
 class TarMe {
     static async main(src, destination) {
         await tar(src, destination);
     }
 }
+
+if (clientId != undefined && clientSecret != undefined) {
+    console.log('Configuring NHS Onto Server connection')
+    console.log('Using ' + ontoServer)
+    var config = {
+        "terminologyServer": ontoServer,
+        "useRemoteTerminology" : true,
+        "clientId" : clientId,
+        "clientSecret": clientSecret
+    }
+    fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+    fs.writeFile(path.join(__dirname,destinationPath + '/validation.json'), JSON.stringify(config),  function(err) {
+        if (err) {
+            return console.error(err);
+        }
+    });
+}
+
 
 if (fs.existsSync(fileName)) {
     const file = fs.readFileSync(fileName, 'utf-8');
@@ -74,6 +74,7 @@ if (fs.existsSync(fileName)) {
                 return console.error(err);
             }
         });
+        console.log(JSON.stringify(pkg))
         fs.writeFile('temp/package/package.json', JSON.stringify(pkg),  function(err) {
             if (err) {
                 return console.error(err);
