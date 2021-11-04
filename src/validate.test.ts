@@ -52,7 +52,10 @@ function testFolder(dir) {
                     .expect(200)
                     .then((response: any) => {
                         resourceChecks(response, file)
-                    })
+                    },
+                        error => {
+                            throw new Error(error.message)
+                        })
             });
         })
     }
