@@ -11,13 +11,14 @@ const args = require('minimist')(process.argv.slice(2))
 
 const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
 
-var ontoServer = 'https://ontology.nhs.uk/authoring/fhir/'
 
-if (process.env.ONTO_CLIENT_ID!= undefined) {
-    ontoServer = process.env.ONTO_CLIENT_ID;
+var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
+if (process.env.ONTO_URL!= undefined) {
+    ontoServer = process.env.ONTO_URL;
 }
 var clientId: string = process.env.ONTO_CLIENT_ID
 var clientSecret: string = process.env.ONTO_CLIENT_SECRET
+
 
 class TarMe {
     static async main(src, destination) {
