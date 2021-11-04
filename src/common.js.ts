@@ -87,7 +87,6 @@ export function getContentType(file) {
 export function resourceChecks(response: any, file) {
 
     const resource: any = response.body;
-    console.log(resource);
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(errorsCheck(resource))
 }
