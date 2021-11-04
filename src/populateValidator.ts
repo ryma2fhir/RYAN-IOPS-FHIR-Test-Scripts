@@ -14,6 +14,9 @@ const decompress = require('decompress');
 
 const args = require('minimist')(process.argv.slice(2))
 
+const readThrottle = 10
+const postThrottle = 500
+
 var accessToken: String
 
 var ontoServer = 'https://ontology.nhs.uk/authoring/fhir'
@@ -82,7 +85,10 @@ async function dldPackage(destinationPath, name,version ) {
         await fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
         await fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
         decompress(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), path.join(__dirname,destinationPath + '/' + name +'-' + version)).then(files => {
-            processPkg(path.join(__dirname,destinationPath + '/' + name +'-' + version + '/package'))
+            const dir = path.join(__dirname,destinationPath + '/' + name +'-' + version + '/package')
+            if (fs.existsSync(dir)) {
+                processPkg(dir)
+            }
         });
 
     } catch (exception) {
@@ -91,10 +97,10 @@ async function dldPackage(destinationPath, name,version ) {
     }
 }
 
-function processPkg( dir) {
+async function processPkg( dir) {
 
-    if (fs.existsSync(dir)) {
-        const list = fs.readdirSync(dir);
+
+        const list = await fs.readdirSync(dir);
         list.forEach(function (file) {
             if (file.includes('.DS_Store')) return;
             if (file.includes('examples')) return;
@@ -110,7 +116,7 @@ function processPkg( dir) {
                 checkResource(resource)
             }
         })
-    }
+
 }
 
 
@@ -118,7 +124,7 @@ async function  checkResource(resource : any) {
     fileNo++
     // throttle requests
     var localFiledNo = fileNo
-    await delay( fileNo * 50)
+    await delay( fileNo * readThrottle)
     console.log(localFiledNo + ' - Checking '+ resource.resourceType + ' url ' + resource.url);
     await axios.get(ontoServer + '/'+resource.resourceType+'?url=' + resource.url, {
         headers: {
@@ -147,16 +153,16 @@ async function  checkResource(resource : any) {
         // start 2 seconds after query
         postNo++;
         const localPostNo = postNo
-        await delay(500*postNo)
+        await delay(postThrottle * postNo)
         console.log(localFileNo + '-'+ localPostNo +' Posting '+  resource.url);
         await axios.post(ontoServer + '/'+resource.resourceType, resource, {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             }
         }).then(result => {
-            console.log(localFileNo + ' - Posted - ' + resource.url)
+            console.log(localFileNo + '-'+ localPostNo+ ' - Posted - ' + resource.url)
         }, err => {
-            console.log(localFileNo + ' - Post for ' + resource.url + ' failed with ' + err.message)
+            console.log(localFileNo + '-'+ localPostNo+ ' - Post for ' + resource.url + ' failed with ' + err.message)
             if (err.data != undefined) console.log(err.data)
 
         })
