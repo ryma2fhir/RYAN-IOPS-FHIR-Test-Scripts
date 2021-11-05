@@ -64,10 +64,6 @@ if (fs.existsSync(fileName)) {
     const pkg = JSON.parse(file);
     pkg.version = '0.0.0-prerelease';
     var manifest = [
-        {
-            "packageName": pkg.name,
-            "version": pkg.version
-        }
     ];
     if (pkg.dependencies != undefined) {
         for( let key in pkg.dependencies) {
@@ -82,6 +78,11 @@ if (fs.existsSync(fileName)) {
                 manifest.push(entry);
             }
         }
+        console.log('Adding manifest entry for ' + pkg.name)
+        manifest.push({
+            "packageName": pkg.name,
+            "version": pkg.version
+        })
         // Ensure temp dir is empty
         fs.rmdirSync(path.join(__dirname, '../temp'), { recursive: true });
        // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
@@ -137,9 +138,11 @@ if (fs.existsSync(fileName)) {
         console.log('Deleting temporary files');
         deleteFile('temp/package/.DS_Store.json');
         deleteFile('temp/package/examples/.DS_Store.json');
+
         TarMe.main(path.join(__dirname, '../temp'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
 
     }
+
 }
 
 function deleteFile(file) {
