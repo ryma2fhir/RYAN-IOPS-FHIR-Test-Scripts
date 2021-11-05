@@ -20,15 +20,15 @@ Run the tests via `npm test`
 
 ### Test files in another folder
 
-The test folder can be changed via the `folder` parameter, e.g. 
+The test folder can be changed via the `examples` parameter, e.g. 
 
-`npm test -- --folder=../ExamplesTest`
+`npm test -- --examples=../ExamplesTest`
 
 ### Implementation Guide Tests
 
-The tests can also be run against a series of folders laid out in a set way. This uses the `path` parameter, e.g. 
+The tests can also be run against a series of folders laid out in a set way. This uses the `source` parameter, e.g. 
 
-`npm test -- --path='../NHSDigital-FHIR-ImplementationGuide/`
+`npm test -- --source='../NHSDigital-FHIR-ImplementationGuide/`
 
 This parameter with search for the following sub folders in the supplied path.
 

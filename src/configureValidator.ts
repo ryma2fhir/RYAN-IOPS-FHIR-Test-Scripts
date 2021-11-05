@@ -5,11 +5,13 @@ import { tar } from 'zip-a-folder';
 
 
 var jsonminify = require("jsonminify");
-const fileName = '../package.json';
+let fileName = 'package.json';
+let source = '../'
+let destination = '../../'
 
 const args = require('minimist')(process.argv.slice(2))
 
-const destinationPath = '../../validation-service-fhir-r4/src/main/resources';
+let destinationPath = 'validation-service-fhir-r4/src/main/resources';
 
 
 var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
@@ -19,6 +21,19 @@ if (process.env.ONTO_URL!= undefined) {
 var clientId: string = process.env.ONTO_CLIENT_ID
 var clientSecret: string = process.env.ONTO_CLIENT_SECRET
 
+if (args!= undefined) {
+    if (args['source']!= undefined) {
+        source = args['source'];
+    }
+    if (args['destination']!= undefined) {
+        destination = args['destination'];
+    }
+}
+
+fileName = source + fileName
+console.log('Source - '+fileName)
+destinationPath = destination + destinationPath
+console.log('Destination - '+ destinationPath)
 
 class TarMe {
     static async main(src, destination) {
@@ -67,6 +82,9 @@ if (fs.existsSync(fileName)) {
                 manifest.push(entry);
             }
         }
+        // Ensure temp dir is empty
+        fs.rmdirSync(path.join(__dirname, '../temp'), { recursive: true });
+       // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
 
         fs.mkdirSync(path.join(__dirname, '../temp/package/examples'),{ recursive: true });
         fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
@@ -83,34 +101,34 @@ if (fs.existsSync(fileName)) {
         });
 
 
-        copyFolder('../CapabilityStatement');
+        copyFolder(source + 'CapabilityStatement');
 
-        copyFolder('../ConceptMap');
+        copyFolder(source + 'ConceptMap');
 
-        copyFolder('../CodeSystem');
+        copyFolder(source + 'CodeSystem');
 
-        copyFolder('../MessageDefinition');
+        copyFolder(source + 'MessageDefinition');
 
-        copyFolder('../NamingSystem');
+        copyFolder(source + 'NamingSystem');
 
-        copyFolder('../ObservationDefinition');
+        copyFolder(source + 'ObservationDefinition');
 
-        copyFolder('../OperationDefinition');
+        copyFolder(source + 'OperationDefinition');
 
-        copyFolder('../Questionnaire');
+        copyFolder(source + 'Questionnaire');
 
-        copyFolder('../SearchParameter');
+        copyFolder(source + 'SearchParameter');
 
-        copyFolder('../StructureDefinition');
+        copyFolder(source + 'StructureDefinition');
 
-        copyFolder('../ValueSet');
+        copyFolder(source + 'ValueSet');
 
         // Begin UK Core folder names
 
-        copyFolder('../codesystems');
-        copyFolder('../conceptmaps');
-        copyFolder('../structuredefinitions');
-        copyFolder('../valuesets');
+        copyFolder(source + 'codesystems');
+        copyFolder(source + 'conceptmaps');
+        copyFolder(source + 'structuredefinitions');
+        copyFolder(source + 'valuesets');
 
         // End UK Core folder names
 
@@ -152,10 +170,10 @@ function copyFolder(dir) {
             let ext: string = path.extname(file)
             let root: string = file.substring(0, file.length - ext.length)
             let destination = 'temp/package/' + root + '.json';
-            if (dir == '../MessageDefinition' || dir == '../ObservationDefinition') {
+            if (dir.includes('MessageDefinition') || dir.includes('ObservationDefinition')) {
                 destination = 'temp/package/examples/' + root + '.json';
             }
-            file = dir + "/" + file;
+
             const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
             const json = getJson(file,resource);
             fs.writeFile(destination, jsonminify(json),  function(err) {

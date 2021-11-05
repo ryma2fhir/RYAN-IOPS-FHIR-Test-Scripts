@@ -7,17 +7,17 @@ import {jest} from "@jest/globals";
 const args = require('minimist')(process.argv.slice(2))
 //const args = process.argv
 
-let path = '../'
-let folder: string
+let source = '../'
+let examples: string
 
 
 
 if (args!= undefined) {
-    if (args['path']!= undefined) {
-        path = args['path'];
+    if (args['source']!= undefined) {
+        source = args['source'];
     }
-    if (args['folder']!= undefined) {
-        folder = args['folder'];
+    if (args['examples']!= undefined) {
+        examples = args['folder'];
     }
 }
 
@@ -64,84 +64,84 @@ function testFolder(dir) {
 
 
     describe('Parsing supplied folder ', () => {
-        if (folder != undefined) testFolder(folder);
+        if (examples != undefined) testFolder(examples);
     });
 
     describe('Parsing folder CapabilityStatement', () => {
-        testFolder(path + 'CapabilityStatement');
+        testFolder(source + 'CapabilityStatement');
     });
 
     describe('Parsing folder CodeSystem', () => {
-        testFolder(path + 'CodeSystem');
+        testFolder(source + 'CodeSystem');
     });
 
 
     describe('Parsing folder ConceptMap', () => {
-        testFolder(path + 'ConceptMap');
+        testFolder(source + 'ConceptMap');
     });
 
     describe('Parsing folder Examples', () => {
-        testFolder(path + 'Examples');
+        testFolder(source + 'Examples');
     });
 
     describe('Parsing folder MessageDefinition', () => {
-        testFolder(path + 'MessageDefinition');
+        testFolder(source + 'MessageDefinition');
     });
 
     describe('Parsing folder NamingSystem', () => {
-        testFolder(path + 'NamingSystem');
+        testFolder(source + 'NamingSystem');
     });
 
     describe('Parsing folder ObservationDefinition', () => {
-        testFolder(path + 'ObservationDefinition');
+        testFolder(source + 'ObservationDefinition');
     });
 
     describe('Parsing folder OperationDefinition', () => {
-        testFolder(path + 'OperationDefinition');
+        testFolder(source + 'OperationDefinition');
     });
 
     describe('Parsing folder Questionnaire', () => {
-        testFolder(path + 'Questionnaire');
+        testFolder(source + 'Questionnaire');
     });
 
 
     describe('Parsing folder SearchParameter', () => {
-        testFolder(path + 'SearchParameter');
+        testFolder(source + 'SearchParameter');
     });
 
     describe('Parsing folder StructureDefinition', () => {
-        testFolder(path + 'StructureDefinition');
+        testFolder(source + 'StructureDefinition');
     });
 
 
     describe('Parsing folder ValueSet', () => {
-        testFolder(path + 'ValueSet');
+        testFolder(source + 'ValueSet');
     });
 
 // Begin UK Core folder names
 
     describe('Parsing folder codesystems', () => {
-        testFolder(path + 'codesystems');
+        testFolder(source + 'codesystems');
     });
 
     describe('Parsing folder conceptmaps', () => {
-        testFolder(path + 'conceptmaps');
+        testFolder(source + 'conceptmaps');
     });
 
     describe('Parsing folder examples', () => {
-        testFolder(path + 'examples');
+        testFolder(source + 'examples');
     });
 
     describe('Parsing folder examples', () => {
-        testFolder(path + 'examples');
+        testFolder(source + 'examples');
     });
 
     describe('Parsing folder structuredefinitions', () => {
-        testFolder(path + 'structuredefinitions');
+        testFolder(source + 'structuredefinitions');
     });
 
     describe('Parsing folder valuesets', () => {
-        testFolder(path + 'valuesets');
+        testFolder(source + 'valuesets');
     });
 
 // End UK Core folder names
