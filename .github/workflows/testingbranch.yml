@@ -1,4 +1,4 @@
-name: FHIR-Validation-Test-Master
+name: FHIR-Validation-Test-Testing
 
 # Controls when the workflow will run
 on:
@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: NHSDigital/validation-service-fhir-r4
-          ref: master
+          ref: testing
           path: validation-service-fhir-r4
         
       - name: Install Python 3.8
