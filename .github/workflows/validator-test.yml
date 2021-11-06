@@ -67,6 +67,9 @@ jobs:
         run: make install
         
       - name: Update FHIR Validator dependencies and build
+        run: make -C validation-service-fhir-r4 install
+        
+      - name: Update FHIR Validator dependencies and build
         run: make -C validation-service-fhir-r4 build
 
       - name: Run FHIR Validator
