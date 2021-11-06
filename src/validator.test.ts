@@ -76,8 +76,10 @@ describe('Testing validation fails simple resource', () => {
 
     testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-invalidaUnitOfMeasure.json','Validation failed for \'http://unitsofmeasure.org')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system','Examples/fail/MedicationDispense-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
-    testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalidJSON.json', undefined)
+
     testFileError('Check validation fails when MedicationRequest is not referenced in the MessageHeader.focus but is present','Examples/fail/Bundle-prescripton-order-12 Item-incorrectFocus.json', undefined)
     testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescripton-order-12 Item-locationNotPresent.json', undefined)
+
+    testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalidJSON.json', undefined)
 });
 
