@@ -1,4 +1,4 @@
-name: FHIR-Validation-Test-Master
+name: FHIR-Validation-Test-Testing
 
 # Controls when the workflow will run
 on:
