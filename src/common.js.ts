@@ -2,6 +2,8 @@ import axios from "axios";
 import {OperationOutcome, OperationOutcomeIssue, Patient} from "fhir/r4";
 import fs from "fs";
 import path from "path";
+import exp from "constants";
+import {expect} from "@jest/globals";
 
 export const basePath = "/FHIR/R4"
 
@@ -9,53 +11,6 @@ var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001';
 
-export let patient : Patient = {
-        resourceType: "Patient",
-        identifier: [
-            {
-                "system": "https://fhir.nhs.uk/Id/nhs-number",
-                "value": "9000000009"
-            }
-        ],
-        name: [
-            {
-                given: [
-                    "Jane"
-                ],
-                family: "Smith",
-                prefix: [
-                    "Mrs"
-                ],
-                suffix: [
-                    "MBE"
-                ]
-            }
-        ],
-        gender: "female",
-        birthDate: "2010-10-22",
-        generalPractitioner: [
-            {
-                "identifier": {
-                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                    "value": "Y12345"
-                }
-            }
-        ],
-        address: [
-            {
-
-                line: [
-                    "1 Trevelyan Square",
-                    "Boar Lane",
-                    "City Centre",
-                    "Leeds",
-                    "West Yorkshire"
-                ],
-                postalCode: "LS1 6AE"
-            }
-        ]
-    }
-;
 
 export async function validate(resource,contentType ) {
 
@@ -84,11 +39,29 @@ export function getContentType(file) {
     return contentType;
 }
 
-export function resourceChecks(response: any, file) {
+export function resourceChecks(response: any) {
 
     const resource: any = response.body;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(errorsCheck(resource))
+}
+
+export function resourceCheckErrorMessage(response: any, message: string) {
+
+    const resource: any = response.body;
+    expect(resource.resourceType).toEqual('OperationOutcome');
+    expect(haserrorMessage(resource)).toEqual(true)
+    if (message != undefined) expect(errorMessageCheck(resource,message))
+}
+
+export async function getPatient(): Promise<any> {
+    const resource: any = await fs.readFileSync('Examples/patient.json', 'utf8');
+    return resource;
+}
+
+export async function getResource(file: string): Promise<any> {
+    const resource: any = await fs.readFileSync(file, 'utf8');
+    return resource;
 }
 
 
@@ -125,6 +98,39 @@ export async function downloadPackage(destinationPath, name,version ) {
     }
 }
 
+function haserrorMessage(resource): boolean  {
+    const operationOutcome: OperationOutcome = resource;
+    let warn=0;
+    if (operationOutcome.issue !== undefined) {
+        for (const issue of operationOutcome.issue) {
+            switch (issue.severity) {
+                case "error":
+                case "fatal":
+                    return true;
+            }
+        }
+    }
+    // if (warn>5) console.log("Warnings "+warn);
+    return false;
+}
+
+function errorMessageCheck(resource, message) :boolean {
+    const operationOutcome: OperationOutcome = resource;
+    let warn=0;
+    let errorMessage = 'None found';
+    if (operationOutcome.issue !== undefined) {
+        for (const issue of operationOutcome.issue) {
+
+            switch (issue.severity) {
+                case "error":
+                case "fatal":
+                    errorMessage = getErrorFull(issue);
+                    if (errorMessage.includes(message)) return true;
+            }
+        }
+    }
+    throw new Error('Expected: ' + message + ' Found: '+errorMessage)
+}
 
 function errorsCheck(resource) {
     const operationOutcome: OperationOutcome = resource;

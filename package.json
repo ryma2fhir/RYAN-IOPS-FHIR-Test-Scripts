@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "jest",
+    "test": "jest src/validate.test.ts",
+    "integration-test": "jest src/validator.test.ts",
     "build": "ts-node src/populateValidator.ts",
     "start": "ts-node src/configureValidator.ts"
   },

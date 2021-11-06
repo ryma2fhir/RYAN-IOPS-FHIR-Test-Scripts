@@ -1,4 +1,4 @@
-import {basePath, defaultBaseUrl, getJson, patient, resourceChecks} from "./common.js";
+import {basePath, defaultBaseUrl, getJson, getPatient, resourceChecks} from "./common.js";
 
 import * as fs from "fs";
 import supertest from "supertest"
@@ -51,7 +51,7 @@ function testFolder(dir) {
                     .send(getJson(file, resource))
                     .expect(200)
                     .then((response: any) => {
-                        resourceChecks(response, file)
+                        resourceChecks(response)
                     },
                         error => {
                             throw new Error(error.message)
@@ -152,7 +152,7 @@ function testFolder(dir) {
                 .post('/$validate')
                 .set("Content-Type", "application/fhir+json; fhirVersion=4.0")
                 .set("Accept", "application/fhir+json")
-                .send(patient)
+                .send(getPatient())
                 .expect(200)
         });
     });
