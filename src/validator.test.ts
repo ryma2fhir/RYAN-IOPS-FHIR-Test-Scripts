@@ -83,7 +83,7 @@ describe('Testing validation fails invalid FHIR resources', () => {
     testFileError('Check validation fails when MedicationRequest is not referenced in the MessageHeader.focus but is present','Examples/fail/Bundle-prescription-order-12 Item-incorrectFocus.json', undefined)
     testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-12 Item-locationNotPresent.json', undefined)
     testFileError('Check validation fails when Message Bundle.entry.fullUrl is absent','Examples/fail/Bundle-prescription-order-missingFullUrl.json','Bundle entry missing fullUrl')
-    testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent','Examples/fail/Bundle-searchset-COVIDExemption-missingFullUrl.json','Bundle entry missing fullUrl')
+    testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent','Examples/fail/Bundle-searchset-COVIDExemption-missingFullUrl.json','fullUrl')
     testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
 });
 
