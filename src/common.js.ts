@@ -53,7 +53,7 @@ export function resourceCheckErrorMessage(response: any, message: string) {
 }
 
 export async function getPatient(): Promise<any> {
-    const resource: any = await fs.readFileSync('Examples/patient.json', 'utf8');
+    const resource: any = await fs.readFileSync('Examples/pass/patient.json', 'utf8');
     return resource;
 }
 
