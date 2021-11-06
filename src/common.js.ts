@@ -2,8 +2,6 @@ import axios from "axios";
 import {OperationOutcome, OperationOutcomeIssue, Patient} from "fhir/r4";
 import fs from "fs";
 import path from "path";
-import exp from "constants";
-import {expect} from "@jest/globals";
 
 export const basePath = "/FHIR/R4"
 
