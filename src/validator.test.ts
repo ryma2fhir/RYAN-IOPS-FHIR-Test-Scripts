@@ -62,7 +62,10 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
-    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/Bundle-prescription-order-12 Item.json')
+    testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription-order-12 Item.json')
+    testFile('Test HL7 FHIR Seaarch QuestionnaireResponse Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDExemption.json')
+    testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
+    testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
     testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.xml')
     testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
 });
@@ -79,7 +82,8 @@ describe('Testing validation fails invalid FHIR resources', () => {
 
     testFileError('Check validation fails when MedicationRequest is not referenced in the MessageHeader.focus but is present','Examples/fail/Bundle-prescription-order-12 Item-incorrectFocus.json', undefined)
     testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-12 Item-locationNotPresent.json', undefined)
-
+    testFileError('Check validation fails when Message Bundle.entry.fullUrl is absent','Examples/fail/Bundle-prescription-order-missingFullUrl.json','Bundle entry missing fullUrl')
+    testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent','Examples/fail/Bundle-COVIDExemption-missingFullUrl.json','Bundle entry missing fullUrl')
     testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
 });
 
