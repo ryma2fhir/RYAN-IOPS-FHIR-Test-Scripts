@@ -13,10 +13,10 @@ it('Validator is functioning ',async function () {
     await client().get('/_status').expect(200)
 });
 
-function testFile(file) {
+function testFile(testDescription,file) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it('Test HL7 FHIR resource passes validation ' + file, async () => {
+    it(testDescription + ' filename' + file, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
@@ -58,11 +58,13 @@ function testFileError(testDescription, file,message) {
 
 
 describe('Testing validation api is functioning', () => {
-    testFile('Examples/pass/patient.json')
-    testFile('Examples/pass/MedicationRequest-pass.json')
-    testFile('Examples/pass/MedicationDispense-pass.json')
+    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/patient.json')
+    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
+    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
-    testFile('Examples/pass/Bundle-prescripton-order-12 Item.json')
+    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/Bundle-prescripton-order-12 Item.json')
+    testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.xml')
+    testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
 });
 
 describe('Testing validation fails simple resource', () => {
@@ -74,7 +76,7 @@ describe('Testing validation fails simple resource', () => {
 
     testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-invalidaUnitOfMeasure.json','Validation failed for \'http://unitsofmeasure.org')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system','Examples/fail/MedicationDispense-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
-    testFileError('Check validation fails when identifier is an object not an array','Examples/fail/MedicationRequest-invalidJSON.json', undefined)
+    testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalidJSON.json', undefined)
     testFileError('Check validation fails when MedicationRequest is not referenced in the MessageHeader.focus but is present','Examples/fail/Bundle-prescripton-order-12 Item-incorrectFocus.json', undefined)
     testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescripton-order-12 Item-locationNotPresent.json', undefined)
 });
