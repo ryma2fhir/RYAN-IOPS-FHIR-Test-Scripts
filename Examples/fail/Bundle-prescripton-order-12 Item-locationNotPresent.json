@@ -53,8 +53,8 @@
             "type": "MedicationRequest"
           },
           {
-            "reference": "urn:uuid:a1f9ad95-8e2b-4020-a6bd-124f6fe2ef1c",
-            "type": "Patient"
+            "reference": "urn:uuid:c7d942f2-3c1d-4d93-9ba8-ba57db83cdc0",
+            "type": "MedicationRequest"
           }
         ]
       }
@@ -167,23 +167,6 @@
             "use": "work"
           }
         ]
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:4bdb71a5-209a-49b9-89ff-5396abc2e582",
-      "resource": {
-        "resourceType": "Location",
-        "id": "4bdb71a5-209a-49b9-89ff-5396abc2e582",
-        "status": "active",
-        "mode": "instance",
-        "address": {
-          "line": [
-            "SOUTHAMPTON GENERAL HOSPITAL",
-            "TREMONA ROAD",
-            "SOUTHAMPTON"
-          ],
-          "postalCode": "SO16 6YD"
-        }
       }
     },
     {
@@ -522,7 +505,7 @@
         "identifier": [
           {
             "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-            "value": "c7d942f2-3c1d-4d93-9ba8-ba57db83cdc0"
+            "value": "c7d942f2-3c1d-4d93-9ba8-ba57db83cdc1"
           }
         ],
         "status": "active",
