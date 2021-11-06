@@ -62,7 +62,7 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
-    testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription-order-12 Item.json')
+    testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
     testFile('Test HL7 FHIR Seaarch QuestionnaireResponse Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDExemption.json')
     testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
@@ -73,17 +73,23 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
 describe('Testing validation fails invalid FHIR resources', () => {
     testFileError('Check validation fails when no NHS Number is supplied','Examples/fail/patientError.json','Patient.identifier:nhsNumber: minimum required = 1')
 
+    // MedicationRequest
     testFileError('Check validation fails when no medication code is supplied', 'Examples/fail/MedicationRequest-missingMedication.json',undefined)
     testFileError('Check validation fails when no medication code is supplied','Examples/fail/MedicationRequest-missingMedication.json','MedicationRequest.medication[x]: minimum required = 1')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system', 'Examples/fail/MedicationRequest-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
+    testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
 
+    // MedicationDispense
     testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-invalidaUnitOfMeasure.json','Validation failed for \'http://unitsofmeasure.org')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system','Examples/fail/MedicationDispense-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
 
-    testFileError('Check validation fails when MedicationRequest is not referenced in the MessageHeader.focus but is present','Examples/fail/Bundle-prescription-order-12 Item-incorrectFocus.json', undefined)
-    testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-12 Item-locationNotPresent.json', undefined)
+    testFileError('Check validation fails when MedicationRequest references Patient in the MessageHeader.focus but is present','Examples/fail/Bundle-prescription-order-incorrectFocus.json', 'Invalid Resource target type.')
+    // Should be in MessageDefinition??
+    testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-locationNotPresent.json', undefined)
+    testFileError('Check validation fails when extra MedicationRequest is included but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-extraMedicationRequest.json', undefined)
+
     testFileError('Check validation fails when Message Bundle.entry.fullUrl is absent','Examples/fail/Bundle-prescription-order-missingFullUrl.json','Bundle entry missing fullUrl')
-    testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent','Examples/fail/Bundle-searchset-COVIDExemption-missingFullUrl.json','fullUrl')
-    testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
+    testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent (AEA-1828)','Examples/fail/Bundle-searchset-COVIDExemption-missingFullUrl.json','fullUrl')
+
 });
 
