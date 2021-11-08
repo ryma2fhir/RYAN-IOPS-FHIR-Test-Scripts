@@ -63,6 +63,8 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
     testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
+
+
     testFile('Test HL7 FHIR Seaarch QuestionnaireResponse Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDExemption.json')
     testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
@@ -86,12 +88,19 @@ describe('Testing validation fails invalid FHIR resources', () => {
 
     testFileError('Check validation fails when MedicationRequest references Patient in the MessageHeader.focus but is present','Examples/fail/Bundle-prescription-order-incorrectFocus.json', 'Invalid Resource target type.')
     // Should be in MessageDefinition??
-    testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-locationNotPresent.json', undefined)
-    // TODO need to discuss if this is an error, should at least be a warning.
-    //testFileError('Check validation fails when extra MedicationRequest is included but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-extraMedicationRequest.json', undefined)
+    testFileError('Check validation fails when Location is referenced but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-locationNotPresent.json', 'Unable to find a match for profile')
 
     testFileError('Check validation fails when Message Bundle.entry.fullUrl is absent','Examples/fail/Bundle-prescription-order-missingFullUrl.json','Bundle entry missing fullUrl')
     testFileError('Check validation fails when SearchSet Bundle.entry.fullUrl is absent (AEA-1828)','Examples/fail/Bundle-searchset-COVIDExemption-missingFullUrl.json','fullUrl')
 
+    testFileError('Test HL7 FHIR Message Bundle passes validation (AEA-1833)','Examples/fail/Bundle-prescription-rest-references.json','Bundled or contained reference not found within the bundle')
 });
 
+
+describe('Tests to be re-evaluated as they should be not be passing', () => {
+    // This should fail as the subject reference is not in the Bundle
+
+
+    // TODO need to discuss if this is an error, should at least be a warning.
+    testFile('Check validation fails when extra MedicationRequest is included but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-extraMedicationRequest.json')
+});
