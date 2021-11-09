@@ -80,7 +80,7 @@ describe('Testing validation fails invalid FHIR resources', () => {
     testFileError('Check validation fails when no medication code is supplied','Examples/fail/MedicationRequest-missingMedication.json','MedicationRequest.medication[x]: minimum required = 1')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system', 'Examples/fail/MedicationRequest-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
     testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
-
+    testFileError('Check validation fails when non dm+d SNOMED drug code is supplied','Examples/fail/MedicationRequest-not-dmd-drug.json','is not in the value set')
     // MedicationDispense
     testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-daysSupply-invalidaUnitOfMeasure.json','Validation failed for \'http://unitsofmeasure.org')
     testFileError('Check validation fails when dosageInstruction.timing has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-timing-invalidaUnitOfMeasure.json','UnitsOfTime')
@@ -102,5 +102,5 @@ describe('Tests to be re-evaluated as they should be not be passing', () => {
 
 
     // TODO need to discuss if this is an error, should at least be a warning.
-    testFile('Check validation fails when extra MedicationRequest is included but not present in the FHIR Message','Examples/fail/Bundle-prescription-order-extraMedicationRequest.json')
+    testFile('Check validation fails when extra MedicationRequest is included but not present in the FHIR Message [AEA-1835]','Examples/fail/Bundle-prescription-order-extraMedicationRequest.json')
 });
