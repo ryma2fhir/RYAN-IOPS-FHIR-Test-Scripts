@@ -9,10 +9,11 @@ const client = () => {
     return supertest(url)
 }
 
-let terminology = false;
+let terminology = true;
 
+// Need to check the capabilities of the validation service and decide if to run terminology tests
+if (process.env.ONTO_CLIENT_ID == undefined) terminology = false;
 
-// Need to check the capabities of the validation service and decide if to run terminology tests
 
 
 it('Validator is functioning ',async function () {
