@@ -178,6 +178,9 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
         if (issue.diagnostics.includes('incorrect type for element')) {
             return true;
         }
+        if (issue.diagnostics.includes('Error HTTP 401')) {
+            return true;
+        }
     }
     return false;
 }
