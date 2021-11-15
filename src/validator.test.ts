@@ -128,6 +128,14 @@ describe('Tests against a supplier set of examples', () => {
     testFile('Check validation passes : Single Item','Examples/supplierA/Single Item - 9a413654-2d44-4d8f-8357-132ab2de6c8f.json')
 });
 
+describe('Test Paracetamol', () => {
+    testFileError('Check validation fails  : Paracetamol VTM','Examples/fail/MedicationRequest-Paracetamol-vtm.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+    testFile('Check validation passes  : Paracetamol VMP','Examples/pass/MedicationRequest-Paracetamol-vmp.json')
+    testFile('Check validation passes  : Paracetamol AMP','Examples/pass/MedicationRequest-Paracetamol-amp.json')
+    testFileError('Check validation fails  : Paracetamol AMPP','Examples/fail/MedicationRequest-Paracetamol-ampp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+    testFileError('Check validation fails  : Paracetamol VMPP','Examples/fail/MedicationRequest-Paracetamol-vmpp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+});
+
 describe('Terminology Tests', () => {
     if (terminology) {
         testFileError('Check validation fails when non dm+d SNOMED drug code is supplied', 'Examples/fail/MedicationRequest-not-dmd-drug.json', 'is not in the value set')

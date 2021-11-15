@@ -4,9 +4,6 @@ import {URLSearchParams} from "url";
 import fs from "fs";
 import path from "path";
 import {delay, getJson, resourceChecks, wait} from "./common.js";
-import {err} from "pino-std-serializers";
-
-
 
 const fileName = '../package.json';
 
