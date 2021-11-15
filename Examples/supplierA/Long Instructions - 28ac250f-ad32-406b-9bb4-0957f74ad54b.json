@@ -1,0 +1,324 @@
+{
+    "resourceType": "Bundle",
+    "id": "7910ce5f-d2ef-4afe-aac1-a0c486245984",
+    "identifier": {
+        "system": "https://tools.ietf.org/html/rfc4122",
+        "value": "dad36bd5-aae0-4828-b4fe-9e88e9edbe46"
+    },
+    "type": "message",
+    "entry": [{
+        "fullUrl": "urn:uuid:7910ce5f-d2ef-4afe-aac1-a0c486245984",
+        "resource": {
+            "resourceType": "MessageHeader",
+            "id": "28ac250f-ad32-406b-9bb4-0957f74ad54b",
+            "eventCoding": {
+                "system": "https://fhir.nhs.uk/CodeSystem/message-event",
+                "code": "prescription-order",
+                "display": "Prescription Order"
+            },
+            "destination": [{
+                "endpoint": "urn:nhs-uk:addressing:ods:FCW64",
+                "receiver": {
+                    "identifier": {
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "FCW64"
+                    }
+                }
+            }],
+            "sender": {
+                "reference": "urn:uuid:c0116dd2-7c13-469a-bada-8b2cd59a2921",
+                "identifier": {
+                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                    "value": "694X0"
+                },
+                "display": "Clark|Jackie"
+            },
+            "source": {
+                "endpoint": "urn:nhs-uk:addressing:ods:694X0"
+            },
+            "focus": [{
+                "reference": "urn:uuid:73393047-082e-4cc2-84a8-7453af229b1f",
+                "type": "MedicationRequest"
+            }, {
+                "reference": "urn:uuid:d5f1338f-507c-4993-baf0-ad8f66370895",
+                "type": "Patient"
+            }]
+        }
+    }, {
+        "fullUrl": "urn:uuid:d5f1338f-507c-4993-baf0-ad8f66370895",
+        "resource": {
+            "resourceType": "Patient",
+            "id": "d5f1338f-507c-4993-baf0-ad8f66370895",
+            "identifier": [{
+                "extension": [{
+                    "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus",
+                    "valueCodeableConcept": {
+                        "coding": [{
+                            "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus",
+                            "code": "01",
+                            "display": "Number present and verified"
+                        }]
+                    }
+                }],
+                "system": "https://fhir.nhs.uk/Id/nhs-number",
+                "value": "9657847419"
+            }],
+            "name": [{
+                "use": "usual",
+                "family": "HOMAN",
+                "given": ["Amos Lloyd"]
+            }],
+            "telecom": [{
+                "system": "phone",
+                "value": "07000123123"
+            }],
+            "gender": "male",
+            "birthDate": "1985-03-12",
+            "address": [{
+                "use": "home",
+                "line": ["1 Dalmatian Way", "Broughton", "BRIGG"],
+                "postalCode": "DN20 0ET"
+            }],
+            "generalPractitioner": [{
+                "identifier": {
+                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                    "value": "A20047"
+                }
+            }]
+        }
+    }, {
+        "fullUrl": "urn:uuid:1e7b59ba-d521-4945-9f36-c319123f3149",
+        "resource": {
+            "resourceType": "Practitioner",
+            "id": "1e7b59ba-d521-4945-9f36-c319123f3149",
+            "identifier": [{
+                "system": "https://fhir.nhs.uk/Id/sds-user-id",
+                "value": "555252291108"
+            }, {
+                "system": "https://fhir.hl7.org.uk/Id/gmc-number",
+                "value": "1231234"
+            }],
+            "name": [{
+                "use": "usual",
+                "family": "Clark",
+                "given": ["Jackie"]
+            }],
+            "gender": "unknown"
+        }
+    }, {
+        "fullUrl": "urn:uuid:c0116dd2-7c13-469a-bada-8b2cd59a2921",
+        "resource": {
+            "resourceType": "PractitionerRole",
+            "id": "c0116dd2-7c13-469a-bada-8b2cd59a2921",
+            "identifier": [{
+                "system": "https://fhir.nhs.uk/Id/sds-role-profile-id",
+                "value": "555086415105"
+            }],
+            "practitioner": {
+                "reference": "urn:uuid:1e7b59ba-d521-4945-9f36-c319123f3149"
+            },
+            "organization": {
+                "reference": "urn:uuid:7a366fcb-5975-474f-a41c-1b9421da84f1"
+            },
+            "code": [{
+                "coding": [{
+                    "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-SDSJobRoleName",
+                    "code": "R8000",
+                    "display": "Clinical Practitioner Access Role"
+                }]
+            }],
+            "healthcareService": [{
+                "reference": "urn:uuid:d411c6ed-0601-4da5-b9c1-a217474a8999",
+                "display": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY"
+            }],
+            "telecom": [{
+                "system": "phone",
+                "value": "02380798431",
+                "use": "work"
+            }]
+        }
+    }, {
+        "fullUrl": "urn:uuid:7a366fcb-5975-474f-a41c-1b9421da84f1",
+        "resource": {
+            "resourceType": "Organization",
+            "id": "7a366fcb-5975-474f-a41c-1b9421da84f1",
+            "identifier": [{
+                "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                "value": "694X0"
+            }],
+            "type": [{
+                "coding": [{
+                    "system": "https://fhir.nhs.uk/CodeSystem/organisation-role",
+                    "code": "173",
+                    "display": "PATHOLOGY LAB"
+                }]
+            }],
+            "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
+            "telecom": [{
+                "system": "phone",
+                "value": "02380798431",
+                "use": "work"
+            }],
+            "address": [{
+                "line": ["SOUTHAMPTON GENERAL HOSPITAL", "TREMONA ROAD", "SOUTHAMPTON", "HAMPSHIRE"],
+                "postalCode": "SO16 6YD"
+            }]
+        }
+    }, {
+        "fullUrl": "urn:uuid:d411c6ed-0601-4da5-b9c1-a217474a8999",
+        "resource": {
+            "resourceType": "HealthcareService",
+            "id": "d411c6ed-0601-4da5-b9c1-a217474a8999",
+            "identifier": [{
+                "use": "usual",
+                "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                "value": "694X0"
+            }],
+            "active": true,
+            "providedBy": {
+                "identifier": {
+                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                    "value": "694X0"
+                }
+            },
+            "location": [{
+                "reference": "urn:uuid:b77bb6ca-4280-4e36-b3da-e94cf3b60b49"
+            }],
+            "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
+            "telecom": [{
+                "system": "phone",
+                "value": "02380798431",
+                "use": "work"
+            }]
+        }
+    }, {
+        "fullUrl": "urn:uuid:b77bb6ca-4280-4e36-b3da-e94cf3b60b49",
+        "resource": {
+            "resourceType": "Location",
+            "id": "b77bb6ca-4280-4e36-b3da-e94cf3b60b49",
+            "status": "active",
+            "mode": "instance",
+            "address": {
+                "line": ["SOUTHAMPTON GENERAL HOSPITAL", "TREMONA ROAD", "SOUTHAMPTON"],
+                "postalCode": "SO16 6YD"
+            }
+        }
+    }, {
+        "fullUrl": "urn:uuid:73393047-082e-4cc2-84a8-7453af229b1f",
+        "resource": {
+            "resourceType": "MedicationRequest",
+            "id": "73393047-082e-4cc2-84a8-7453af229b1f",
+            "extension": [{
+                "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
+                "valueCoding": {
+                    "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
+                    "code": "1001",
+                    "display": "Outpatient Community Prescriber - Medical Prescriber"
+                }
+            }],
+            "identifier": [{
+                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
+                "value": "73393047-082e-4cc2-84a8-7453af229b1f"
+            }],
+            "status": "active",
+            "intent": "order",
+            "category": [{
+                "coding": [{
+                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+                    "code": "outpatient",
+                    "display": "Outpatient"
+                }]
+            }],
+            "medicationCodeableConcept": {
+                "coding": [{
+                    "system": "http://snomed.info/sct",
+                    "code": "35901911000001104",
+                    "display": "Amoxicillin 125mg/5ml oral suspension sugar free"
+                }]
+            },
+            "subject": {
+                "reference": "urn:uuid:d5f1338f-507c-4993-baf0-ad8f66370895"
+            },
+            "authoredOn": "2021-06-25T14:47:54+01:00",
+            "requester": {
+                "reference": "urn:uuid:c0116dd2-7c13-469a-bada-8b2cd59a2921"
+            },
+            "groupIdentifier": {
+                "extension": [{
+                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
+                    "valueIdentifier": {
+                        "system": "https://fhir.nhs.uk/Id/prescription",
+                        "value": "0feb47d4-8423-4388-a198-879c5b4d0165"
+                    }
+                }],
+                "system": "https://fhir.nhs.uk/Id/prescription-order-number",
+                "value": "BD2999-0694X0-025087"
+            },
+            "courseOfTherapyType": {
+                "coding": [{
+                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+                    "code": "acute",
+                    "display": "Short course (acute) therapy"
+                }]
+            },
+            "dosageInstruction": [{
+                "text": "sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. ut enim ad minima veniam, quisno"
+            }],
+            "dispenseRequest": {
+                "extension": [{
+                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
+                    "valueCoding": {
+                        "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
+                        "code": "P1",
+                        "display": "Other (e.g. Community Pharmacy)"
+                    }
+                }],
+                "quantity": {
+                    "value": 100,
+                    "unit": "ml",
+                    "system": "http://snomed.info/sct",
+                    "code": "258773002"
+                },
+                "performer": {
+                    "identifier": {
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "FCW64"
+                    }
+                }
+            },
+            "substitution": {
+                "allowedBoolean": false
+            }
+        }
+    }, {
+        "fullUrl": "urn:uuid:46fb2286-7696-442c-88e4-38c96c904ca9",
+        "resource": {
+            "resourceType": "Provenance",
+            "id": "46fb2286-7696-442c-88e4-38c96c904ca9",
+            "target": [{
+                "reference": "urn:uuid:73393047-082e-4cc2-84a8-7453af229b1f",
+                "type": "MedicationRequest"
+            }],
+            "recorded": "2021-06-25T14:47:56.1461585+01:00",
+            "agent": [{
+                "who": {
+                    "reference": "urn:uuid:c0116dd2-7c13-469a-bada-8b2cd59a2921",
+                    "type": "PractitionerRole"
+                }
+            }],
+            "signature": [{
+                "type": [{
+                    "system": "urn:iso-astm:E1762-95:2013",
+                    "code": "1.2.840.10065.1.12.1.1",
+                    "display": "Author's Signature"
+                }],
+                "when": "2021-06-25T14:47:56.1461585+01:00",
+                "who": {
+                    "reference": "urn:uuid:c0116dd2-7c13-469a-bada-8b2cd59a2921",
+                    "type": "PractitionerRole"
+                },
+                "data": "PFNpZ25hdHVyZSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+PFNpZ25lZEluZm8geG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L0Nhbm9uaWNhbGl6YXRpb25NZXRob2Q+PFNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSI+PC9TaWduYXR1cmVNZXRob2Q+PFJlZmVyZW5jZT48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L1RyYW5zZm9ybT48L1RyYW5zZm9ybXM+PERpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIj48L0RpZ2VzdE1ldGhvZD48RGlnZXN0VmFsdWU+RDhTMXNyd0YwLzd2dE5OQ0xwaGJaNGNvSUtFPTwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT53MmVnNm1zbCtlbzZPdXhyQ3ZHK3cwRGE2OGluVVR2K3kxK0NhVnNZN1FTT3ppYWgvUUtTcVF6MCtRWVQyWW5RZWxEMlcwbXpsMjhCWklQc0huWk9VRWZhc1BQbUdYVWc4Vnd3bDN5cjVpVnlJUHl6S0g0Y0RaYXVCQ1luN1ZSQkI3WENMYUw1ejFvdGZJTG9EODB0UUcvREVqeG0zZm9lbFY2OG9ZVk55WE09PC9TaWduYXR1cmVWYWx1ZT48S2V5SW5mbz48WDUwOURhdGE+PFg1MDlDZXJ0aWZpY2F0ZT5NSUlEdURDQ0FxQ2dBd0lCQWdJRVhjbW83ekFOQmdrcWhraUc5dzBCQVFzRkFEQTJNUXd3Q2dZRFZRUUtFd051YUhNeEN6QUpCZ05WQkFzVEFrTkJNUmt3RndZRFZRUURFeEJPU0ZNZ1NVNVVJRXhsZG1Wc0lERkVNQjRYRFRJd01Ea3lNekUxTkRrME9Gb1hEVEl5TURreU16RTJNVGswT0Zvd1F6RU1NQW9HQTFVRUNoTURibWh6TVE4d0RRWURWUVFMRXdaUVpXOXdiR1V4SWpBZ0JnTlZCQU1NR1RVMU5UQTROalF4TlRFd05WOVVaWE4wWDFSbGMzUmtiMmN3Z1o4d0RRWUpLb1pJaHZjTkFRRUJCUUFEZ1kwQU1JR0pBb0dCQVBDeW1MYjBJdm5nS21ZOTlwcmx2VU8xTmxnK1l5NHpEanpUaHVxZDJrdGsyOE1lWWRWbUFMV0xJWTY5cE50VDhEV0NrSmJtVytyR1JFYzFueG9halcrb0NqV2dlMUtjdytVVU15MnNZNXBMMmJoMGpmNGhtK3d5OVZvbGdNeWRsWmN6cklxWmJpYjhCbTBZbkZtbGtqSDltZnU1ZWRzQzhPVmYzdHIyUktYSEFnTUJBQUdqZ2dGRE1JSUJQekFPQmdOVkhROEJBZjhFQkFNQ0JrQXdaUVlEVlIwZ0FRSC9CRnN3V1RCWEJnc3Foam9BaVh0bUFBTUNBREJJTUVZR0NDc0dBUVVGQndJQkZqcG9kSFJ3Y3pvdkwzQnJhUzV1YUhNdWRXc3ZZMlZ5ZEdsbWFXTmhkR1ZmY0c5c2FXTnBaWE12WTI5dWRHVnVkRjlqYjIxdGFYUnRaVzUwTURNR0ExVWRId1FzTUNvd0tLQW1vQ1NHSW1oMGRIQTZMeTlqY213dWJtaHpMblZyTDJsdWRDOHhaQzlqY214ak15NWpjbXd3S3dZRFZSMFFCQ1F3SW9BUE1qQXlNREE1TWpNeE5UUTVORGhhZ1E4eU1ESXlNREl4TmpFMk1UazBPRm93SHdZRFZSMGpCQmd3Rm9BVW9KWWZnWVROUGQ2RVVLTDZRTEl6SHhZNVBGSXdIUVlEVlIwT0JCWUVGRi9YS2h0NWVpN3FyeHcxM1dmR2xDQStaNS9NTUFrR0ExVWRFd1FDTUFBd0dRWUpLb1pJaHZaOUIwRUFCQXd3Q2hzRVZqZ3VNd01DQkxBd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFFZmFidkVRcmt0MEJTUnkzYnA1NkRJMUJyWEN5eVFWdjhORkdsZ2VDQTNOV0V5dE9uQkpqaDNJT0c1YlpsclVBK1lnK2xJMWxFUFlWaGJxd0R2bmlDdUYyOWw1TE0zai82Y1c0YWRIRUFPMTVnZWNHUVRzbm9DUlRZMnYrTzBDcVZ5MGtaWkV0dFRFbGtPekZ3clNvQzRITDdkOG96cG9UR0NpVDBHK3lKT25mWm9yc1ZWd1JFNW9rNUhwMlYyQWEwQ2EvUUVkNzc4UFMxOXFqdHBEUWJjODdVYkVPSXY2alZscUM3VHhIVGViNjB2akhIcU14VFU5bCtjdGF0TnU4N1ovMTA3eG1NRmFVYTRVMXA0R0xZYm9QbElOSUkzVVlwdGNDdXRXeHROcTVGZ1RNTkI1eEJQUE9SU2tjSWxrNDBsc0U1R3EzczlVZ2xLZzNBQ3V1Wnc9PC9YNTA5Q2VydGlmaWNhdGU+PC9YNTA5RGF0YT48L0tleUluZm8+PC9TaWduYXR1cmU+"
+            }]
+        }
+    }]
+}
