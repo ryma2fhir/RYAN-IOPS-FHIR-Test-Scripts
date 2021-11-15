@@ -41,6 +41,7 @@ class TarMe {
     }
 }
 
+/*
 if (clientId != undefined && clientSecret != undefined) {
     console.log('Configuring NHS Onto Server connection')
     console.log('Using ' + ontoServer)
@@ -50,6 +51,7 @@ if (clientId != undefined && clientSecret != undefined) {
         "clientId" : clientId,
         "clientSecret": clientSecret
     }
+    process.env.hapi_fhir_terminology_client_id = clientId
     fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
     fs.writeFile(path.join(__dirname,destinationPath + '/validation.json'), JSON.stringify(config),  function(err) {
         if (err) {
@@ -57,7 +59,7 @@ if (clientId != undefined && clientSecret != undefined) {
         }
     });
 }
-
+*/
 
 if (fs.existsSync(fileName)) {
     const file = fs.readFileSync(fileName, 'utf-8');
