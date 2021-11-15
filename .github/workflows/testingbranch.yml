@@ -74,7 +74,7 @@ jobs:
 
       - name: Run FHIR Validator
         run: 
-          nohup java -jar validation-service-fhir-r4/target/fhir-validator-0.0.1-SNAPSHOT.jar &
+          nohup java -jar validation-service-fhir-r4/target/fhir-validator-0.0.1-SNAPSHOT.jar -Dhapi.fhir.terminology.use_remote=false &
           sleep 60
         
       - name: Run Test
