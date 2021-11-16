@@ -1,4 +1,12 @@
-import {defaultBaseUrl, getJson, getPatient, getResource, resourceCheckErrorMessage, resourceChecks} from "./common.js";
+import {
+    defaultBaseUrl,
+    getJson,
+    getPatient,
+    getResource,
+    resourceCheckErrorMessage,
+    resourceChecks,
+    resourceCheckWarningMessage
+} from "./common.js";
 import supertest from "supertest"
 import {jest} from "@jest/globals";
 import fs from "fs";
@@ -62,13 +70,43 @@ function testFileError(testDescription, file,message) {
     });
 }
 
+function testFileWarning(testDescription, file,message) {
+    const resource: any = fs.readFileSync(file, 'utf8');
+
+    it(testDescription + ' Filename = ' + file, async () => {
+        // Initial terminology queries can take a long time to process - cached responses are much more responsive
+        jest.setTimeout(30000)
+        await client()
+            .post('/$validate')
+            .set("Content-Type", 'application/fhir+xml')
+            .set("Accept", 'application/fhir+json')
+            .send(getJson(file, resource))
+            .expect(200)
+            .then((response: any) => {
+                    resourceCheckWarningMessage(response,message)
+                },
+                error => {
+                    throw new Error(error.message)
+                })
+    });
+}
+
 
 
 describe('Testing validation passes for valid HL7 FHIR resources', () => {
+    // Patient
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/patient.json')
+
+    // MedicationRequest
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
+
+    // MedicationDispense
     testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
+    // PractitionerRole
+    testFile('Test HL7 FHIR resource passes validation PractitionerRole','Examples/pass/PractitionerRole-pass.json')
+
+    // Bundle
     testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
 
 
@@ -80,7 +118,14 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
 });
 
 describe('Testing validation fails invalid FHIR resources', () => {
+
+    //Patient
     testFileError('Check validation fails when no NHS Number is supplied','Examples/fail/patientError.json','Patient.identifier:nhsNumber: minimum required = 1')
+    testFileError('Check validation fails when no Scottish CHI Number is supplied','Examples/fail/patient-chi-number.json','Supplied NHS Number is outside the English and Welsh NHS Number')
+
+    // PractitionerRole
+    testFileWarning('Check validation fails on PractitionerRole when invalid GMC Number is supplied','Examples/fail/PractitionerRole-invalidGMC.json','GMC must be of the format CNNNNNNN')
+
 
     // MedicationRequest
     testFileError('Check validation fails when no medication code is supplied', 'Examples/fail/MedicationRequest-missingMedication.json',undefined)
@@ -128,12 +173,18 @@ describe('Tests against a supplier set of examples', () => {
     testFile('Check validation passes : Single Item','Examples/supplierA/Single Item - 9a413654-2d44-4d8f-8357-132ab2de6c8f.json')
 });
 
-describe('Test Paracetamol', () => {
-    testFileError('Check validation fails  : Paracetamol VTM','Examples/fail/MedicationRequest-Paracetamol-vtm.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
-    testFile('Check validation passes  : Paracetamol VMP','Examples/pass/MedicationRequest-Paracetamol-vmp.json')
-    testFile('Check validation passes  : Paracetamol AMP','Examples/pass/MedicationRequest-Paracetamol-amp.json')
-    testFileError('Check validation fails  : Paracetamol AMPP','Examples/fail/MedicationRequest-Paracetamol-ampp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
-    testFileError('Check validation fails  : Paracetamol VMPP','Examples/fail/MedicationRequest-Paracetamol-vmpp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+describe('Test dm+d valuesets Paracetamol', () => {
+    testFileError('Check validation fails  : MedicationRequest Paracetamol VTM','Examples/dmdTests/MedicationRequest-Paracetamol-vtm.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+    testFile('Check validation passes  : MedicationRequest Paracetamol VMP','Examples/dmdTests/MedicationRequest-Paracetamol-vmp.json')
+    testFile('Check validation passes  : MedicationRequest Paracetamol AMP','Examples/dmdTests/MedicationRequest-Paracetamol-amp.json')
+    testFileError('Check validation fails  : MedicationRequest Paracetamol AMPP','Examples/dmdTests/MedicationRequest-Paracetamol-ampp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+    testFileError('Check validation fails  : MedicationRequest Paracetamol VMPP','Examples/dmdTests/MedicationRequest-Paracetamol-vmpp.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationRequest-Code')
+
+    testFileError('Check validation fails  : MedicationDispense Paracetamol VTM','Examples/dmdTests/MedicationDispense-Paracetamol-vtm.json','is not in the value set https://fhir.nhs.uk/ValueSet/NHSDigital-MedicationDispense-Code')
+    testFile('Check validation passes  : MedicationDispense Paracetamol VMP','Examples/dmdTests/MedicationDispense-Paracetamol-vmp.json')
+    testFile('Check validation passes  : MedicationDispense Paracetamol AMP','Examples/dmdTests/MedicationDispense-Paracetamol-amp.json')
+    testFile('Check validation passes  : MedicationDispense Paracetamol AMPP','Examples/dmdTests/MedicationDispense-Paracetamol-ampp.json')
+    testFile('Check validation passes  : MedicationDispense Paracetamol VMPP','Examples/dmdTests/MedicationDispense-Paracetamol-vmpp.json')
 });
 
 describe('Terminology Tests', () => {

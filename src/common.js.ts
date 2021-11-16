@@ -48,9 +48,18 @@ export function resourceCheckErrorMessage(response: any, message: string) {
 
     const resource: any = response.body;
     expect(resource.resourceType).toEqual('OperationOutcome');
-    expect(haserrorMessage(resource)).toEqual(true)
+    expect(hasErrorMessage(resource)).toEqual(true)
     if (message != undefined) expect(errorMessageCheck(resource,message))
 }
+
+export function resourceCheckWarningMessage(response: any, message: string) {
+
+    const resource: any = response.body;
+    expect(resource.resourceType).toEqual('OperationOutcome');
+    expect(hasWarningMessage(resource)).toEqual(true)
+    if (message != undefined) expect(warningMessageCheck(resource,message))
+}
+
 
 export async function getPatient(): Promise<any> {
     const resource: any = await fs.readFileSync('Examples/pass/patient.json', 'utf8');
@@ -96,7 +105,7 @@ export async function downloadPackage(destinationPath, name,version ) {
     }
 }
 
-function haserrorMessage(resource): boolean  {
+function hasErrorMessage(resource): boolean  {
     const operationOutcome: OperationOutcome = resource;
     let warn=0;
     if (operationOutcome.issue !== undefined) {
@@ -112,6 +121,20 @@ function haserrorMessage(resource): boolean  {
     return false;
 }
 
+function hasWarningMessage(resource): boolean  {
+    const operationOutcome: OperationOutcome = resource;
+    let warn=0;
+    if (operationOutcome.issue !== undefined) {
+        for (const issue of operationOutcome.issue) {
+            switch (issue.severity) {
+                case "warning":
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
 function errorMessageCheck(resource, message) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let warn=0;
@@ -122,7 +145,24 @@ function errorMessageCheck(resource, message) :boolean {
             switch (issue.severity) {
                 case "error":
                 case "fatal":
-                    errorMessage = getErrorFull(issue);
+                    errorMessage = getErrorOrWarningFull(issue);
+                    if (errorMessage.includes(message)) return true;
+            }
+        }
+    }
+    throw new Error('Expected: ' + message + ' Found: '+errorMessage)
+}
+
+function warningMessageCheck(resource, message) :boolean {
+    const operationOutcome: OperationOutcome = resource;
+    let warn=0;
+    let errorMessage = 'None found';
+    if (operationOutcome.issue !== undefined) {
+        for (const issue of operationOutcome.issue) {
+
+            switch (issue.severity) {
+                case "warning":
+                    errorMessage = getErrorOrWarningFull(issue);
                     if (errorMessage.includes(message)) return true;
             }
         }
@@ -139,10 +179,10 @@ function errorsCheck(resource) {
             switch (issue.severity) {
                 case "error":
                 case "fatal":
-                    if (raiseError(issue)) throw new Error(getErrorFull(issue))
+                    if (raiseError(issue)) throw new Error(getErrorOrWarningFull(issue))
                     break;
                 case "warning":
-                    if (raiseWarning(issue)) throw new Error(getErrorFull(issue))
+                    if (raiseWarning(issue)) throw new Error(getErrorOrWarningFull(issue))
                     warn++;
                     break;
             }
@@ -164,7 +204,7 @@ export function wait(ms) {
     }
 }
 
-function getErrorFull(issue: OperationOutcomeIssue) {
+function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
     let error = issue.diagnostics;
     if (issue.location != undefined) {
         for(let location of issue.location) {
