@@ -134,7 +134,7 @@ describe('Testing validation fails invalid FHIR resources', () => {
     testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
 
     // MedicationDispense
-    testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-daysSupply-invalidaUnitOfMeasure.json','Validation failed for \'http://unitsofmeasure.org')
+    testFileError('Check validation fails when daysSupply has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-daysSupply-invalidaUnitOfMeasure.json','units-of-time')
     testFileError('Check validation fails when dosageInstruction.timing has an incorrect unitsofmeasure code','Examples/fail/MedicationDispense-timing-invalidaUnitOfMeasure.json','UnitsOfTime')
     testFileError('Check validation fails when medication code is supplied with the future dm+d system','Examples/fail/MedicationDispense-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
 
@@ -185,6 +185,11 @@ describe('Test dm+d valuesets Paracetamol', () => {
     testFile('Check validation passes  : MedicationDispense Paracetamol AMP','Examples/dmdTests/MedicationDispense-Paracetamol-amp.json')
     testFile('Check validation passes  : MedicationDispense Paracetamol AMPP','Examples/dmdTests/MedicationDispense-Paracetamol-ampp.json')
     testFile('Check validation passes  : MedicationDispense Paracetamol VMPP','Examples/dmdTests/MedicationDispense-Paracetamol-vmpp.json')
+});
+
+describe('Test prescription orders', ()=> {
+    testFile('Check validation passes  : GP prescription-order','Examples/prescriptions/Bundle-prescription-gp.json')
+    testFile('Check validation passes  : Acute prescription-order no healthcare service','Examples/prescriptions/Bundle-prescription-acute-noHealthcareService.json')
 });
 
 describe('Terminology Tests', () => {
