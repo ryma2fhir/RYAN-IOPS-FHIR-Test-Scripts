@@ -49,7 +49,7 @@
   "medicationCodeableConcept": {
     "coding": [
       {
-        "system": "https://dmd.nhs.uk/",
+        "system": "https://dmd.nhs.uk",
         "code": "36126511000001106",
         "display": "Morphine 10mg modified-release tablets"
       }

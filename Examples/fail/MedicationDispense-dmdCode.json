@@ -21,7 +21,7 @@
   "medicationCodeableConcept": {
     "coding": [
       {
-        "system": "https://dmd.nhs.uk/",
+        "system": "https://dmd.nhs.uk",
         "code": "585011000001109",
         "display": "Metronidazole 400mg tablets (Teva UK Ltd)"
       }
