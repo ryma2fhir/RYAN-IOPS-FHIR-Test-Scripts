@@ -43,7 +43,7 @@ function testFolder(dir) {
 
             it('Validate ' + file, async () => {
                 // Initial terminology queries can take a long time to process - cached responses are much more responsive
-                jest.setTimeout(30000)
+                jest.setTimeout(40000)
                 await client()
                     .post('/$validate')
                     .retry(3)
@@ -55,6 +55,7 @@ function testFolder(dir) {
                         resourceChecks(response)
                     },
                         error => {
+                            console.log('In the error trap')
                             throw new Error(error.message)
                         })
             });
