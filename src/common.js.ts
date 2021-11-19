@@ -77,9 +77,11 @@ export function getJson(file, resource) {
     if (fileExtension == 'xml' || fileExtension == 'XML') {
         var fhir = new Fhir();
         var json = fhir.xmlToJson(resource);
-        //console.log(json);
+        if (JSON.parse(json).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
+
         return json;
     } else {
+        if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
         return resource;
     }
 

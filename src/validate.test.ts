@@ -55,8 +55,7 @@ function testFolder(dir) {
                         resourceChecks(response)
                     },
                         error => {
-                            console.log('In the error trap')
-                            throw new Error(error.message)
+                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
                         })
             });
         })
