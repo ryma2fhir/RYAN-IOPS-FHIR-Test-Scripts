@@ -46,6 +46,7 @@ function testFolder(dir) {
                 jest.setTimeout(30000)
                 await client()
                     .post('/$validate')
+                    .retry(3)
                     .set("Content-Type", 'application/fhir+xml')
                     .set("Accept", 'application/fhir+json')
                     .send(getJson(file, resource))
