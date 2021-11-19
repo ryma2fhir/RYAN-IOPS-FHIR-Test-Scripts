@@ -147,6 +147,9 @@ function errorMessageCheck(resource, message) :boolean {
                 case "fatal":
                     errorMessage = getErrorOrWarningFull(issue);
                     if (errorMessage.includes(message)) return true;
+                case "warning":
+                    if (raiseWarning(issue)) throw new Error(getErrorOrWarningFull(issue))
+                    break;
             }
         }
     }
@@ -219,6 +222,12 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
             return true;
         }
         if (issue.diagnostics.includes('Error HTTP 401')) {
+            return true;
+        }
+        if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
+            if (issue.diagnostics.includes('http://snomed.info/sct')) return true;
+        }
+        if (issue.diagnostics.includes('must be of the format')) {
             return true;
         }
     }

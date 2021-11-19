@@ -36,6 +36,7 @@ function testFile(testDescription,file) {
         jest.setTimeout(30000)
         await client()
             .post('/$validate')
+            .retry(2)
             .set("Content-Type", 'application/fhir+xml')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
@@ -57,6 +58,7 @@ function testFileError(testDescription, file,message) {
         jest.setTimeout(30000)
         await client()
             .post('/$validate')
+            .retry(2)
             .set("Content-Type", 'application/fhir+xml')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
@@ -78,6 +80,7 @@ function testFileWarning(testDescription, file,message) {
         jest.setTimeout(30000)
         await client()
             .post('/$validate')
+            .retry(2)
             .set("Content-Type", 'application/fhir+xml')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
@@ -111,7 +114,8 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
 
 
     testFile('Test HL7 FHIR Seaarch QuestionnaireResponse Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDExemption.json')
-    testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
+    // logged as https://simplifier.net/hl7fhirukcorer4/~issues/1839 this should be a pass?
+    testFileWarning('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json','None of the codings provided are in the value set https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
     testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.xml')
     testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
@@ -160,17 +164,16 @@ describe('Tests to be re-evaluated as they should be not be passing', () => {
 describe('Tests against a supplier set of examples', () => {
     // This should fail as the subject reference is not in the Bundle
 
-
     // TODO need to discuss if this is an error, should at least be a warning.
-    testFile('Check validation passes : 12 Items - Message 1','Examples/supplierA/12 Items - Message 1 - 7f0ad496-f165-41e8-8751-1b6c2dea8752.json')
-    testFile('Check validation passes : 12 Items - Message 2','Examples/supplierA/12 Items - Message 2 - 41bfb0d1-498f-4edf-bb50-8d31206ce2ac.json')
-    testFile('Check validation passes : 12 Items - Message 3','Examples/supplierA/12 Items - Message 3 - a0628c74-7c4f-4a2a-a170-c6478a5f799c.json')
-    testFile('Check validation passes : Controlled Drugs','Examples/supplierA/Controlled Drugs - 53e7da06-be64-4d7e-a565-551c63283111.json')
-    testFile('Check validation passes : Endorsements','Examples/supplierA/Endorsements - 699f577c-7e56-4f8c-914a-6a175300c47b.json')
-    testFile('Check validation passes : Four Items','Examples/supplierA/Four Items - 5f98c9b0-647b-4309-a161-dea5f2030b7b.json')
-    testFile('Check validation passes : Long Description','Examples/supplierA/Long Description - 72d5b7d4-e992-4f34-a70d-c6e0299d7f81.json')
-    testFile('Check validation passes : Long Instructions','Examples/supplierA/Long Instructions - 28ac250f-ad32-406b-9bb4-0957f74ad54b.json')
-    testFile('Check validation passes : Single Item','Examples/supplierA/Single Item - 9a413654-2d44-4d8f-8357-132ab2de6c8f.json')
+    testFileWarning('Check validation passes : 12 Items - Message 1','Examples/supplierA/12 Items - Message 1 - 7f0ad496-f165-41e8-8751-1b6c2dea8752.json','GMC must be of the format')
+    testFileWarning('Check validation passes : 12 Items - Message 2','Examples/supplierA/12 Items - Message 2 - 41bfb0d1-498f-4edf-bb50-8d31206ce2ac.json','GMC must be of the format')
+    testFileWarning('Check validation passes : 12 Items - Message 3','Examples/supplierA/12 Items - Message 3 - a0628c74-7c4f-4a2a-a170-c6478a5f799c.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Controlled Drugs','Examples/supplierA/Controlled Drugs - 53e7da06-be64-4d7e-a565-551c63283111.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Endorsements','Examples/supplierA/Endorsements - 699f577c-7e56-4f8c-914a-6a175300c47b.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Four Items','Examples/supplierA/Four Items - 5f98c9b0-647b-4309-a161-dea5f2030b7b.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Long Description','Examples/supplierA/Long Description - 72d5b7d4-e992-4f34-a70d-c6e0299d7f81.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Long Instructions','Examples/supplierA/Long Instructions - 28ac250f-ad32-406b-9bb4-0957f74ad54b.json','GMC must be of the format')
+    testFileWarning('Check validation passes : Single Item','Examples/supplierA/Single Item - 9a413654-2d44-4d8f-8357-132ab2de6c8f.json','GMC must be of the format')
 });
 
 describe('Test dm+d valuesets Paracetamol', () => {
@@ -196,7 +199,7 @@ describe('Test dosage instructions', () => {
 
 describe('Test prescription orders', ()=> {
     testFile('Check validation passes  : GP prescription-order','Examples/prescriptions/Bundle-prescription-gp.json')
-    testFile('Check validation passes  : Acute prescription-order no healthcare service','Examples/prescriptions/Bundle-prescription-acute-noHealthcareService.json')
+    testFileWarning('Check validation passes  : Acute prescription-order no healthcare service','Examples/prescriptions/Bundle-prescription-acute-noHealthcareService.json','GMC must be of the format')
 });
 
 describe('Terminology Tests', () => {
