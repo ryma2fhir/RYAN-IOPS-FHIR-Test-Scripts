@@ -225,7 +225,13 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
             return true;
         }
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
-            if (issue.diagnostics.includes('http://snomed.info/sct')) return true;
+            if (issue.diagnostics.includes('http://snomed.info/sct')) {
+                // This has raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1839
+                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')) return false
+                // This has been raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1840
+                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ReasonImmunizationNotAdministered')) return false
+                return true;
+            }
         }
         if (issue.diagnostics.includes('must be of the format')) {
             return true;
@@ -241,6 +247,10 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         // fault with current 5.5.1 validation
         if ( issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
         if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
+        if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
+            console.log(issue.diagnostics)
+            return false
+        }
     }
     return true;
 }
