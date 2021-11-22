@@ -19,8 +19,7 @@ const client = () => {
 
 let terminology = true;
 
-// Need to check the capabilities of the validation service and decide if to run terminology tests
-if (process.env.ONTO_CLIENT_ID == undefined) terminology = false;
+
 
 
 
@@ -206,4 +205,14 @@ describe('Terminology Tests', () => {
     if (terminology) {
         testFileError('Check validation fails when non dm+d SNOMED drug code is supplied', 'Examples/fail/MedicationRequest-not-dmd-drug.json', 'is not in the value set')
     }
+});
+
+
+describe('CourseOfTherapy Tests', () => {
+
+        testFile('Check repeat dispensing original-order passes', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-original-order.json')
+        testFile('Check repeat dispensing reflex-order passes', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order.json')
+        testFileError('Check repeat dispensing reflex-order with no basedOn fails with eps-10', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order-noBasedOn.json', 'eps-10')
+        testFileWarning('Check repeat dispensing with intent = order gives warning eps-7', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-original-order-wrong-intent.json', 'eps-7')
+        testFileError('Check repeat dispensing reflex-order with six authorised issues eps-11', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order-numberOfRepeatsAllowed-six.json','eps-11')
 });
