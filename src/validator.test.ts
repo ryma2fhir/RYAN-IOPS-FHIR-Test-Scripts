@@ -210,9 +210,22 @@ describe('Terminology Tests', () => {
 
 describe('CourseOfTherapy Tests', () => {
 
+    // Repeat dispensing
         testFile('Check repeat dispensing original-order passes', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-original-order.json')
+        testFileError('Check repeat dispensing original-order with issues fails', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-original-order-withIssues.json','eps-13')
+        testFileError('Check repeat dispensing reflex-order without issues fails', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order-withoutIssues.json','eps-14')
         testFile('Check repeat dispensing reflex-order passes', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order.json')
         testFileError('Check repeat dispensing reflex-order with no basedOn fails with eps-10', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order-noBasedOn.json', 'eps-10')
         testFileWarning('Check repeat dispensing with intent = order gives warning eps-7', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-original-order-wrong-intent.json', 'eps-7')
         testFileError('Check repeat dispensing reflex-order with six authorised issues eps-11', 'Examples/courseOfTherapyTests/MedicationRequest-repeatDispensing-reflex-order-numberOfRepeatsAllowed-six.json','eps-11')
+
+    // Repeats
+        testFile('Check repeat passes','Examples/courseOfTherapyTests/MedicationRequest-repeat.json')
+        testFileWarning('Check repeat with no basedOn gives warning eps-12', 'Examples/courseOfTherapyTests/MedicationRequest-repeat-noBasedOn.json', 'eps-12')
+        testFileWarning('Check repeat with no issue number gives warning eps-15', 'Examples/courseOfTherapyTests/MedicationRequest-repeat-noIssueNumber.json', 'eps-15')
+
+    // Acute
+        testFileError('Check acute passes with number of repeats allowed fails','Examples/courseOfTherapyTests/MedicationRequest-acute-withNumberOfRepeatsAllowed.json','eps-6')
+        testFileError('Check acute passes with repeat extension fails','Examples/courseOfTherapyTests/MedicationRequest-acute-withRepeatExtension.json','eps-16')
+
 });

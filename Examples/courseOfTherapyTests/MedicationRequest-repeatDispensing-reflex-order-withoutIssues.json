@@ -20,10 +20,6 @@
             "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-MedicationRepeatInformation",
             "extension": [
                 {
-                    "url": "numberOfPrescriptionsIssued",
-                    "valueUnsignedInt": 1
-                },
-                {
                     "url": "authorisationExpiryDate",
                     "valueDateTime": "2020-12-07"
                 }
@@ -127,7 +123,7 @@
             "start": "2020-06-10T00:00:00+00:00",
             "end": "2020-07-09T00:00:00+00:00"
         },
-        "numberOfRepeatsAllowed": 6,
+        "numberOfRepeatsAllowed": 0,
         "quantity": {
             "value": 28,
             "unit": "sachet",

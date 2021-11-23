@@ -19,10 +19,10 @@
         {
             "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-MedicationRepeatInformation",
             "extension": [
-                {
-                    "url": "numberOfPrescriptionsIssued",
-                    "valueUnsignedInt": 1
-                },
+             {
+                                "url": "numberOfPrescriptionsIssued",
+                                "valueUnsignedInt": 1
+                            },
                 {
                     "url": "authorisationExpiryDate",
                     "valueDateTime": "2020-12-07"
@@ -33,11 +33,11 @@
     "identifier": [
         {
             "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-            "value": "A7B86F8D-1D59-FC28-E050-D20AE3A215F0#1"
+            "value": "A7B86F8D-1D59-FC28-E050-D20AE3A215F0"
         }
     ],
     "status": "active",
-    "intent": "reflex-order",
+    "intent": "original-order",
     "category": [
         {
             "coding": [
@@ -67,25 +67,6 @@
         "reference": "urn:uuid:1557E58E-3B1E-41DD-B3B5-D4D393DC5A3D",
         "display": "Dr Smith"
     },
-    "basedOn": [
-        {
-            "extension": [
-                {
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-EPS-RepeatInformation",
-                    "extension": [
-                        {
-                            "url": "numberOfRepeatsAllowed",
-                            "valueUnsignedInt": 6
-                        }
-                    ]
-                }
-            ],
-            "identifier": {
-                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-                "value": "A7B86F8D-1D59-FC28-E050-D20AE3A215F0"
-            }
-        }
-    ],
     "groupIdentifier": {
         "extension": [
             {
