@@ -252,9 +252,15 @@ describe('CourseOfTherapy Tests', () => {
 
 });
 
-/*
+
 describe('Digital Medicines', () => {
+
+    // Examples from https://simplifier.net/guide/ukcoreimplementationguideformedicines/DosageExamples-Fullycoded2
+
+    testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-AspirinDispersibleTablets.json')
+    testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-AspirinSuppository.json')
+    testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-BeclometasoneCream.json')
+    testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-Co-trimoxazoleTablets.json')
     testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-Levothyroxine.json')
 });
 
- */

@@ -6,598 +6,764 @@
         "value": "bd049fa3-6a00-40c0-8930-2867df2610e5"
     },
     "type": "message",
-    "entry": [{
-        "fullUrl": "urn:uuid:c99cd6f0-0f71-4f09-8f96-d6df479c0992",
-        "resource": {
-            "resourceType": "MessageHeader",
-            "id": "41bfb0d1-498f-4edf-bb50-8d31206ce2ac",
-            "eventCoding": {
-                "system": "https://fhir.nhs.uk/CodeSystem/message-event",
-                "code": "prescription-order",
-                "display": "Prescription Order"
-            },
-            "destination": [{
-                "endpoint": "urn:nhs-uk:addressing:ods:FCW64",
-                "receiver": {
-                    "identifier": {
-                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                        "value": "FCW64"
-                    }
-                }
-            }],
-            "sender": {
-                "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
-                "identifier": {
-                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                    "value": "694X0"
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:c99cd6f0-0f71-4f09-8f96-d6df479c0992",
+            "resource": {
+                "resourceType": "MessageHeader",
+                "id": "41bfb0d1-498f-4edf-bb50-8d31206ce2ac",
+                "eventCoding": {
+                    "system": "https://fhir.nhs.uk/CodeSystem/message-event",
+                    "code": "prescription-order",
+                    "display": "Prescription Order"
                 },
-                "display": "Clark|Jackie"
-            },
-            "source": {
-                "endpoint": "urn:nhs-uk:addressing:ods:694X0"
-            },
-            "focus": [{
-                "reference": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e",
-                "type": "Patient"
-            }]
-        }
-    }, {
-        "fullUrl": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e",
-        "resource": {
-            "resourceType": "Patient",
-            "id": "87811023-e736-401b-aaf0-a3e010ee1c5e",
-            "identifier": [{
-                "extension": [{
-                    "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus",
-                    "valueCodeableConcept": {
-                        "coding": [{
-                            "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus",
-                            "code": "01",
-                            "display": "Number present and verified"
-                        }]
+                "destination": [
+                    {
+                        "endpoint": "urn:nhs-uk:addressing:ods:FCW64",
+                        "receiver": {
+                            "identifier": {
+                                "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                                "value": "FCW64"
+                            }
+                        }
                     }
-                }],
-                "system": "https://fhir.nhs.uk/Id/nhs-number",
-                "value": "9657847419"
-            }],
-            "name": [{
-                "use": "usual",
-                "family": "HOMAN",
-                "given": ["Amos Lloyd"]
-            }],
-            "telecom": [{
-                "system": "phone",
-                "value": "07000123123"
-            }],
-            "gender": "male",
-            "birthDate": "1985-03-12",
-            "address": [{
-                "use": "home",
-                "line": ["1 Dalmatian Way", "Broughton", "BRIGG"],
-                "postalCode": "DN20 0ET"
-            }],
-            "generalPractitioner": [{
-                "identifier": {
-                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                    "value": "A20047"
-                }
-            }]
-        }
-    }, {
-        "fullUrl": "urn:uuid:770b4d4e-9576-4f21-861a-4e490555d9c8",
-        "resource": {
-            "resourceType": "Practitioner",
-            "id": "770b4d4e-9576-4f21-861a-4e490555d9c8",
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/sds-user-id",
-                "value": "555252291108"
-            }, {
-                "system": "https://fhir.hl7.org.uk/Id/gmc-number",
-                "value": "1231234"
-            }],
-            "name": [{
-                "use": "usual",
-                "family": "Clark",
-                "given": ["Jackie"]
-            }],
-            "gender": "unknown"
-        }
-    }, {
-        "fullUrl": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
-        "resource": {
-            "resourceType": "PractitionerRole",
-            "id": "45f563c4-bc5d-4c68-8979-8ba1d96fb505",
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/sds-role-profile-id",
-                "value": "555086415105"
-            }],
-            "practitioner": {
-                "reference": "urn:uuid:770b4d4e-9576-4f21-861a-4e490555d9c8"
-            },
-            "organization": {
-                "reference": "urn:uuid:fbc6c5e5-4721-4373-b4c7-c183129f7e2b"
-            },
-            "code": [{
-                "coding": [{
-                    "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-SDSJobRoleName",
-                    "code": "R8000",
-                    "display": "Clinical Practitioner Access Role"
-                }]
-            }],
-            "healthcareService": [{
-                "reference": "urn:uuid:37247d4a-cb87-442c-a90d-a09921962c50",
-                "display": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY"
-            }],
-            "telecom": [{
-                "system": "phone",
-                "value": "02380798431",
-                "use": "work"
-            }]
-        }
-    }, {
-        "fullUrl": "urn:uuid:fbc6c5e5-4721-4373-b4c7-c183129f7e2b",
-        "resource": {
-            "resourceType": "Organization",
-            "id": "fbc6c5e5-4721-4373-b4c7-c183129f7e2b",
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                "value": "694X0"
-            }],
-            "type": [{
-                "coding": [{
-                    "system": "https://fhir.nhs.uk/CodeSystem/organisation-role",
-                    "code": "173",
-                    "display": "PATHOLOGY LAB"
-                }]
-            }],
-            "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
-            "telecom": [{
-                "system": "phone",
-                "value": "02380798431",
-                "use": "work"
-            }],
-            "address": [{
-                "line": ["SOUTHAMPTON GENERAL HOSPITAL", "TREMONA ROAD", "SOUTHAMPTON", "HAMPSHIRE"],
-                "postalCode": "SO16 6YD"
-            }]
-        }
-    }, {
-        "fullUrl": "urn:uuid:37247d4a-cb87-442c-a90d-a09921962c50",
-        "resource": {
-            "resourceType": "HealthcareService",
-            "id": "37247d4a-cb87-442c-a90d-a09921962c50",
-            "identifier": [{
-                "use": "usual",
-                "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                "value": "694X0"
-            }],
-            "active": true,
-            "providedBy": {
-                "identifier": {
-                    "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                    "value": "694X0"
-                }
-            },
-            "location": [{
-                "reference": "urn:uuid:2eec365b-8179-4896-94a4-9bed2e45c7c6"
-            }],
-            "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
-            "telecom": [{
-                "system": "phone",
-                "value": "02380798431",
-                "use": "work"
-            }]
-        }
-    }, {
-        "fullUrl": "urn:uuid:2eec365b-8179-4896-94a4-9bed2e45c7c6",
-        "resource": {
-            "resourceType": "Location",
-            "id": "2eec365b-8179-4896-94a4-9bed2e45c7c6",
-            "status": "active",
-            "mode": "instance",
-            "address": {
-                "line": ["SOUTHAMPTON GENERAL HOSPITAL", "TREMONA ROAD", "SOUTHAMPTON"],
-                "postalCode": "SO16 6YD"
-            }
-        }
-    }, {
-        "fullUrl": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
-        "resource": {
-            "resourceType": "MedicationRequest",
-            "id": "fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
-            "extension": [{
-                "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
-                "valueCoding": {
-                    "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
-                    "code": "1001",
-                    "display": "Outpatient Community Prescriber - Medical Prescriber"
-                }
-            }],
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-                "value": "fefc0da4-65e2-48e3-895c-d0f60dd1e5ed"
-            }],
-            "status": "active",
-            "intent": "order",
-            "category": [{
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
-                    "code": "outpatient",
-                    "display": "Outpatient"
-                }]
-            }],
-            "medicationCodeableConcept": {
-                "coding": [{
-                    "system": "http://snomed.info/sct",
-                    "code": "324178009",
-                    "display": "Erythromycin 250mg gastro-resistant tablets"
-                }]
-            },
-            "subject": {
-                "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
-            },
-            "authoredOn": "2021-06-25T14:40:15+01:00",
-            "requester": {
-                "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
-            },
-            "groupIdentifier": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
-                    "valueIdentifier": {
-                        "system": "https://fhir.nhs.uk/Id/prescription",
-                        "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
-                    }
-                }],
-                "system": "https://fhir.nhs.uk/Id/prescription-order-number",
-                "value": "918E6B-0694X0-02505A"
-            },
-            "courseOfTherapyType": {
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
-                    "code": "acute",
-                    "display": "Short course (acute) therapy"
-                }]
-            },
-            "dosageInstruction": [{
-                "text": "test"
-            }],
-            "dispenseRequest": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
-                    "valueCoding": {
-                        "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
-                        "code": "P1",
-                        "display": "Other (e.g. Community Pharmacy)"
-                    }
-                }],
-                "quantity": {
-                    "value": 28,
-                    "unit": "tablet",
-                    "system": "http://snomed.info/sct",
-                    "code": "428673006"
-                },
-                "performer": {
-                    "identifier": {
-                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                        "value": "FCW64"
-                    }
-                }
-            },
-            "substitution": {
-                "allowedBoolean": false
-            }
-        }
-    }, {
-        "fullUrl": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
-        "resource": {
-            "resourceType": "MedicationRequest",
-            "id": "5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
-            "extension": [{
-                "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
-                "valueCoding": {
-                    "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
-                    "code": "1001",
-                    "display": "Outpatient Community Prescriber - Medical Prescriber"
-                }
-            }],
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-                "value": "5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d"
-            }],
-            "status": "active",
-            "intent": "order",
-            "category": [{
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
-                    "code": "outpatient",
-                    "display": "Outpatient"
-                }]
-            }],
-            "medicationCodeableConcept": {
-                "coding": [{
-                    "system": "http://snomed.info/sct",
-                    "code": "39732311000001104",
-                    "display": "Amoxicillin 250mg capsules"
-                }]
-            },
-            "subject": {
-                "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
-            },
-            "authoredOn": "2021-06-25T14:40:15+01:00",
-            "requester": {
-                "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
-            },
-            "groupIdentifier": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
-                    "valueIdentifier": {
-                        "system": "https://fhir.nhs.uk/Id/prescription",
-                        "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
-                    }
-                }],
-                "system": "https://fhir.nhs.uk/Id/prescription-order-number",
-                "value": "918E6B-0694X0-02505A"
-            },
-            "courseOfTherapyType": {
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
-                    "code": "acute",
-                    "display": "Short course (acute) therapy"
-                }]
-            },
-            "dosageInstruction": [{
-                "text": "Take ONE Four Times Daily"
-            }],
-            "dispenseRequest": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
-                    "valueCoding": {
-                        "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
-                        "code": "P1",
-                        "display": "Other (e.g. Community Pharmacy)"
-                    }
-                }],
-                "quantity": {
-                    "value": 14,
-                    "unit": "capsule",
-                    "system": "http://snomed.info/sct",
-                    "code": "428641000"
-                },
-                "performer": {
-                    "identifier": {
-                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                        "value": "FCW64"
-                    }
-                }
-            },
-            "substitution": {
-                "allowedBoolean": false
-            }
-        }
-    }, {
-        "fullUrl": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
-        "resource": {
-            "resourceType": "MedicationRequest",
-            "id": "19f850ad-a6ab-4307-8123-22a78b0eb8b3",
-            "extension": [{
-                "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
-                "valueCoding": {
-                    "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
-                    "code": "1001",
-                    "display": "Outpatient Community Prescriber - Medical Prescriber"
-                }
-            }],
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-                "value": "19f850ad-a6ab-4307-8123-22a78b0eb8b3"
-            }],
-            "status": "active",
-            "intent": "order",
-            "category": [{
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
-                    "code": "outpatient",
-                    "display": "Outpatient"
-                }]
-            }],
-            "medicationCodeableConcept": {
-                "coding": [{
-                    "system": "http://snomed.info/sct",
-                    "code": "4865011000001104",
-                    "display": "Cefalexin 125mg/5ml oral suspension sugar free"
-                }]
-            },
-            "subject": {
-                "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
-            },
-            "authoredOn": "2021-06-25T14:40:15+01:00",
-            "requester": {
-                "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
-            },
-            "groupIdentifier": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
-                    "valueIdentifier": {
-                        "system": "https://fhir.nhs.uk/Id/prescription",
-                        "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
-                    }
-                }],
-                "system": "https://fhir.nhs.uk/Id/prescription-order-number",
-                "value": "918E6B-0694X0-02505A"
-            },
-            "courseOfTherapyType": {
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
-                    "code": "acute",
-                    "display": "Short course (acute) therapy"
-                }]
-            },
-            "dosageInstruction": [{
-                "text": "Take ONE To be taken three Times Daily"
-            }],
-            "dispenseRequest": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
-                    "valueCoding": {
-                        "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
-                        "code": "P1",
-                        "display": "Other (e.g. Community Pharmacy)"
-                    }
-                }],
-                "quantity": {
-                    "value": 200,
-                    "unit": "ml",
-                    "system": "http://snomed.info/sct",
-                    "code": "258773002"
-                },
-                "performer": {
-                    "identifier": {
-                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                        "value": "FCW64"
-                    }
-                }
-            },
-            "substitution": {
-                "allowedBoolean": false
-            }
-        }
-    }, {
-        "fullUrl": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
-        "resource": {
-            "resourceType": "MedicationRequest",
-            "id": "d165c581-1be2-46b7-adc9-5c8f17a03850",
-            "extension": [{
-                "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
-                "valueCoding": {
-                    "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
-                    "code": "1001",
-                    "display": "Outpatient Community Prescriber - Medical Prescriber"
-                }
-            }],
-            "identifier": [{
-                "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
-                "value": "d165c581-1be2-46b7-adc9-5c8f17a03850"
-            }],
-            "status": "active",
-            "intent": "order",
-            "category": [{
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
-                    "code": "outpatient",
-                    "display": "Outpatient"
-                }]
-            }],
-            "medicationCodeableConcept": {
-                "coding": [{
-                    "system": "http://snomed.info/sct",
-                    "code": "5133811000001102",
-                    "display": "Water for injections 50ml vials"
-                }]
-            },
-            "subject": {
-                "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
-            },
-            "authoredOn": "2021-06-25T14:40:15+01:00",
-            "requester": {
-                "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
-            },
-            "groupIdentifier": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
-                    "valueIdentifier": {
-                        "system": "https://fhir.nhs.uk/Id/prescription",
-                        "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
-                    }
-                }],
-                "system": "https://fhir.nhs.uk/Id/prescription-order-number",
-                "value": "918E6B-0694X0-02505A"
-            },
-            "courseOfTherapyType": {
-                "coding": [{
-                    "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
-                    "code": "acute",
-                    "display": "Short course (acute) therapy"
-                }]
-            },
-            "dosageInstruction": [{
-                "text": "as and when"
-            }],
-            "dispenseRequest": {
-                "extension": [{
-                    "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
-                    "valueCoding": {
-                        "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
-                        "code": "P1",
-                        "display": "Other (e.g. Community Pharmacy)"
-                    }
-                }],
-                "quantity": {
-                    "value": 10,
-                    "unit": "vial",
-                    "system": "http://snomed.info/sct",
-                    "code": "415818006"
-                },
-                "performer": {
-                    "identifier": {
-                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-                        "value": "FCW64"
-                    }
-                }
-            },
-            "substitution": {
-                "allowedBoolean": false
-            }
-        }
-    }, {
-        "fullUrl": "urn:uuid:09b0d4d4-7248-40dd-9306-79de4817c1aa",
-        "resource": {
-            "resourceType": "Provenance",
-            "id": "09b0d4d4-7248-40dd-9306-79de4817c1aa",
-            "target": [{
-                "reference": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
-                "type": "MedicationRequest"
-            }, {
-                "reference": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
-                "type": "MedicationRequest"
-            }],
-            "recorded": "2021-06-25T14:40:18.1937101+01:00",
-            "agent": [{
-                "who": {
+                ],
+                "sender": {
                     "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
-                    "type": "PractitionerRole"
-                }
-            }],
-            "signature": [{
-                "type": [{
-                    "system": "urn:iso-astm:E1762-95:2013",
-                    "code": "1.2.840.10065.1.12.1.1",
-                    "display": "Author's Signature"
-                }],
-                "when": "2021-06-25T14:40:18.1937101+01:00",
-                "who": {
-                    "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
-                    "type": "PractitionerRole"
+                    "identifier": {
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "694X0"
+                    },
+                    "display": "Clark|Jackie"
                 },
-                "data": "PFNpZ25hdHVyZSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+PFNpZ25lZEluZm8geG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L0Nhbm9uaWNhbGl6YXRpb25NZXRob2Q+PFNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSI+PC9TaWduYXR1cmVNZXRob2Q+PFJlZmVyZW5jZT48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L1RyYW5zZm9ybT48L1RyYW5zZm9ybXM+PERpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIj48L0RpZ2VzdE1ldGhvZD48RGlnZXN0VmFsdWU+MHJQWU9OY3Q1U01SVE5hRS9aLzEwSWtnMWJzPTwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT5wb3JGSW56WVlXWnpCWDliU0JwUG9KRU9HNE9hbXkwRHdyc1lHVG5rbm03Zk9Sd3h0T21zZnFOU2VVV1VWOW56b2h1L3JranZERmE3VTM1ZHlreGsvUXg0Y2NyZEluNmJDZ3hXZzJuVExWMXJKVGduMXI5b2xZZWUvUWxmclZWL0xTRnIvdklIck82OHFsVk1JNjJXdWlJZktmaWRZSFFQT3U0Y3VzR00wazA9PC9TaWduYXR1cmVWYWx1ZT48S2V5SW5mbz48WDUwOURhdGE+PFg1MDlDZXJ0aWZpY2F0ZT5NSUlEdURDQ0FxQ2dBd0lCQWdJRVhjbW83ekFOQmdrcWhraUc5dzBCQVFzRkFEQTJNUXd3Q2dZRFZRUUtFd051YUhNeEN6QUpCZ05WQkFzVEFrTkJNUmt3RndZRFZRUURFeEJPU0ZNZ1NVNVVJRXhsZG1Wc0lERkVNQjRYRFRJd01Ea3lNekUxTkRrME9Gb1hEVEl5TURreU16RTJNVGswT0Zvd1F6RU1NQW9HQTFVRUNoTURibWh6TVE4d0RRWURWUVFMRXdaUVpXOXdiR1V4SWpBZ0JnTlZCQU1NR1RVMU5UQTROalF4TlRFd05WOVVaWE4wWDFSbGMzUmtiMmN3Z1o4d0RRWUpLb1pJaHZjTkFRRUJCUUFEZ1kwQU1JR0pBb0dCQVBDeW1MYjBJdm5nS21ZOTlwcmx2VU8xTmxnK1l5NHpEanpUaHVxZDJrdGsyOE1lWWRWbUFMV0xJWTY5cE50VDhEV0NrSmJtVytyR1JFYzFueG9halcrb0NqV2dlMUtjdytVVU15MnNZNXBMMmJoMGpmNGhtK3d5OVZvbGdNeWRsWmN6cklxWmJpYjhCbTBZbkZtbGtqSDltZnU1ZWRzQzhPVmYzdHIyUktYSEFnTUJBQUdqZ2dGRE1JSUJQekFPQmdOVkhROEJBZjhFQkFNQ0JrQXdaUVlEVlIwZ0FRSC9CRnN3V1RCWEJnc3Foam9BaVh0bUFBTUNBREJJTUVZR0NDc0dBUVVGQndJQkZqcG9kSFJ3Y3pvdkwzQnJhUzV1YUhNdWRXc3ZZMlZ5ZEdsbWFXTmhkR1ZmY0c5c2FXTnBaWE12WTI5dWRHVnVkRjlqYjIxdGFYUnRaVzUwTURNR0ExVWRId1FzTUNvd0tLQW1vQ1NHSW1oMGRIQTZMeTlqY213dWJtaHpMblZyTDJsdWRDOHhaQzlqY214ak15NWpjbXd3S3dZRFZSMFFCQ1F3SW9BUE1qQXlNREE1TWpNeE5UUTVORGhhZ1E4eU1ESXlNREl4TmpFMk1UazBPRm93SHdZRFZSMGpCQmd3Rm9BVW9KWWZnWVROUGQ2RVVLTDZRTEl6SHhZNVBGSXdIUVlEVlIwT0JCWUVGRi9YS2h0NWVpN3FyeHcxM1dmR2xDQStaNS9NTUFrR0ExVWRFd1FDTUFBd0dRWUpLb1pJaHZaOUIwRUFCQXd3Q2hzRVZqZ3VNd01DQkxBd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFFZmFidkVRcmt0MEJTUnkzYnA1NkRJMUJyWEN5eVFWdjhORkdsZ2VDQTNOV0V5dE9uQkpqaDNJT0c1YlpsclVBK1lnK2xJMWxFUFlWaGJxd0R2bmlDdUYyOWw1TE0zai82Y1c0YWRIRUFPMTVnZWNHUVRzbm9DUlRZMnYrTzBDcVZ5MGtaWkV0dFRFbGtPekZ3clNvQzRITDdkOG96cG9UR0NpVDBHK3lKT25mWm9yc1ZWd1JFNW9rNUhwMlYyQWEwQ2EvUUVkNzc4UFMxOXFqdHBEUWJjODdVYkVPSXY2alZscUM3VHhIVGViNjB2akhIcU14VFU5bCtjdGF0TnU4N1ovMTA3eG1NRmFVYTRVMXA0R0xZYm9QbElOSUkzVVlwdGNDdXRXeHROcTVGZ1RNTkI1eEJQUE9SU2tjSWxrNDBsc0U1R3EzczlVZ2xLZzNBQ3V1Wnc9PC9YNTA5Q2VydGlmaWNhdGU+PC9YNTA5RGF0YT48L0tleUluZm8+PC9TaWduYXR1cmU+"
-            }]
+                "source": {
+                    "endpoint": "urn:nhs-uk:addressing:ods:694X0"
+                },
+                "focus": [
+                    {
+                        "reference": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e",
+                        "type": "Patient"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e",
+            "resource": {
+                "resourceType": "Patient",
+                "id": "87811023-e736-401b-aaf0-a3e010ee1c5e",
+                "identifier": [
+                    {
+                        "extension": [
+                            {
+                                "url": "https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-NHSNumberVerificationStatus",
+                                "valueCodeableConcept": {
+                                    "coding": [
+                                        {
+                                            "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-NHSNumberVerificationStatus",
+                                            "code": "01",
+                                            "display": "Number present and verified"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "system": "https://fhir.nhs.uk/Id/nhs-number",
+                        "value": "9657847419"
+                    }
+                ],
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "HOMAN",
+                        "given": [
+                            "Amos Lloyd"
+                        ]
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "07000123123"
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1985-03-12",
+                "address": [
+                    {
+                        "use": "home",
+                        "line": [
+                            "1 Dalmatian Way",
+                            "Broughton",
+                            "BRIGG"
+                        ],
+                        "postalCode": "DN20 0ET"
+                    }
+                ],
+                "generalPractitioner": [
+                    {
+                        "identifier": {
+                            "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                            "value": "A20047"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:770b4d4e-9576-4f21-861a-4e490555d9c8",
+            "resource": {
+                "resourceType": "Practitioner",
+                "id": "770b4d4e-9576-4f21-861a-4e490555d9c8",
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/sds-user-id",
+                        "value": "555252291108"
+                    },
+                    {
+                        "system": "https://fhir.hl7.org.uk/Id/gmc-number",
+                        "value": "1231234"
+                    }
+                ],
+                "name": [
+                    {
+                        "use": "usual",
+                        "family": "Clark",
+                        "given": [
+                            "Jackie"
+                        ]
+                    }
+                ],
+                "gender": "unknown"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
+            "resource": {
+                "resourceType": "PractitionerRole",
+                "id": "45f563c4-bc5d-4c68-8979-8ba1d96fb505",
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/sds-role-profile-id",
+                        "value": "555086415105"
+                    }
+                ],
+                "practitioner": {
+                    "reference": "urn:uuid:770b4d4e-9576-4f21-861a-4e490555d9c8"
+                },
+                "organization": {
+                    "reference": "urn:uuid:fbc6c5e5-4721-4373-b4c7-c183129f7e2b"
+                },
+                "code": [
+                    {
+                        "coding": [
+                            {
+                                "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-SDSJobRoleName",
+                                "code": "R8000",
+                                "display": "Clinical Practitioner Access Role"
+                            }
+                        ]
+                    }
+                ],
+                "healthcareService": [
+                    {
+                        "reference": "urn:uuid:37247d4a-cb87-442c-a90d-a09921962c50",
+                        "display": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY"
+                    }
+                ],
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "02380798431",
+                        "use": "work"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:fbc6c5e5-4721-4373-b4c7-c183129f7e2b",
+            "resource": {
+                "resourceType": "Organization",
+                "id": "fbc6c5e5-4721-4373-b4c7-c183129f7e2b",
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "694X0"
+                    }
+                ],
+                "type": [
+                    {
+                        "coding": [
+                            {
+                                "system": "https://fhir.nhs.uk/CodeSystem/organisation-role",
+                                "code": "173",
+                                "display": "PATHOLOGY LAB"
+                            }
+                        ]
+                    }
+                ],
+                "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "02380798431",
+                        "use": "work"
+                    }
+                ],
+                "address": [
+                    {
+                        "line": [
+                            "SOUTHAMPTON GENERAL HOSPITAL",
+                            "TREMONA ROAD",
+                            "SOUTHAMPTON",
+                            "HAMPSHIRE"
+                        ],
+                        "postalCode": "SO16 6YD"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:37247d4a-cb87-442c-a90d-a09921962c50",
+            "resource": {
+                "resourceType": "HealthcareService",
+                "id": "37247d4a-cb87-442c-a90d-a09921962c50",
+                "identifier": [
+                    {
+                        "use": "usual",
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "694X0"
+                    }
+                ],
+                "active": true,
+                "providedBy": {
+                    "identifier": {
+                        "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                        "value": "694X0"
+                    }
+                },
+                "location": [
+                    {
+                        "reference": "urn:uuid:2eec365b-8179-4896-94a4-9bed2e45c7c6"
+                    }
+                ],
+                "name": "SOUTHAMPTON GENERAL HOSPITAL LABORATORY",
+                "telecom": [
+                    {
+                        "system": "phone",
+                        "value": "02380798431",
+                        "use": "work"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:2eec365b-8179-4896-94a4-9bed2e45c7c6",
+            "resource": {
+                "resourceType": "Location",
+                "id": "2eec365b-8179-4896-94a4-9bed2e45c7c6",
+                "status": "active",
+                "mode": "instance",
+                "address": {
+                    "line": [
+                        "SOUTHAMPTON GENERAL HOSPITAL",
+                        "TREMONA ROAD",
+                        "SOUTHAMPTON"
+                    ],
+                    "postalCode": "SO16 6YD"
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
+            "resource": {
+                "resourceType": "MedicationRequest",
+                "id": "fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
+                "extension": [
+                    {
+                        "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
+                        "valueCoding": {
+                            "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
+                            "code": "1001",
+                            "display": "Outpatient Community Prescriber - Medical Prescriber"
+                        }
+                    }
+                ],
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
+                        "value": "fefc0da4-65e2-48e3-895c-d0f60dd1e5ed"
+                    }
+                ],
+                "status": "active",
+                "intent": "order",
+                "category": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+                                "code": "outpatient",
+                                "display": "Outpatient"
+                            }
+                        ]
+                    }
+                ],
+                "medicationCodeableConcept": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "324178009",
+                            "display": "Erythromycin 250mg gastro-resistant tablets"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
+                },
+                "authoredOn": "2021-06-25T14:40:15+01:00",
+                "requester": {
+                    "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
+                },
+                "groupIdentifier": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
+                            "valueIdentifier": {
+                                "system": "https://fhir.nhs.uk/Id/prescription",
+                                "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
+                            }
+                        }
+                    ],
+                    "system": "https://fhir.nhs.uk/Id/prescription-order-number",
+                    "value": "918E6B-0694X0-02505A"
+                },
+                "courseOfTherapyType": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+                            "code": "acute",
+                            "display": "Short course (acute) therapy"
+                        }
+                    ]
+                },
+                "dosageInstruction": [
+                    {
+                        "text": "test"
+                    }
+                ],
+                "dispenseRequest": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
+                            "valueCoding": {
+                                "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
+                                "code": "P1",
+                                "display": "Other (e.g. Community Pharmacy)"
+                            }
+                        }
+                    ],
+                    "quantity": {
+                        "value": 28,
+                        "unit": "tablet",
+                        "system": "http://snomed.info/sct",
+                        "code": "428673006"
+                    },
+                    "performer": {
+                        "identifier": {
+                            "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                            "value": "FCW64"
+                        }
+                    }
+                },
+                "substitution": {
+                    "allowedBoolean": false
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
+            "resource": {
+                "resourceType": "MedicationRequest",
+                "id": "5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
+                "extension": [
+                    {
+                        "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
+                        "valueCoding": {
+                            "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
+                            "code": "1001",
+                            "display": "Outpatient Community Prescriber - Medical Prescriber"
+                        }
+                    }
+                ],
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
+                        "value": "5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d"
+                    }
+                ],
+                "status": "active",
+                "intent": "order",
+                "category": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+                                "code": "outpatient",
+                                "display": "Outpatient"
+                            }
+                        ]
+                    }
+                ],
+                "medicationCodeableConcept": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "39732311000001104",
+                            "display": "Amoxicillin 250mg capsules"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
+                },
+                "authoredOn": "2021-06-25T14:40:15+01:00",
+                "requester": {
+                    "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
+                },
+                "groupIdentifier": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
+                            "valueIdentifier": {
+                                "system": "https://fhir.nhs.uk/Id/prescription",
+                                "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
+                            }
+                        }
+                    ],
+                    "system": "https://fhir.nhs.uk/Id/prescription-order-number",
+                    "value": "918E6B-0694X0-02505A"
+                },
+                "courseOfTherapyType": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+                            "code": "acute",
+                            "display": "Short course (acute) therapy"
+                        }
+                    ]
+                },
+                "dosageInstruction": [
+                    {
+                        "text": "Take ONE Four Times Daily"
+                    }
+                ],
+                "dispenseRequest": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
+                            "valueCoding": {
+                                "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
+                                "code": "P1",
+                                "display": "Other (e.g. Community Pharmacy)"
+                            }
+                        }
+                    ],
+                    "quantity": {
+                        "value": 14,
+                        "unit": "capsule",
+                        "system": "http://snomed.info/sct",
+                        "code": "428641000"
+                    },
+                    "performer": {
+                        "identifier": {
+                            "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                            "value": "FCW64"
+                        }
+                    }
+                },
+                "substitution": {
+                    "allowedBoolean": false
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
+            "resource": {
+                "resourceType": "MedicationRequest",
+                "id": "19f850ad-a6ab-4307-8123-22a78b0eb8b3",
+                "extension": [
+                    {
+                        "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
+                        "valueCoding": {
+                            "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
+                            "code": "1001",
+                            "display": "Outpatient Community Prescriber - Medical Prescriber"
+                        }
+                    }
+                ],
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
+                        "value": "19f850ad-a6ab-4307-8123-22a78b0eb8b3"
+                    }
+                ],
+                "status": "active",
+                "intent": "order",
+                "category": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+                                "code": "outpatient",
+                                "display": "Outpatient"
+                            }
+                        ]
+                    }
+                ],
+                "medicationCodeableConcept": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "4865011000001104",
+                            "display": "Cefalexin 125mg/5ml oral suspension sugar free"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
+                },
+                "authoredOn": "2021-06-25T14:40:15+01:00",
+                "requester": {
+                    "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
+                },
+                "groupIdentifier": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
+                            "valueIdentifier": {
+                                "system": "https://fhir.nhs.uk/Id/prescription",
+                                "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
+                            }
+                        }
+                    ],
+                    "system": "https://fhir.nhs.uk/Id/prescription-order-number",
+                    "value": "918E6B-0694X0-02505A"
+                },
+                "courseOfTherapyType": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+                            "code": "acute",
+                            "display": "Short course (acute) therapy"
+                        }
+                    ]
+                },
+                "dosageInstruction": [
+                    {
+                        "text": "Take ONE To be taken three Times Daily"
+                    }
+                ],
+                "dispenseRequest": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
+                            "valueCoding": {
+                                "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
+                                "code": "P1",
+                                "display": "Other (e.g. Community Pharmacy)"
+                            }
+                        }
+                    ],
+                    "quantity": {
+                        "value": 200,
+                        "unit": "ml",
+                        "system": "http://snomed.info/sct",
+                        "code": "258773002"
+                    },
+                    "performer": {
+                        "identifier": {
+                            "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                            "value": "FCW64"
+                        }
+                    }
+                },
+                "substitution": {
+                    "allowedBoolean": false
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
+            "resource": {
+                "resourceType": "MedicationRequest",
+                "id": "d165c581-1be2-46b7-adc9-5c8f17a03850",
+                "extension": [
+                    {
+                        "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionType",
+                        "valueCoding": {
+                            "system": "https://fhir.nhs.uk/CodeSystem/prescription-type",
+                            "code": "1001",
+                            "display": "Outpatient Community Prescriber - Medical Prescriber"
+                        }
+                    }
+                ],
+                "identifier": [
+                    {
+                        "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
+                        "value": "d165c581-1be2-46b7-adc9-5c8f17a03850"
+                    }
+                ],
+                "status": "active",
+                "intent": "order",
+                "category": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+                                "code": "outpatient",
+                                "display": "Outpatient"
+                            }
+                        ]
+                    }
+                ],
+                "medicationCodeableConcept": {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "5133811000001102",
+                            "display": "Water for injections 50ml vials"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "urn:uuid:87811023-e736-401b-aaf0-a3e010ee1c5e"
+                },
+                "authoredOn": "2021-06-25T14:40:15+01:00",
+                "requester": {
+                    "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505"
+                },
+                "groupIdentifier": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PrescriptionId",
+                            "valueIdentifier": {
+                                "system": "https://fhir.nhs.uk/Id/prescription",
+                                "value": "7cd78221-bd56-4e9f-a30b-6d5be1bf65b5"
+                            }
+                        }
+                    ],
+                    "system": "https://fhir.nhs.uk/Id/prescription-order-number",
+                    "value": "918E6B-0694X0-02505A"
+                },
+                "courseOfTherapyType": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-course-of-therapy",
+                            "code": "acute",
+                            "display": "Short course (acute) therapy"
+                        }
+                    ]
+                },
+                "dosageInstruction": [
+                    {
+                        "text": "as and when"
+                    }
+                ],
+                "dispenseRequest": {
+                    "extension": [
+                        {
+                            "url": "https://fhir.nhs.uk/StructureDefinition/Extension-DM-PerformerSiteType",
+                            "valueCoding": {
+                                "system": "https://fhir.nhs.uk/CodeSystem/dispensing-site-preference",
+                                "code": "P1",
+                                "display": "Other (e.g. Community Pharmacy)"
+                            }
+                        }
+                    ],
+                    "quantity": {
+                        "value": 10,
+                        "unit": "vial",
+                        "system": "http://snomed.info/sct",
+                        "code": "415818006"
+                    },
+                    "performer": {
+                        "identifier": {
+                            "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+                            "value": "FCW64"
+                        }
+                    }
+                },
+                "substitution": {
+                    "allowedBoolean": false
+                }
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:09b0d4d4-7248-40dd-9306-79de4817c1aa",
+            "resource": {
+                "resourceType": "Provenance",
+                "id": "09b0d4d4-7248-40dd-9306-79de4817c1aa",
+                "target": [
+                    {
+                        "reference": "urn:uuid:fefc0da4-65e2-48e3-895c-d0f60dd1e5ed",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:5dca8d34-c2bb-4ad5-b9f3-3e93938fc48d",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:19f850ad-a6ab-4307-8123-22a78b0eb8b3",
+                        "type": "MedicationRequest"
+                    },
+                    {
+                        "reference": "urn:uuid:d165c581-1be2-46b7-adc9-5c8f17a03850",
+                        "type": "MedicationRequest"
+                    }
+                ],
+                "recorded": "2021-06-25T14:40:18.1937101+01:00",
+                "agent": [
+                    {
+                        "who": {
+                            "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
+                            "type": "PractitionerRole"
+                        }
+                    }
+                ],
+                "signature": [
+                    {
+                        "type": [
+                            {
+                                "system": "urn:iso-astm:E1762-95:2013",
+                                "code": "1.2.840.10065.1.12.1.1",
+                                "display": "Author's Signature"
+                            }
+                        ],
+                        "when": "2021-06-25T14:40:18.1937101+01:00",
+                        "who": {
+                            "reference": "urn:uuid:45f563c4-bc5d-4c68-8979-8ba1d96fb505",
+                            "type": "PractitionerRole"
+                        },
+                        "data": "PFNpZ25hdHVyZSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+PFNpZ25lZEluZm8geG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L0Nhbm9uaWNhbGl6YXRpb25NZXRob2Q+PFNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSI+PC9TaWduYXR1cmVNZXRob2Q+PFJlZmVyZW5jZT48VHJhbnNmb3Jtcz48VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIj48L1RyYW5zZm9ybT48L1RyYW5zZm9ybXM+PERpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIj48L0RpZ2VzdE1ldGhvZD48RGlnZXN0VmFsdWU+MHJQWU9OY3Q1U01SVE5hRS9aLzEwSWtnMWJzPTwvRGlnZXN0VmFsdWU+PC9SZWZlcmVuY2U+PC9TaWduZWRJbmZvPjxTaWduYXR1cmVWYWx1ZT5wb3JGSW56WVlXWnpCWDliU0JwUG9KRU9HNE9hbXkwRHdyc1lHVG5rbm03Zk9Sd3h0T21zZnFOU2VVV1VWOW56b2h1L3JranZERmE3VTM1ZHlreGsvUXg0Y2NyZEluNmJDZ3hXZzJuVExWMXJKVGduMXI5b2xZZWUvUWxmclZWL0xTRnIvdklIck82OHFsVk1JNjJXdWlJZktmaWRZSFFQT3U0Y3VzR00wazA9PC9TaWduYXR1cmVWYWx1ZT48S2V5SW5mbz48WDUwOURhdGE+PFg1MDlDZXJ0aWZpY2F0ZT5NSUlEdURDQ0FxQ2dBd0lCQWdJRVhjbW83ekFOQmdrcWhraUc5dzBCQVFzRkFEQTJNUXd3Q2dZRFZRUUtFd051YUhNeEN6QUpCZ05WQkFzVEFrTkJNUmt3RndZRFZRUURFeEJPU0ZNZ1NVNVVJRXhsZG1Wc0lERkVNQjRYRFRJd01Ea3lNekUxTkRrME9Gb1hEVEl5TURreU16RTJNVGswT0Zvd1F6RU1NQW9HQTFVRUNoTURibWh6TVE4d0RRWURWUVFMRXdaUVpXOXdiR1V4SWpBZ0JnTlZCQU1NR1RVMU5UQTROalF4TlRFd05WOVVaWE4wWDFSbGMzUmtiMmN3Z1o4d0RRWUpLb1pJaHZjTkFRRUJCUUFEZ1kwQU1JR0pBb0dCQVBDeW1MYjBJdm5nS21ZOTlwcmx2VU8xTmxnK1l5NHpEanpUaHVxZDJrdGsyOE1lWWRWbUFMV0xJWTY5cE50VDhEV0NrSmJtVytyR1JFYzFueG9halcrb0NqV2dlMUtjdytVVU15MnNZNXBMMmJoMGpmNGhtK3d5OVZvbGdNeWRsWmN6cklxWmJpYjhCbTBZbkZtbGtqSDltZnU1ZWRzQzhPVmYzdHIyUktYSEFnTUJBQUdqZ2dGRE1JSUJQekFPQmdOVkhROEJBZjhFQkFNQ0JrQXdaUVlEVlIwZ0FRSC9CRnN3V1RCWEJnc3Foam9BaVh0bUFBTUNBREJJTUVZR0NDc0dBUVVGQndJQkZqcG9kSFJ3Y3pvdkwzQnJhUzV1YUhNdWRXc3ZZMlZ5ZEdsbWFXTmhkR1ZmY0c5c2FXTnBaWE12WTI5dWRHVnVkRjlqYjIxdGFYUnRaVzUwTURNR0ExVWRId1FzTUNvd0tLQW1vQ1NHSW1oMGRIQTZMeTlqY213dWJtaHpMblZyTDJsdWRDOHhaQzlqY214ak15NWpjbXd3S3dZRFZSMFFCQ1F3SW9BUE1qQXlNREE1TWpNeE5UUTVORGhhZ1E4eU1ESXlNREl4TmpFMk1UazBPRm93SHdZRFZSMGpCQmd3Rm9BVW9KWWZnWVROUGQ2RVVLTDZRTEl6SHhZNVBGSXdIUVlEVlIwT0JCWUVGRi9YS2h0NWVpN3FyeHcxM1dmR2xDQStaNS9NTUFrR0ExVWRFd1FDTUFBd0dRWUpLb1pJaHZaOUIwRUFCQXd3Q2hzRVZqZ3VNd01DQkxBd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFFZmFidkVRcmt0MEJTUnkzYnA1NkRJMUJyWEN5eVFWdjhORkdsZ2VDQTNOV0V5dE9uQkpqaDNJT0c1YlpsclVBK1lnK2xJMWxFUFlWaGJxd0R2bmlDdUYyOWw1TE0zai82Y1c0YWRIRUFPMTVnZWNHUVRzbm9DUlRZMnYrTzBDcVZ5MGtaWkV0dFRFbGtPekZ3clNvQzRITDdkOG96cG9UR0NpVDBHK3lKT25mWm9yc1ZWd1JFNW9rNUhwMlYyQWEwQ2EvUUVkNzc4UFMxOXFqdHBEUWJjODdVYkVPSXY2alZscUM3VHhIVGViNjB2akhIcU14VFU5bCtjdGF0TnU4N1ovMTA3eG1NRmFVYTRVMXA0R0xZYm9QbElOSUkzVVlwdGNDdXRXeHROcTVGZ1RNTkI1eEJQUE9SU2tjSWxrNDBsc0U1R3EzczlVZ2xLZzNBQ3V1Wnc9PC9YNTA5Q2VydGlmaWNhdGU+PC9YNTA5RGF0YT48L0tleUluZm8+PC9TaWduYXR1cmU+"
+                    }
+                ]
+            }
         }
-    }]
+    ]
 }
