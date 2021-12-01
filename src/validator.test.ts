@@ -49,6 +49,28 @@ function testFile(testDescription,file) {
     });
 }
 
+function testFileWithProfile(profile, testDescription,file) {
+    const resource: any = fs.readFileSync(file, 'utf8');
+
+    it(testDescription + ' filename ' + file + ' profile = '+ profile, async () => {
+        // Initial terminology queries can take a long time to process - cached responses are much more responsive
+        jest.setTimeout(30000)
+        await client()
+            .post('/$validate?profile='+profile)
+            .retry(2)
+            .set("Content-Type", 'application/fhir+xml')
+            .set("Accept", 'application/fhir+json')
+            .send(getJson(file, resource))
+            .expect(200)
+            .then((response: any) => {
+                    resourceChecks(response)
+                },
+                error => {
+                    throw new Error(error.message)
+                })
+    });
+}
+
 function testFileError(testDescription, file,message) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
@@ -229,3 +251,10 @@ describe('CourseOfTherapy Tests', () => {
         testFileError('Check acute passes with repeat extension fails','Examples/courseOfTherapyTests/MedicationRequest-acute-withRepeatExtension.json','eps-16')
 
 });
+
+/*
+describe('Digital Medicines', () => {
+    testFileWithProfile('https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest','Check Medication Request passes validation','Examples/digitalMedicines/MedicationRequest-Levothyroxine.json')
+});
+
+ */

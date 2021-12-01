@@ -1,0 +1,83 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "18a8ea33-dc5f-4fb7-985e-acc474bf97cd",
+  "meta": {
+    "profile":  [
+      "https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest"
+    ]
+  },
+  "status": "active",
+  "intent": "order",
+  "category":  [
+    {
+      "coding":  [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+          "code": "outpatient",
+          "display": "outpatient"
+        }
+      ]
+    }
+  ],
+  "medicationCodeableConcept": {
+    "coding":  [
+      {
+        "system": "https://dmd.nhs.uk",
+        "code": "10071011000001106",
+        "display": "Levothyroxine"
+      }
+    ]
+  },
+  "subject": {
+    "identifier": {
+      "system": "https://fhir.nhs.uk/Id/nhs-number",
+      "value": "9999999999"
+    }
+  },
+  "authoredOn": "2019-01-15T15:00:00Z",
+  "requester": {
+    "reference": "urn:staff-1112",
+    "display": "Dr Maikeu Well"
+  },
+  "recorder": {
+    "reference": "urn:staff-1112",
+    "display": "Dr Maikeu Well"
+  },
+  "dosageInstruction":  [
+    {
+      "text": "150 microgram - daily - during the morning and before breakfast - oral",
+      "route": {
+        "coding":  [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "26643006",
+            "display": "oral"
+          }
+        ]
+      },
+      "timing": {
+        "repeat": {
+          "period": 1,
+          "periodUnit": "d",
+          "when":  [
+            "MORN",
+            "ACM"
+          ]
+        }
+      },
+      "doseAndRate":  [
+        {
+          "doseQuantity": {
+            "value": 150,
+            "unit": "microgram",
+            "system": "http://unitsofmeasure.org",
+            "code": "ug"
+          }
+        }
+      ]
+    }
+  ],
+  "substitution": {
+    "allowedBoolean": false
+  }
+}

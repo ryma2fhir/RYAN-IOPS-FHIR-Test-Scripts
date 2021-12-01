@@ -1,0 +1,112 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "41dab799-fdbb-4a1e-bee2-a1a73dacac8d",
+  "meta": {
+    "profile":  [
+      "https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest"
+    ]
+  },
+  "contained":  [
+    {
+      "resourceType": "Medication",
+      "id": "med1",
+      "code": {
+        "coding":  [
+          {
+            "system": "https://dmd.nhs.uk",
+            "code": "7947003",
+            "display": "Aspirin"
+          }
+        ]
+      },
+      "form": {
+        "coding":  [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "385194003",
+            "display": "Suppository"
+          }
+        ]
+      }
+    }
+  ],
+  "status": "active",
+  "intent": "order",
+  "category":  [
+    {
+      "coding":  [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+          "code": "outpatient",
+          "display": "outpatient"
+        }
+      ]
+    }
+  ],
+  "medicationReference": {
+    "reference": "#med1"
+  },
+  "subject": {
+    "identifier": {
+      "system": "https://fhir.nhs.uk/Id/nhs-number",
+      "value": "9999999999"
+    }
+  },
+  "authoredOn": "2020-05-15T15:00:00Z",
+  "requester": {
+    "reference": "urn:staff-1112",
+    "display": "Dr Maikeu Well"
+  },
+  "recorder": {
+    "reference": "urn:staff-1112",
+    "display": "Dr Maikeu Well"
+  },
+  "dosageInstruction":  [
+    {
+      "text": "600 milligram - every 4 hours - Rectal - up to a maximum of 3.6 gram in 24 hours",
+      "timing": {
+        "repeat": {
+          "frequency": 1,
+          "period": 4,
+          "periodUnit": "h"
+        }
+      },
+      "route": {
+        "coding":  [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "37161004",
+            "display": "Rectal"
+          }
+        ]
+      },
+      "doseAndRate":  [
+        {
+          "doseQuantity": {
+            "value": 600,
+            "unit": "milligram",
+            "system": "http://unitsofmeasure.org",
+            "code": "mg"
+          }
+        }
+      ],
+      "maxDosePerPeriod": {
+        "numerator": {
+          "value": 3.6,
+          "unit": "gram",
+          "system": "http://unitsofmeasure.org",
+          "code": "g"
+        },
+        "denominator": {
+          "value": 24,
+          "unit": "hour",
+          "system": "http://unitsofmeasure.org",
+          "code": "h"
+        }
+      }
+    }
+  ],
+  "substitution": {
+    "allowedBoolean": false
+  }
+}
