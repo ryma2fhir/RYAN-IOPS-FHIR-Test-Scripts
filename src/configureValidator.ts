@@ -34,6 +34,8 @@ fileName = source + fileName
 console.log('Source - '+fileName)
 destinationPath = destination + destinationPath
 console.log('Destination - '+ destinationPath)
+console.log('Current directory - ' + __dirname)
+var workerDir = __dirname
 
 class TarMe {
     static async main(src, destination) {
@@ -86,12 +88,13 @@ if (fs.existsSync(fileName)) {
             "version": pkg.version
         })
         // Ensure temp dir is empty
-        fs.rmdirSync(path.join(__dirname, '../temp'), { recursive: true });
+        console.log('Current directory - ' + __dirname)
+        fs.rmdirSync(path.join(workerDir, '../temp'), { recursive: true });
        // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
 
-        fs.mkdirSync(path.join(__dirname, '../temp/package/examples'),{ recursive: true });
-        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
-        fs.writeFile(path.join(__dirname,destinationPath + '/manifest.json'), JSON.stringify(manifest),  function(err) {
+        fs.mkdirSync(path.join(workerDir, '../temp/package/examples'),{ recursive: true });
+        fs.mkdirSync(path.join(workerDir,destinationPath ),{ recursive: true });
+        fs.writeFile(path.join(workerDir,destinationPath + '/manifest.json'), JSON.stringify(manifest),  function(err) {
             if (err) {
                 return console.error(err);
             }
