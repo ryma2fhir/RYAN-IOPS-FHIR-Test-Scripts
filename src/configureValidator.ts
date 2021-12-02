@@ -89,7 +89,12 @@ if (fs.existsSync(fileName)) {
         })
         // Ensure temp dir is empty
         console.log('Current directory - ' + __dirname)
-        fs.rmdirSync(path.join(workerDir, '../temp'), { recursive: true });
+        try {
+            fs.rmdirSync(path.join(workerDir, '../temp'), {recursive: true});
+        } catch (error) {
+            // do nothing
+            console.log('clean up - directory did not exist')
+        }
        // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
 
         fs.mkdirSync(path.join(workerDir, '../temp/package/examples'),{ recursive: true });
