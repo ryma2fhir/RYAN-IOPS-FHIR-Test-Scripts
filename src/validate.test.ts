@@ -114,6 +114,9 @@ function testFolder(dir) {
         testFolder(source + 'StructureDefinition');
     });
 
+    describe('Parsing folder StructureMap', () => {
+        testFolder(source + 'StructureMap');
+    });
 
     describe('Parsing folder ValueSet', () => {
         testFolder(source + 'ValueSet');

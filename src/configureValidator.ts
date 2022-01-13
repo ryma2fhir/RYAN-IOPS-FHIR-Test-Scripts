@@ -134,6 +134,8 @@ if (fs.existsSync(fileName)) {
 
         copyFolder(source + 'ValueSet');
 
+        copyFolder(source + 'StructureMap');
+
         // Begin UK Core folder names
 
         copyFolder(source + 'codesystems');
