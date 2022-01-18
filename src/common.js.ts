@@ -250,6 +250,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         // fault with current 5.5.1 validation
         if ( issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
         if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
+        if ( issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
             console.log(issue.diagnostics)
             return false
