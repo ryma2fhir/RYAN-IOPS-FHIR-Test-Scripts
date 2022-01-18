@@ -68,6 +68,13 @@ function testFolder(dir) {
         if (examples != undefined) testFolder(examples);
     });
 
+    describe('Parsing folder Appointment', () => {
+        testFolder(source + 'Appointment');
+    });
+
+    describe('Parsing folder Bundle', () => {
+        testFolder(source + 'Bundle');
+    });
     describe('Parsing folder CapabilityStatement', () => {
         testFolder(source + 'CapabilityStatement');
     });
@@ -75,7 +82,6 @@ function testFolder(dir) {
     describe('Parsing folder CodeSystem', () => {
         testFolder(source + 'CodeSystem');
     });
-
 
     describe('Parsing folder ConceptMap', () => {
         testFolder(source + 'ConceptMap');
@@ -105,8 +111,15 @@ function testFolder(dir) {
         testFolder(source + 'Questionnaire');
     });
 
+    describe('Parsing folder Parameters', () => {
+        testFolder(source + 'Parameters');
+    });
 
     describe('Parsing folder SearchParameter', () => {
+        testFolder(source + 'SearchParameter');
+    });
+
+    describe('Parsing folder ServiceRequest', () => {
         testFolder(source + 'SearchParameter');
     });
 
@@ -116,6 +129,14 @@ function testFolder(dir) {
 
     describe('Parsing folder StructureMap', () => {
         testFolder(source + 'StructureMap');
+    });
+
+    describe('Parsing folder Subscription', () => {
+        testFolder(source + 'Subscription');
+    });
+
+    describe('Parsing folder Task', () => {
+        testFolder(source + 'Task');
     });
 
     describe('Parsing folder ValueSet', () => {
