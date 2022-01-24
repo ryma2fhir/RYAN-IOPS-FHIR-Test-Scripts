@@ -120,7 +120,7 @@ function testFolder(dir) {
     });
 
     describe('Parsing folder ServiceRequest', () => {
-        testFolder(source + 'SearchParameter');
+        testFolder(source + 'ServiceRequest');
     });
 
     describe('Parsing folder StructureDefinition', () => {
