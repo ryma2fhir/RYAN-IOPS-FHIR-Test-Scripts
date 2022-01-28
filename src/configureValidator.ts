@@ -71,7 +71,7 @@ if (fs.existsSync(fileName)) {
     ];
     if (pkg.dependencies != undefined) {
         for( let key in pkg.dependencies) {
-            //if (key != 'hl7.fhir.r4.core') {
+            if (key != 'hl7.fhir.r4.core') {
                 const entry = {
                     "packageName": key,
                     "version": pkg.dependencies[key]
@@ -80,7 +80,7 @@ if (fs.existsSync(fileName)) {
 
                 downloadPackage(destinationPath,key,pkg.dependencies[key] );
                 manifest.push(entry);
-        //    }
+            }
         }
         console.log('Adding manifest entry for ' + pkg.name)
         manifest.push({
