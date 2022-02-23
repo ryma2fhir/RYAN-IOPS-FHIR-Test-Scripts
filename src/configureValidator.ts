@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import {downloadPackage, getJson, resourceChecks} from "./common.js";
+import { downloadPackage, getJson, resourceChecks } from "./common.js";
 import { tar } from 'zip-a-folder';
 
 
@@ -15,25 +15,25 @@ let destinationPath = 'validation-service-fhir-r4/src/main/resources';
 
 
 var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
-if (process.env.ONTO_URL!= undefined) {
+if (process.env.ONTO_URL != undefined) {
     ontoServer = process.env.ONTO_URL;
 }
 var clientId: string = process.env.ONTO_CLIENT_ID
 var clientSecret: string = process.env.ONTO_CLIENT_SECRET
 
-if (args!= undefined) {
-    if (args['source']!= undefined) {
+if (args != undefined) {
+    if (args['source'] != undefined) {
         source = args['source'];
     }
-    if (args['destination']!= undefined) {
+    if (args['destination'] != undefined) {
         destination = args['destination'];
     }
 }
 
 fileName = source + fileName
-console.log('Source - '+fileName)
+console.log('Source - ' + fileName)
 destinationPath = destination + destinationPath
-console.log('Destination - '+ destinationPath)
+console.log('Destination - ' + destinationPath)
 console.log('Current directory - ' + __dirname)
 var workerDir = __dirname
 
@@ -70,15 +70,15 @@ if (fs.existsSync(fileName)) {
     var manifest = [
     ];
     if (pkg.dependencies != undefined) {
-        for( let key in pkg.dependencies) {
+        for (let key in pkg.dependencies) {
             if (key != 'hl7.fhir.r4.core') {
                 const entry = {
                     "packageName": key,
                     "version": pkg.dependencies[key]
                 };
-                console.log('Using package '+ key + '-' + pkg.dependencies[key])
+                console.log('Using package ' + key + '-' + pkg.dependencies[key])
 
-                downloadPackage(destinationPath,key,pkg.dependencies[key] );
+                downloadPackage(destinationPath, key, pkg.dependencies[key]);
                 manifest.push(entry);
             }
         }
@@ -90,22 +90,22 @@ if (fs.existsSync(fileName)) {
         // Ensure temp dir is empty
         console.log('Current directory - ' + __dirname)
         try {
-            fs.rmdirSync(path.join(workerDir, '../temp'), {recursive: true});
+            fs.rmdirSync(path.join(workerDir, '../temp'), { recursive: true });
         } catch (error) {
             // do nothing
             console.log('clean up - directory did not exist')
         }
-       // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
+        // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
 
-        fs.mkdirSync(path.join(workerDir, '../temp/package/examples'),{ recursive: true });
-        fs.mkdirSync(path.join(workerDir,destinationPath ),{ recursive: true });
-        fs.writeFile(path.join(workerDir,destinationPath + '/manifest.json'), JSON.stringify(manifest),  function(err) {
+        fs.mkdirSync(path.join(workerDir, '../temp/package/examples'), { recursive: true });
+        fs.mkdirSync(path.join(workerDir, destinationPath), { recursive: true });
+        fs.writeFile(path.join(workerDir, destinationPath + '/manifest.json'), JSON.stringify(manifest), function (err) {
             if (err) {
                 return console.error(err);
             }
         });
         console.log(JSON.stringify(pkg))
-        fs.writeFile('temp/package/package.json', JSON.stringify(pkg),  function(err) {
+        fs.writeFile('temp/package/package.json', JSON.stringify(pkg), function (err) {
             if (err) {
                 return console.error(err);
             }
@@ -146,12 +146,12 @@ if (fs.existsSync(fileName)) {
         // End UK Core folder names
 
 
-        console.log('Creating temporary package ' + pkg.name +'-' + pkg.version);
+        console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
         console.log('Deleting temporary files');
         deleteFile('temp/package/.DS_Store.json');
         deleteFile('temp/package/examples/.DS_Store.json');
 
-        TarMe.main(path.join(__dirname, '../temp'),path.join(__dirname,destinationPath + '/' + pkg.name +'-' + pkg.version + '.tgz' ));
+        TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'));
 
     }
 
@@ -163,8 +163,8 @@ function deleteFile(file) {
         if (err) {
             //return console.error(err);
         }
-        fs.unlink(file,function(err){
-            if(err) {
+        fs.unlink(file, function (err) {
+            if (err) {
                 return;
             }
             console.log('file deleted successfully ' + file);
@@ -176,7 +176,7 @@ function deleteFile(file) {
 
 function copyFolder(dir) {
 
-    console.log('Processing '+dir);
+    console.log('Processing ' + dir);
     if (fs.existsSync(dir)) {
 
         const list = fs.readdirSync(dir);
@@ -190,14 +190,14 @@ function copyFolder(dir) {
             }
 
             const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
-            const json = getJson(file,resource);
-            fs.writeFile(destination, jsonminify(json),  function(err) {
+            const json = getJson(file, resource);
+            fs.writeFile(destination, jsonminify(json), function (err) {
                 if (err) {
                     return console.error(err);
                 }
             });
         })
     } else {
-        console.log('INFO Folder not found  '+dir);
+        console.log('INFO Folder not found  ' + dir);
     }
 }
