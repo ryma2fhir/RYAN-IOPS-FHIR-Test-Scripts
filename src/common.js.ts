@@ -7,7 +7,7 @@ export const basePath = "/FHIR/R4"
 
 var Fhir = require('fhir').Fhir;
 
-export let defaultBaseUrl = 'http://localhost:9001';
+export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
 
 
 export async function validate(resource,contentType ) {
@@ -82,6 +82,17 @@ export function getJson(file, resource) {
         return json;
     } else {
         if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
+        if (JSON.parse(resource).resourceType == "Parameters") {
+            return  {
+                "resourceType" : "Parameters",
+                "parameter": [
+                    {
+                        "name": "resource",
+                        "resource": JSON.parse(resource)
+                    }
+                ]
+            }
+        }
         return resource;
     }
 
