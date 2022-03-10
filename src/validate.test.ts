@@ -21,8 +21,9 @@ if (args!= undefined) {
     }
 }
 
+
 it('Validator is functioning ',async function () {
-    await client().get('/_status').expect(200)
+    await client().get('/metadata').expect(200)
 });
 
 
