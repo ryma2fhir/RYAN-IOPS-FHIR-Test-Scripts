@@ -14,6 +14,7 @@ import fs from "fs";
 const args = require('minimist')(process.argv.slice(2))
 const client = () => {
     const url = defaultBaseUrl
+    //console.log(url)
     return supertest(url)
 }
 
@@ -36,7 +37,7 @@ function testFile(testDescription,file) {
         await client()
             .post('/$validate')
             .retry(2)
-            .set("Content-Type", 'application/fhir+xml')
+            .set("Content-Type", 'application/fhir+json')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
             .expect(200)
@@ -56,9 +57,9 @@ function testFileWithProfile(profile, testDescription,file) {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
-            .post('/FHIR/R4/$validate?profile='+profile)
+            .post('/$validate?profile='+profile)
             .retry(2)
-            .set("Content-Type", 'application/fhir+xml')
+            .set("Content-Type", 'application/fhir+json')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
             .expect(200)
@@ -80,7 +81,7 @@ function testFileError(testDescription, file,message) {
         await client()
             .post('/$validate')
             .retry(2)
-            .set("Content-Type", 'application/fhir+xml')
+            .set("Content-Type", 'application/fhir+json')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
             .expect(200)
@@ -102,7 +103,7 @@ function testFileWarning(testDescription, file,message) {
         await client()
             .post('/$validate')
             .retry(2)
-            .set("Content-Type", 'application/fhir+xml')
+            .set("Content-Type", 'application/fhir+json')
             .set("Accept", 'application/fhir+json')
             .send(getJson(file, resource))
             .expect(200)
