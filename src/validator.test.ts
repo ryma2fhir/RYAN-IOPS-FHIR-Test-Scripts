@@ -56,7 +56,7 @@ function testFileWithProfile(profile, testDescription,file) {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
-            .post('/$validate?profile='+profile)
+            .post('/FHIR/R4/$validate?profile='+profile)
             .retry(2)
             .set("Content-Type", 'application/fhir+xml')
             .set("Accept", 'application/fhir+json')
