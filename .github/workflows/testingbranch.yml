@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: NHSDigital/validation-service-fhir-r4
-          ref: testing
+          ref: main2
           path: validation-service-fhir-r4
         
       - name: Install Python 3.8
@@ -48,8 +48,11 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
-      - name: Install Java
-        run: sudo apt-get install --yes default-jre default-jdk
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
 
       - name: Install node
         run: |
@@ -74,7 +77,7 @@ jobs:
 
       - name: Run FHIR Validator
         run: 
-          nohup java -jar validation-service-fhir-r4/target/fhir-validator-0.0.1-SNAPSHOT.jar --terminology.url=https://ontology.nhs.uk/production1/fhir --terminology.authorization.tokenUrl=https://ontology.nhs.uk/authorisation/auth/realms/nhs-digital-terminology/protocol/openid-connect/token --terminology.authorization.clientId=${{ secrets.ONTO_CLIENT_ID }} --terminology.authorization.clientSecret=${{ secrets.ONTO_CLIENT_SECRET }} &
+          nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --terminology.url=https://ontology.nhs.uk/production1/fhir --terminology.authorization.tokenUrl=https://ontology.nhs.uk/authorisation/auth/realms/nhs-digital-terminology/protocol/openid-connect/token --terminology.authorization.clientId=${{ secrets.ONTO_CLIENT_ID }} --terminology.authorization.clientSecret=${{ secrets.ONTO_CLIENT_SECRET }} &
           sleep 60
         
       - name: Run Test
