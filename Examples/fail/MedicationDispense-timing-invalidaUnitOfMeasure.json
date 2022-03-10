@@ -17,6 +17,33 @@
       "value": "06167339-9337-D030-0366-514A6A46DA17"
     }
   ],
+  "contained": [
+    {
+      "resourceType": "PractitionerRole",
+      "id": "performer",
+      "practitioner": {
+        "identifier": {
+          "system": "https://fhir.hl7.org.uk/Id/gphc-number",
+          "value": "7654321"
+        },
+        "display": "Mr Peter Potion"
+      },
+      "organization": {
+        "identifier": {
+          "system": "https://fhir.nhs.uk/Id/ods-organization-code",
+          "value": "VNE51"
+        },
+        "display": "The Simple Pharmacy"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "use": "work",
+          "value": "01234567890"
+        }
+      ]
+    }
+  ],
   "status": "in-progress",
   "medicationCodeableConcept": {
     "coding": [
@@ -38,22 +65,8 @@
   "performer": [
     {
       "actor": {
-        "type" : "Practitioner",
-        "identifier":  {
-          "system": "https://fhir.hl7.org.uk/Id/gphc-number",
-          "value": "7654321"
-        },
-        "display": "Mr Peter Potion"
-      }
-    },
-    {
-      "actor": {
-        "type": "Organization",
-        "identifier":  {
-          "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-          "value": "VNE51"
-        },
-        "display": "The Simple Pharmacy"
+        "type": "PractitionerRole",
+        "reference": "#performer"
       }
     }
   ],
