@@ -239,6 +239,8 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
         }
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
+                // Not defined in UKCore and valueset is extensible
+                if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods')) return false
                 // This has raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1839
                 if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')) return false
                 // This has been raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1840
