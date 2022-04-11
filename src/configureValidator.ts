@@ -6,7 +6,7 @@ import { tar } from 'zip-a-folder';
 
 var jsonminify = require("jsonminify");
 let fileName = 'package.json';
-let source = '../'
+let source : string = undefined;
 let destination = '../../'
 
 const args = require('minimist')(process.argv.slice(2))
@@ -30,8 +30,7 @@ if (args != undefined) {
     }
 }
 
-fileName = source + fileName
-console.log('Source - ' + fileName)
+
 destinationPath = destination + destinationPath
 console.log('Destination - ' + destinationPath)
 console.log('Current directory - ' + __dirname)
@@ -43,118 +42,122 @@ class TarMe {
     }
 }
 
-/*
-if (clientId != undefined && clientSecret != undefined) {
-    console.log('Configuring NHS Onto Server connection')
-    console.log('Using ' + ontoServer)
-    var config = {
-        "terminologyServer": ontoServer,
-        "useRemoteTerminology" : true,
-        "clientId" : clientId,
-        "clientSecret": clientSecret
-    }
-    process.env.hapi_fhir_terminology_client_id = clientId
-    fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
-    fs.writeFile(path.join(__dirname,destinationPath + '/validation.json'), JSON.stringify(config),  function(err) {
-        if (err) {
-            return console.error(err);
-        }
-    });
-}
-*/
+// update manifest file if source supplied, skip otherwise
+var manifest = [];
 
-if (fs.existsSync(fileName)) {
-    const file = fs.readFileSync(fileName, 'utf-8');
-    const pkg = JSON.parse(file);
-    pkg.version = '0.0.0-prerelease';
-    var manifest = [
-    ];
-    if (pkg.dependencies != undefined) {
-        for (let key in pkg.dependencies) {
-            if (key != 'hl7.fhir.r4.core') {
-                const entry = {
-                    "packageName": key,
-                    "version": pkg.dependencies[key]
-                };
-                console.log('Using package ' + key + '-' + pkg.dependencies[key])
+if (source != undefined) {
+    fileName = source + fileName
+    console.log('Source - ' + fileName)
+    if (fs.existsSync(fileName)) {
+        const file = fs.readFileSync(fileName, 'utf-8');
+        const pkg = JSON.parse(file);
+        pkg.version = '0.0.0-prerelease';
 
-                downloadPackage(destinationPath, key, pkg.dependencies[key]);
-                manifest.push(entry);
+        if (pkg.dependencies != undefined) {
+            for (let key in pkg.dependencies) {
+                if (key != 'hl7.fhir.r4.core') {
+                    const entry = {
+                        "packageName": key,
+                        "version": pkg.dependencies[key]
+                    };
+                    console.log('Using package ' + key + '-' + pkg.dependencies[key])
+
+                    downloadPackage(destinationPath, key, pkg.dependencies[key]);
+                    manifest.push(entry);
+                }
             }
-        }
-        console.log('Adding manifest entry for ' + pkg.name)
-        manifest.push({
-            "packageName": pkg.name,
-            "version": pkg.version
-        })
-        // Ensure temp dir is empty
-        console.log('Current directory - ' + __dirname)
-        try {
-            fs.rmdirSync(path.join(workerDir, '../temp'), { recursive: true });
-        } catch (error) {
-            // do nothing
-            console.log('clean up - directory did not exist')
-        }
-        // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
-
-        fs.mkdirSync(path.join(workerDir, '../temp/package/examples'), { recursive: true });
-        fs.mkdirSync(path.join(workerDir, destinationPath), { recursive: true });
-        fs.writeFile(path.join(workerDir, destinationPath + '/manifest.json'), JSON.stringify(manifest), function (err) {
-            if (err) {
-                return console.error(err);
+            console.log('Adding manifest entry for ' + pkg.name)
+            manifest.push({
+                "packageName": pkg.name,
+                "version": pkg.version
+            })
+            // Ensure temp dir is empty
+            console.log('Current directory - ' + __dirname)
+            try {
+                fs.rmdirSync(path.join(workerDir, '../temp'), {recursive: true});
+            } catch (error) {
+                // do nothing
+                console.log('clean up - directory did not exist')
             }
-        });
-        console.log(JSON.stringify(pkg))
-        fs.writeFile('temp/package/package.json', JSON.stringify(pkg), function (err) {
-            if (err) {
-                return console.error(err);
-            }
-        });
+            // new version fs.rmSync(path.join(__dirname, '../temp'), { recursive: true, force: true });
+
+            fs.mkdirSync(path.join(workerDir, '../temp/package/examples'), {recursive: true});
+            fs.mkdirSync(path.join(workerDir, destinationPath), {recursive: true});
+            fs.writeFile(path.join(workerDir, destinationPath + '/manifest.json'), JSON.stringify(manifest, null, 2), function (err) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
+            console.log(JSON.stringify(pkg))
+            fs.writeFile('temp/package/package.json', JSON.stringify(pkg, null, 2), function (err) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
 
 
-        copyFolder(source + 'CapabilityStatement');
+            copyFolder(source + 'CapabilityStatement');
 
-        copyFolder(source + 'ConceptMap');
+            copyFolder(source + 'ConceptMap');
 
-        copyFolder(source + 'CodeSystem');
+            copyFolder(source + 'CodeSystem');
 
-        copyFolder(source + 'MessageDefinition');
+            copyFolder(source + 'MessageDefinition');
 
-        copyFolder(source + 'NamingSystem');
+            copyFolder(source + 'NamingSystem');
 
-        copyFolder(source + 'ObservationDefinition');
+            copyFolder(source + 'ObservationDefinition');
 
-        copyFolder(source + 'OperationDefinition');
+            copyFolder(source + 'OperationDefinition');
 
-        copyFolder(source + 'Questionnaire');
+            copyFolder(source + 'Questionnaire');
 
-        copyFolder(source + 'SearchParameter');
+            copyFolder(source + 'SearchParameter');
 
-        copyFolder(source + 'StructureDefinition');
+            copyFolder(source + 'StructureDefinition');
 
-        copyFolder(source + 'ValueSet');
+            copyFolder(source + 'ValueSet');
 
-        copyFolder(source + 'StructureMap');
+            copyFolder(source + 'StructureMap');
 
-        // Begin UK Core folder names
+            // Begin UK Core folder names
 
-        copyFolder(source + 'codesystems');
-        copyFolder(source + 'conceptmaps');
-        copyFolder(source + 'structuredefinitions');
-        copyFolder(source + 'valuesets');
+            copyFolder(source + 'codesystems');
+            copyFolder(source + 'conceptmaps');
+            copyFolder(source + 'structuredefinitions');
+            copyFolder(source + 'valuesets');
 
-        // End UK Core folder names
+            // End UK Core folder names
 
 
-        console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
-        console.log('Deleting temporary files');
-        deleteFile('temp/package/.DS_Store.json');
-        deleteFile('temp/package/examples/.DS_Store.json');
+            console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
+            console.log('Deleting temporary files');
+            deleteFile('temp/package/.DS_Store.json');
+            deleteFile('temp/package/examples/.DS_Store.json');
 
-        TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'));
+            TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'));
+
+        }
 
     }
+} else {
+    var manifestFile = path.join(workerDir, destinationPath + '/manifest.json');
+    if (fs.existsSync(manifestFile)) {
+        console.log("Reading manifest file");
+        const file = fs.readFileSync(manifestFile, 'utf-8');
+        manifest = JSON.parse(file);
+        for (let index in manifest) {
 
+            if (manifest[index].packageName != 'hl7.fhir.r4.core') {
+                const entry = manifest[index];
+                console.log('Using package ' + entry.packageName + '-' + entry.version)
+                downloadPackage(destinationPath, entry.packageName, entry.version);
+            }
+        }
+    } else {
+        console.log(manifest);
+        console.log("Error - No source package.json or validator manifest.json found");
+    }
 }
 
 function deleteFile(file) {
