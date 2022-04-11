@@ -6,7 +6,7 @@ import { tar } from 'zip-a-folder';
 
 var jsonminify = require("jsonminify");
 let fileName = 'package.json';
-let source : string = undefined;
+let source = '../'
 let destination = '../../'
 
 const args = require('minimist')(process.argv.slice(2))
@@ -45,9 +45,9 @@ class TarMe {
 // update manifest file if source supplied, skip otherwise
 var manifest = [];
 
-if (source != undefined) {
+
     fileName = source + fileName
-    console.log('Source - ' + fileName)
+
     if (fs.existsSync(fileName)) {
         const file = fs.readFileSync(fileName, 'utf-8');
         const pkg = JSON.parse(file);
@@ -138,27 +138,25 @@ if (source != undefined) {
             TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'));
 
         }
-
-    }
-} else {
-    var manifestFile = path.join(workerDir, destinationPath + '/manifest.json');
-    if (fs.existsSync(manifestFile)) {
-        console.log("Reading manifest file");
-        const file = fs.readFileSync(manifestFile, 'utf-8');
-        manifest = JSON.parse(file);
-        for (let index in manifest) {
-
-            if (manifest[index].packageName != 'hl7.fhir.r4.core') {
-                const entry = manifest[index];
-                console.log('Using package ' + entry.packageName + '-' + entry.version)
-                downloadPackage(destinationPath, entry.packageName, entry.version);
-            }
-        }
     } else {
-        console.log(manifest);
-        console.log("Error - No source package.json or validator manifest.json found");
+        var manifestFile = path.join(workerDir, destinationPath + '/manifest.json');
+        if (fs.existsSync(manifestFile)) {
+            console.log("Reading manifest file");
+            const file = fs.readFileSync(manifestFile, 'utf-8');
+            manifest = JSON.parse(file);
+            for (let index in manifest) {
+
+                if (manifest[index].packageName != 'hl7.fhir.r4.core') {
+                    const entry = manifest[index];
+                    console.log('Using package ' + entry.packageName + '-' + entry.version)
+                    downloadPackage(destinationPath, entry.packageName, entry.version);
+                }
+            }
+        } else {
+            console.log(manifest);
+            console.log("Error - No source package.json or validator manifest.json found");
+        }
     }
-}
 
 function deleteFile(file) {
     fs.stat(file, function (err, stats) {
