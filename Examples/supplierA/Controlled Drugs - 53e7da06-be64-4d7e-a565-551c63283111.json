@@ -425,9 +425,7 @@
                     "display": "Outpatient Community Prescriber - Medical Prescriber"
                 }
             }, {
-                "extension": [{
-                    "url": "quantityWords"
-                }, {
+                "extension": [ {
                     "url": "schedule",
                     "valueCoding": {
                         "system": "https://fhir.nhs.uk/CodeSystem/medicationrequest-controlled-drug",
@@ -524,9 +522,7 @@
                     "display": "Outpatient Community Prescriber - Medical Prescriber"
                 }
             }, {
-                "extension": [{
-                    "url": "quantityWords"
-                }, {
+                "extension": [ {
                     "url": "schedule",
                     "valueCoding": {
                         "system": "https://fhir.nhs.uk/CodeSystem/medicationrequest-controlled-drug",

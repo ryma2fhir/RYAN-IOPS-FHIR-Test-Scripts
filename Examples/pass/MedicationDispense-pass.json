@@ -65,7 +65,8 @@
   "performer": [
     {
       "actor": {
-        "type" : "Practitioner",
+        "type" : "PractitionerRole",
+        "reference": "#performer",
         "identifier":  {
           "system": "https://fhir.hl7.org.uk/Id/gphc-number",
           "value": "7654321"
@@ -107,6 +108,7 @@
           ]
         }
       ],
+      "reference": "MedicationRequest/c12f84fa-a597-4f32-98dd-708a34d4575e",
       "identifier": {
         "system": "https://fhir.nhs.uk/Id/prescription-order-item-number",
         "value": "E76622AE-E2DB-5683-2045-D1C229EDA3A2"
