@@ -83,7 +83,7 @@ export function getJson(file, resource) {
     } else {
         if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
         if (JSON.parse(resource).resourceType == "Parameters") {
-            return  {
+            var jsonResource = {
                 "resourceType" : "Parameters",
                 "parameter": [
                     {
@@ -91,7 +91,8 @@ export function getJson(file, resource) {
                         "resource": JSON.parse(resource)
                     }
                 ]
-            }
+            };
+            return JSON.stringify(jsonResource);
         }
         return resource;
     }

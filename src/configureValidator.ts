@@ -129,6 +129,12 @@ var manifest = [];
 
             // End UK Core folder names
 
+            copyExamplesFolder(source + 'Bundle');
+            copyExamplesFolder(source + 'Task');
+            copyExamplesFolder(source + 'Parameters');
+            copyExamplesFolder(source + 'Examples');
+            copyExamplesFolder(source + 'ServiceRequest');
+            copyExamplesFolder(source + 'Questionnaire');
 
             console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
             console.log('Deleting temporary files');
@@ -174,6 +180,30 @@ function deleteFile(file) {
 }
 
 
+function copyExamplesFolder(dir) {
+
+    console.log('Processing ' + dir);
+    if (fs.existsSync(dir)) {
+
+        const list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+
+            let ext: string = path.extname(file)
+            let root: string = file.substring(0, file.length - ext.length)
+            let destination = 'temp/package/examples/' + root + '.json';
+
+            const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+            const json = getJson(file, resource);
+            fs.writeFile(destination, jsonminify(json), function (err) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
+        })
+    } else {
+        console.log('INFO Folder not found  ' + dir);
+    }
+}
 
 function copyFolder(dir) {
 
