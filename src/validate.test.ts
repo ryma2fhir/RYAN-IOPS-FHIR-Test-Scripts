@@ -80,6 +80,10 @@ function testFolder(dir) {
         testFolder(source + 'CapabilityStatement');
     });
 
+    describe('Parsing folder Claim', () => {
+    testFolder(source + 'Claim');
+    });
+
     describe('Parsing folder CodeSystem', () => {
         testFolder(source + 'CodeSystem');
     });
@@ -94,6 +98,14 @@ function testFolder(dir) {
 
     describe('Parsing folder MessageDefinition', () => {
         testFolder(source + 'MessageDefinition');
+    });
+
+    describe('Parsing folder MedicationDispense', () => {
+        testFolder(source + 'MedicationDispense');
+    });
+
+    describe('Parsing folder MedicationRequest', () => {
+        testFolder(source + 'MedicationRequest');
     });
 
     describe('Parsing folder NamingSystem', () => {
