@@ -81,6 +81,7 @@ export function getJson(file, resource) {
 
         return json;
     } else {
+        console.log(file);
         if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
         if (JSON.parse(resource).resourceType == "Parameters") {
             var jsonResource = {

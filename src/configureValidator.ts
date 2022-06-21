@@ -187,18 +187,19 @@ function copyExamplesFolder(dir) {
 
         const list = fs.readdirSync(dir);
         list.forEach(function (file) {
+            if (!file.startsWith(".")) {
+                let ext: string = path.extname(file)
+                let root: string = file.substring(0, file.length - ext.length)
+                let destination = 'temp/package/examples/' + root + '.json';
 
-            let ext: string = path.extname(file)
-            let root: string = file.substring(0, file.length - ext.length)
-            let destination = 'temp/package/examples/' + root + '.json';
-
-            const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
-            const json = getJson(file, resource);
-            fs.writeFile(destination, jsonminify(json), function (err) {
-                if (err) {
-                    return console.error(err);
-                }
-            });
+                const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+                const json = getJson(file, resource);
+                fs.writeFile(destination, jsonminify(json), function (err) {
+                    if (err) {
+                        return console.error(err);
+                    }
+                });
+            }
         })
     } else {
         console.log('INFO Folder not found  ' + dir);
