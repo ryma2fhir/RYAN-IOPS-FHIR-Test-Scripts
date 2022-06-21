@@ -136,6 +136,15 @@ var manifest = [];
             copyExamplesFolder(source + 'ServiceRequest');
             copyExamplesFolder(source + 'Questionnaire');
 
+            copyExamplesFolder(source + 'CommunicationRequest');
+            copyExamplesFolder(source + 'HealthcareService');
+            copyExamplesFolder(source + 'Immunization');
+            copyExamplesFolder(source + 'Observation');
+            copyExamplesFolder(source + 'Patient');
+            copyExamplesFolder(source + 'Practitioner');
+            copyExamplesFolder(source + 'PractitionerRole');
+            copyExamplesFolder(source + 'Organization');
+
             console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
             console.log('Deleting temporary files');
             deleteFile('temp/package/.DS_Store.json');
