@@ -58,7 +58,7 @@
                     {
                         "system": "http://snomed.info/sct",
                         "code": "6064005",
-                        "display": "Topical"
+                        "display": "Topical route"
                     }
                 ]
             },
