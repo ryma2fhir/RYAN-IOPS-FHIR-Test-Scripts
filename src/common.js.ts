@@ -81,7 +81,7 @@ export function getJson(file, resource) {
 
         return json;
     } else {
-        console.log(file);
+       // console.log(file);
         if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
         if (JSON.parse(resource).resourceType == "Parameters") {
             var jsonResource = {
@@ -270,6 +270,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
         if ( issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
         if ( issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
+        if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
             console.log(issue.diagnostics)
             return false
