@@ -109,6 +109,7 @@ var manifest = [];
             copyFolder(source + 'ObservationDefinition');
 
             copyFolder(source + 'OperationDefinition');
+            copyFolder(source + 'OperationOutcome');
 
             copyFolder(source + 'Questionnaire');
 
