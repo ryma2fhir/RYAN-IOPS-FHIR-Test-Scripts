@@ -109,7 +109,6 @@ var manifest = [];
             copyFolder(source + 'ObservationDefinition');
 
             copyFolder(source + 'OperationDefinition');
-            copyFolder(source + 'OperationOutcome');
 
             copyFolder(source + 'Questionnaire');
 
@@ -130,6 +129,7 @@ var manifest = [];
 
             // End UK Core folder names
 
+            copyExamplesFolder(source + 'OperationOutcome');
             copyExamplesFolder(source + 'Bundle');
             copyExamplesFolder(source + 'Task');
             copyExamplesFolder(source + 'Parameters');

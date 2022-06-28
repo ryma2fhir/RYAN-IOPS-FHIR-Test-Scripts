@@ -120,7 +120,12 @@ function testFolder(dir) {
         testFolder(source + 'OperationDefinition');
     });
 
-    describe('Parsing folder Questionnaire', () => {
+    describe('Parsing folder OperationOutcome', () => {
+        testFolder(source + 'OperationOutcome');
+    });
+
+
+describe('Parsing folder Questionnaire', () => {
         testFolder(source + 'Questionnaire');
     });
 
