@@ -145,8 +145,9 @@ var manifest = [];
             copyExamplesFolder(source + 'Practitioner');
             copyExamplesFolder(source + 'PractitionerRole');
             copyExamplesFolder(source + 'Organization');
-            copyExamplesFolder(source + 'Encouter');
+            copyExamplesFolder(source + 'Encounter');
             copyExamplesFolder(source + 'EpisodeOfCare');
+            copyExamplesFolder(source + 'DocumentReference');
 
             console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
             console.log('Deleting temporary files');
