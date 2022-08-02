@@ -1,4 +1,4 @@
-import {basePath, defaultBaseUrl, getJson, getPatient, resourceChecks} from "./common.js";
+import {basePath, defaultBaseUrl, downloadPackage, getJson, getPatient, resourceChecks} from "./common.js";
 
 import * as fs from "fs";
 import supertest from "supertest"
@@ -10,11 +10,14 @@ const args = require('minimist')(process.argv.slice(2))
 let source = '../'
 let examples: string
 
+let failOnWarning = false;
+
 
 
 if (args!= undefined) {
     if (args['source']!= undefined) {
         source = args['source'];
+
     }
     if (args['examples']!= undefined) {
         examples = args['folder'];
@@ -32,6 +35,19 @@ const client = () => {
     return supertest(url)
 }
 
+const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
+if (resource != undefined) {
+    let pkg= JSON.parse(resource)
+
+    if (pkg.dependencies != undefined) {
+        for (let key in pkg.dependencies) {
+            if (key.startsWith('fhir.r4.ukcore')) {
+                failOnWarning = true;
+                console.log('ukcore dependency found, enabled STRICT validation')
+            }
+        }
+    }
+}
 
 function testFolder(dir) {
 
@@ -53,7 +69,7 @@ function testFolder(dir) {
                     .send(getJson(file, resource))
                     .expect(200)
                     .then((response: any) => {
-                        resourceChecks(response)
+                        resourceChecks(response, failOnWarning)
                     },
                         error => {
                             if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)

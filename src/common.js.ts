@@ -37,19 +37,19 @@ export function getContentType(file) {
     return contentType;
 }
 
-export function resourceChecks(response: any) {
+export function resourceChecks(response: any, failOnWarning:boolean) {
 
     const resource: any = response.body;
     expect(resource.resourceType).toEqual('OperationOutcome');
-    expect(errorsCheck(resource))
+    expect(errorsCheck(resource, failOnWarning))
 }
 
-export function resourceCheckErrorMessage(response: any, message: string) {
+export function resourceCheckErrorMessage(response: any, message: string, failOnWarning:boolean) {
 
     const resource: any = response.body;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(hasErrorMessage(resource)).toEqual(true)
-    if (message != undefined) expect(errorMessageCheck(resource,message))
+    if (message != undefined) expect(errorMessageCheck(resource,message, failOnWarning))
 }
 
 export function resourceCheckWarningMessage(response: any, message: string) {
@@ -150,7 +150,7 @@ function hasWarningMessage(resource): boolean  {
     return false;
 }
 
-function errorMessageCheck(resource, message) :boolean {
+function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let warn=0;
     let errorMessage = 'None found';
@@ -163,7 +163,7 @@ function errorMessageCheck(resource, message) :boolean {
                     errorMessage = getErrorOrWarningFull(issue);
                     if (errorMessage.includes(message)) return true;
                 case "warning":
-                    if (raiseWarning(issue)) throw new Error(getErrorOrWarningFull(issue))
+                    if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
                     break;
             }
         }
@@ -188,7 +188,7 @@ function warningMessageCheck(resource, message) :boolean {
     throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
 
-function errorsCheck(resource) {
+function errorsCheck(resource, failOnWarning:boolean) {
     const operationOutcome: OperationOutcome = resource;
     let warn=0;
     if (operationOutcome.issue !== undefined) {
@@ -200,7 +200,7 @@ function errorsCheck(resource) {
                     if (raiseError(issue)) throw new Error(getErrorOrWarningFull(issue))
                     break;
                 case "warning":
-                    if (raiseWarning(issue)) throw new Error(getErrorOrWarningFull(issue))
+                    if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
                     warn++;
                     break;
             }
@@ -231,7 +231,7 @@ function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
     }
     return error;
 }
-function raiseWarning(issue: OperationOutcomeIssue): boolean {
+function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
         if (issue.diagnostics.includes('incorrect type for element')) {
             return true;
@@ -240,12 +240,14 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
             return true;
         }
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
+        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
                 // Not defined in UKCore and valueset is extensible
                 if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods')) return false
                 // This has raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1839
                 if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')) return false
+
                 // This has been raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1840
                 if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ReasonImmunizationNotAdministered')) return false
                 if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode (https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false;
@@ -261,7 +263,10 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
     }
 
     // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
-    return false;
+
+    if (failOnWarning) {
+        return true
+    } else return false;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
@@ -273,6 +278,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
         if ( issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
         if ( issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
+        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
             console.log(issue.diagnostics)
