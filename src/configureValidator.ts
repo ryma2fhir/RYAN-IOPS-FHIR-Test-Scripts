@@ -223,7 +223,6 @@ function copyFolder(dir) {
 
         const list = fs.readdirSync(dir);
         list.forEach(function (file) {
-
             let ext: string = path.extname(file)
             let root: string = file.substring(0, file.length - ext.length)
             let destination = 'temp/package/' + root + '.json';

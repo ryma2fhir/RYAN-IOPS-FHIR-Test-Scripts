@@ -239,6 +239,7 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
+        if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
                 // Not defined in UKCore and valueset is extensible
@@ -258,6 +259,8 @@ function raiseWarning(issue: OperationOutcomeIssue): boolean {
             return true;
         }
     }
+
+    // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
     return false;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
