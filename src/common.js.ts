@@ -246,13 +246,13 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
                 // Not defined in UKCore and valueset is extensible
                 if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods')) return false
                 // This has raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1839
-                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')) return false
+                //if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ImmunizationExplanationReason')) return false
 
                 // This has been raised as an issue with UKCore https://simplifier.net/hl7fhirukcorer4/~issues/1840
-                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ReasonImmunizationNotAdministered')) return false
-                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode (https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false;
+                //if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ReasonImmunizationNotAdministered')) return false
+              //  if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode (https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false;
                 // HAPI FHIR 5.7.0 version of above
-                if (issue.diagnostics.includes('\'UK Core Medication Code\' (https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false;
+              //  if (issue.diagnostics.includes('\'UK Core Medication Code\' (https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false;
 
                 return true;
             }
@@ -279,7 +279,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         if ( issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
         if ( issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-        if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
+       // if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
             console.log(issue.diagnostics)
             return false
