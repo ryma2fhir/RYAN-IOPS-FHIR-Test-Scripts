@@ -112,6 +112,9 @@ describe('Parsing folder CommunicationRequest', () => {
     testFolder(source + 'CommunicationRequest');
 });
 
+describe('Parsing folder DocumentReference', () => {
+    testFolder(source + 'DocumentReference');
+});
     describe('Parsing folder Examples', () => {
         testFolder(source + 'Examples');
     });
@@ -120,9 +123,15 @@ describe('Parsing folder Encounter', () => {
     testFolder(source + 'Encounter');
 });
 
+
 describe('Parsing folder HealthcareService', () => {
     testFolder(source + 'HealthcareService');
 });
+
+describe('Parsing folder Immunization', () => {
+    testFolder(source + 'Immunization');
+});
+
 
     describe('Parsing folder MessageDefinition', () => {
         testFolder(source + 'MessageDefinition');
@@ -139,6 +148,10 @@ describe('Parsing folder HealthcareService', () => {
     describe('Parsing folder NamingSystem', () => {
         testFolder(source + 'NamingSystem');
     });
+
+describe('Parsing folder Observation', () => {
+    testFolder(source + 'Observation');
+});
 
     describe('Parsing folder ObservationDefinition', () => {
         testFolder(source + 'ObservationDefinition');
@@ -163,9 +176,9 @@ describe('Parsing folder QuestionnaireResponse', () => {
     testFolder(source + 'QuestionnaireResponse');
 });
 
-    describe('Parsing folder Parameters', () => {
-        testFolder(source + 'Parameters');
-    });
+describe('Parsing folder Parameters', () => {
+    testFolder(source + 'Parameters');
+});
 
 describe('Parsing folder Patient', () => {
     testFolder(source + 'Patient');
@@ -218,9 +231,6 @@ describe('Parsing folder PractitionerRole', () => {
         testFolder(source + 'examples');
     });
 
-    describe('Parsing folder examples', () => {
-        testFolder(source + 'examples');
-    });
 
     describe('Parsing folder structuredefinitions', () => {
         testFolder(source + 'structuredefinitions');
