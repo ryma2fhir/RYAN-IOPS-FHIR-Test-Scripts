@@ -108,9 +108,21 @@ function testFolder(dir) {
         testFolder(source + 'ConceptMap');
     });
 
+describe('Parsing folder CommunicationRequest', () => {
+    testFolder(source + 'CommunicationRequest');
+});
+
     describe('Parsing folder Examples', () => {
         testFolder(source + 'Examples');
     });
+
+describe('Parsing folder Encounter', () => {
+    testFolder(source + 'Encounter');
+});
+
+describe('Parsing folder HealthcareService', () => {
+    testFolder(source + 'HealthcareService');
+});
 
     describe('Parsing folder MessageDefinition', () => {
         testFolder(source + 'MessageDefinition');
@@ -139,16 +151,31 @@ function testFolder(dir) {
     describe('Parsing folder OperationOutcome', () => {
         testFolder(source + 'OperationOutcome');
     });
-
+describe('Parsing folder Organization', () => {
+    testFolder(source + 'Organization');
+});
 
 describe('Parsing folder Questionnaire', () => {
         testFolder(source + 'Questionnaire');
     });
 
+describe('Parsing folder QuestionnaireResponse', () => {
+    testFolder(source + 'QuestionnaireResponse');
+});
+
     describe('Parsing folder Parameters', () => {
         testFolder(source + 'Parameters');
     });
 
+describe('Parsing folder Patient', () => {
+    testFolder(source + 'Patient');
+});
+describe('Parsing folder Practitioner', () => {
+    testFolder(source + 'Practitioner');
+});
+describe('Parsing folder PractitionerRole', () => {
+    testFolder(source + 'PractitionerRole');
+});
     describe('Parsing folder SearchParameter', () => {
         testFolder(source + 'SearchParameter');
     });
