@@ -239,6 +239,9 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
+        if (issue.diagnostics.includes('Error HTTP 404')) {
+            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/Workflow-Code')) return false;
+        }
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
