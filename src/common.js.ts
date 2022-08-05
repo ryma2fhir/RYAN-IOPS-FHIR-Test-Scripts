@@ -240,7 +240,9 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
             return true;
         }
         if (issue.diagnostics.includes('Error HTTP 404')) {
+            // THis is issues with the Terminology Server not containig UKCore and NHSDigita CocdeSystems
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/Workflow-Code')) return false;
+            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDataModelAndDictionary-treatment-function')) return false;
         }
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
