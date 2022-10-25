@@ -49,6 +49,23 @@ if (resource != undefined) {
     }
 }
 
+async function validateFHIR(fhirResource: any) {
+    await client()
+        .post('/$validate')
+        .retry(3)
+        .set("Content-Type", 'application/fhir+json')
+        .set("Accept", 'application/fhir+json')
+        .send(fhirResource)
+        .expect(200)
+        .then((response: any) => {
+                resourceChecks(response, failOnWarning)
+            },
+            error => {
+                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+            })
+
+}
+
 function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
@@ -61,19 +78,21 @@ function testFolder(dir) {
             it('Validate ' + file, async () => {
                 // Initial terminology queries can take a long time to process - cached responses are much more responsive
                 jest.setTimeout(40000)
-                await client()
-                    .post('/$validate')
-                    .retry(3)
-                    .set("Content-Type", 'application/fhir+json')
-                    .set("Accept", 'application/fhir+json')
-                    .send(getJson(file, resource))
-                    .expect(200)
-                    .then((response: any) => {
-                        resourceChecks(response, failOnWarning)
-                    },
-                        error => {
-                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                        })
+                let fhirResource = getJson(file, resource)
+                let json =JSON.parse(fhirResource)
+                if (json.resourceType == "StructureDefinition") {
+                    if (json.kind == "logical") {
+                        // skip for now
+                    } else {
+                        validateFHIR(fhirResource)
+                    }
+
+                }
+                else {
+                   // console.log(json.resourceType)
+                    validateFHIR(fhirResource)
+                }
+
             });
         })
     }
