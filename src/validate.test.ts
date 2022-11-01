@@ -129,6 +129,10 @@ describe('Parsing folder CommunicationRequest', () => {
     testFolder(source + 'CommunicationRequest');
 });
 
+describe('Parsing folder DiagnosticReport', () => {
+    testFolder(source + 'DiagnosticReport');
+});
+
 describe('Parsing folder DocumentReference', () => {
     testFolder(source + 'DocumentReference');
 });
