@@ -8,7 +8,7 @@ export const basePath = "/FHIR/R4"
 var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
-
+//export let defaultBaseUrl = 'http://lb-fhir-validator-924628614.eu-west-2.elb.amazonaws.com/FHIR/R4';
 
 export async function validate(resource,contentType ) {
 

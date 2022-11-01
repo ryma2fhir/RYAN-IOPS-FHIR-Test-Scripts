@@ -50,19 +50,6 @@ if (resource != undefined) {
 }
 
 async function validateFHIR(fhirResource: any) {
-    await client()
-        .post('/$validate')
-        .retry(3)
-        .set("Content-Type", 'application/fhir+json')
-        .set("Accept", 'application/fhir+json')
-        .send(fhirResource)
-        .expect(200)
-        .then((response: any) => {
-                resourceChecks(response, failOnWarning)
-            },
-            error => {
-                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-            })
 
 }
 
@@ -74,27 +61,38 @@ function testFolder(dir) {
             if (file.includes('.DS_Store')) return;
             file = dir + "/" + file;
             const resource: any = fs.readFileSync(file, 'utf8');
-
-            it('Validate ' + file, async () => {
-                // Initial terminology queries can take a long time to process - cached responses are much more responsive
-                jest.setTimeout(40000)
-                let fhirResource = getJson(file, resource)
-                let json =JSON.parse(fhirResource)
-                if (json.resourceType == "StructureDefinition") {
-                    if (json.kind == "logical") {
-                        // skip for now
-                    } else {
-                        validateFHIR(fhirResource)
-                    }
-
+              // Initial terminology queries can take a long time to process - cached responses are much more responsive
+            jest.setTimeout(40000)
+            let fhirResource = getJson(file, resource)
+            let json =JSON.parse(fhirResource)
+            let validate=true
+            if (json.resourceType == "StructureDefinition") {
+                if (json.kind == "logical") {
+                    // skip for now
+                    validate = false
                 }
-                else {
-                   // console.log(json.resourceType)
-                    validateFHIR(fhirResource)
-                }
+            }
+            if (validate) {
+                it('Validate ' + file, async () => {
 
+                await client()
+                    .post('/$validate')
+                    .retry(3)
+                    .set("Content-Type", 'application/fhir+json')
+                    .set("Accept", 'application/fhir+json')
+                    .send(fhirResource)
+                    .expect(200)
+                    .then((response: any) => {
+                            resourceChecks(response, failOnWarning)
+                        },
+                        error => {
+                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                        }
+                        )
+                }
+                )
+                }
             });
-        })
     }
 }
 
