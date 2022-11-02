@@ -106,6 +106,10 @@ function testFolder(dir) {
         testFolder(source + 'Appointment');
     });
 
+    describe('Parsing folder AppointmentResponse', () => {
+    testFolder(source + 'AppointmentResponse');
+    });
+
     describe('Parsing folder Bundle', () => {
         testFolder(source + 'Bundle');
     });
@@ -153,6 +157,9 @@ describe('Parsing folder Immunization', () => {
     testFolder(source + 'Immunization');
 });
 
+describe('Parsing folder Location', () => {
+    testFolder(source + 'Location');
+});
 
     describe('Parsing folder MessageDefinition', () => {
         testFolder(source + 'MessageDefinition');
