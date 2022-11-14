@@ -75,6 +75,8 @@ export async function getResource(file: string): Promise<any> {
 export function getJson(file, resource) {
     var fileExtension = file.split('.').pop();
     if (fileExtension == 'xml' || fileExtension == 'XML') {
+
+
         var fhir = new Fhir();
         var json = fhir.xmlToJson(resource);
         if (JSON.parse(json).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)

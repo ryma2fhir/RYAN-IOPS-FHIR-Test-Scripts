@@ -63,37 +63,60 @@ function testFolder(dir) {
             const resource: any = fs.readFileSync(file, 'utf8');
               // Initial terminology queries can take a long time to process - cached responses are much more responsive
             jest.setTimeout(40000)
-            let fhirResource = getJson(file, resource)
-            let json =JSON.parse(fhirResource)
-            let validate=true
-            if (json.resourceType == "StructureDefinition") {
-                if (json.kind == "logical") {
-                    // skip for now
-                    validate = false
-                }
-            }
-            if (validate) {
-                it('Validate ' + file, async () => {
 
-                    await client()
-                        .post('/$validate')
-                        .retry(3)
-                        .set("Content-Type", 'application/fhir+json')
-                        .set("Accept", 'application/fhir+json')
-                        .send(fhirResource)
-                        .expect(200)
-                            .then((response: any) =>
-                                {
-                                    resourceChecks(response, failOnWarning)
-                                },
-                                error => {
-
-                                   if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                }
-                            )
+                let fhirResource = getJson(file, resource)
+                let json = JSON.parse(fhirResource)
+                let validate = true
+                if (json.resourceType == "StructureDefinition") {
+                    if (json.kind == "logical") {
+                        // skip for now
+                        validate = false
                     }
-                )
-            }
+                }
+                if (validate) {
+                    var fileExtension = file.split('.').pop();
+                    if (fileExtension == 'xml' || fileExtension == 'XML') {
+                        it('Validate ' + file, async () => {
+
+                                await client()
+                                    .post('/$validate')
+                                    .retry(3)
+                                    .set("Content-Type", 'application/fhir+xml')
+                                    .set("Accept", 'application/fhir+json')
+                                    .send(resource)
+                                   // .expect(200)
+                                    .then((response: any) => {
+                                            resourceChecks(response, failOnWarning)
+                                        },
+                                        error => {
+
+                                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                        }
+                                    )
+                            }
+                        )
+                    } else {
+                        it('Validate ' + file, async () => {
+
+                                await client()
+                                    .post('/$validate')
+                                    .retry(3)
+                                    .set("Content-Type", 'application/fhir+json')
+                                    .set("Accept", 'application/fhir+json')
+                                    .send(fhirResource)
+                                    .expect(200)
+                                    .then((response: any) => {
+                                            resourceChecks(response, failOnWarning)
+                                        },
+                                        error => {
+
+                                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                        }
+                                    )
+                            }
+                        )
+                    }
+                }
         });
     }
 }
