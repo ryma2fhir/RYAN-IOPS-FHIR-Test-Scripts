@@ -75,24 +75,26 @@ function testFolder(dir) {
             if (validate) {
                 it('Validate ' + file, async () => {
 
-                await client()
-                    .post('/$validate')
-                    .retry(3)
-                    .set("Content-Type", 'application/fhir+json')
-                    .set("Accept", 'application/fhir+json')
-                    .send(fhirResource)
-                    .expect(200)
-                    .then((response: any) => {
-                            resourceChecks(response, failOnWarning)
-                        },
-                        error => {
-                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                        }
-                        )
-                }
+                    await client()
+                        .post('/$validate')
+                        .retry(3)
+                        .set("Content-Type", 'application/fhir+json')
+                        .set("Accept", 'application/fhir+json')
+                        .send(fhirResource)
+                        .expect(200)
+                            .then((response: any) =>
+                                {
+                                    resourceChecks(response, failOnWarning)
+                                },
+                                error => {
+
+                                   if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                }
+                            )
+                    }
                 )
-                }
-            });
+            }
+        });
     }
 }
 
