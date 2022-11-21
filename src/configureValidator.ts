@@ -62,7 +62,7 @@ var manifest = [];
                     };
                     console.log('Using package ' + key + '-' + pkg.dependencies[key])
 
-                    downloadPackage(destinationPath, key, pkg.dependencies[key]);
+                   // downloadPackage(destinationPath, key, pkg.dependencies[key]);
                     manifest.push(entry);
                 }
             }
