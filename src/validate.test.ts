@@ -53,6 +53,100 @@ async function validateFHIR(fhirResource: any) {
 
 }
 
+function testFolderAll(dir) {
+
+    if (fs.existsSync(dir)) {
+        const list = fs.readdirSync(dir);
+        list.forEach(function (fileTop) {
+            if (fs.lstatSync(source+fileTop).isDirectory()) {
+                const list = fs.readdirSync(dir + fileTop);
+                let runTest = true
+                if (fileTop.startsWith('.')) runTest = false;
+                if (fileTop == 'Diagrams') runTest = false;
+                if (fileTop == 'Diagams') runTest = false;
+                if (fileTop == 'FML') runTest = false;
+                if (fileTop == 'dist') runTest = false;
+                if (fileTop == 'documents') runTest = false;
+                if (fileTop == 'nhsdtheme') runTest = false;
+                if (fileTop == 'ukcore') runTest = false;
+                if (fileTop == 'apim') runTest = false;
+                if (fileTop == 'Supporting Information') runTest = false;
+                if (runTest) {
+                    list.forEach(function (file) {
+                        if (file.includes('.DS_Store')) return;
+                        file = dir + fileTop + "/" + file;
+                        const resource: any = fs.readFileSync(file, 'utf8');
+                        // Initial terminology queries can take a long time to process - cached responses are much more responsive
+                        jest.setTimeout(40000)
+
+                        let fhirResource = getJson(file, resource)
+                        let validate = true
+                        try {
+                            let json = JSON.parse(fhirResource)
+                            if (json.resourceType == "StructureDefinition") {
+                                if (json.kind == "logical") {
+                                    // skip for now
+                                    validate = false
+                                }
+                            }
+                        }
+                        catch (e) {
+                            console.log('Error processing ' + file + ' exception '+(e as Error).message)
+                            validate = false
+                        }
+
+                        if (validate) {
+                            var fileExtension = file.split('.').pop();
+                            if (fileExtension == 'xml' || fileExtension == 'XML') {
+                                it('Validate ' + file, async () => {
+
+                                        await client()
+                                            .post('/$validate')
+                                            .retry(3)
+                                            .set("Content-Type", 'application/fhir+xml')
+                                            .set("Accept", 'application/fhir+json')
+                                            .send(resource)
+                                            // .expect(200)
+                                            .then((response: any) => {
+                                                    resourceChecks(response, failOnWarning)
+                                                },
+                                                error => {
+
+                                                    if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                                }
+                                            )
+                                    }
+                                )
+                            } else {
+                                it('Validate ' + file, async () => {
+
+                                        await client()
+                                            .post('/$validate')
+                                            .retry(3)
+                                            .set("Content-Type", 'application/fhir+json')
+                                            .set("Accept", 'application/fhir+json')
+                                            .send(fhirResource)
+                                            .expect(200)
+                                            .then((response: any) => {
+                                                    resourceChecks(response, failOnWarning)
+                                                },
+                                                error => {
+
+                                                    if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                                }
+                                            )
+                                    }
+                                )
+                            }
+                        }
+
+                    });
+                }
+            }
+        })
+    }
+}
+
 function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
@@ -121,177 +215,34 @@ function testFolder(dir) {
     }
 }
 
+    describe('Testing folder resources', () => {
+        testFolderAll(source );
+     /*
+        fs.readdir(source, (err, files) => {
+            files.forEach(file => {
 
+                if (fs.lstatSync(source+file).isDirectory()) {
+
+                    let test = true;
+                    if (file.startsWith('.') ) test = false
+
+                    if (test) {
+                        console.log('Testing '  + source + file);
+                      //
+
+                    }
+                } else {
+                    //console.log('Is a file '  + file)
+                }
+            });
+        });*/
+    });
 
     describe('Parsing supplied folder ', () => {
         if (examples != undefined) testFolder(examples);
     });
 
-    describe('Parsing folder Appointment', () => {
-        testFolder(source + 'Appointment');
-    });
 
-    describe('Parsing folder AppointmentResponse', () => {
-    testFolder(source + 'AppointmentResponse');
-    });
-
-    describe('Parsing folder Bundle', () => {
-        testFolder(source + 'Bundle');
-    });
-    describe('Parsing folder CapabilityStatement', () => {
-        testFolder(source + 'CapabilityStatement');
-    });
-
-    describe('Parsing folder Claim', () => {
-    testFolder(source + 'Claim');
-    });
-
-    describe('Parsing folder CodeSystem', () => {
-        testFolder(source + 'CodeSystem');
-    });
-
-    describe('Parsing folder ConceptMap', () => {
-        testFolder(source + 'ConceptMap');
-    });
-
-describe('Parsing folder CommunicationRequest', () => {
-    testFolder(source + 'CommunicationRequest');
-});
-
-describe('Parsing folder DiagnosticReport', () => {
-    testFolder(source + 'DiagnosticReport');
-});
-
-describe('Parsing folder DocumentReference', () => {
-    testFolder(source + 'DocumentReference');
-});
-    describe('Parsing folder Examples', () => {
-        testFolder(source + 'Examples');
-    });
-
-describe('Parsing folder Encounter', () => {
-    testFolder(source + 'Encounter');
-});
-
-
-describe('Parsing folder HealthcareService', () => {
-    testFolder(source + 'HealthcareService');
-});
-
-describe('Parsing folder Immunization', () => {
-    testFolder(source + 'Immunization');
-});
-
-describe('Parsing folder Location', () => {
-    testFolder(source + 'Location');
-});
-
-    describe('Parsing folder MessageDefinition', () => {
-        testFolder(source + 'MessageDefinition');
-    });
-
-    describe('Parsing folder MedicationDispense', () => {
-        testFolder(source + 'MedicationDispense');
-    });
-
-    describe('Parsing folder MedicationRequest', () => {
-        testFolder(source + 'MedicationRequest');
-    });
-
-    describe('Parsing folder NamingSystem', () => {
-        testFolder(source + 'NamingSystem');
-    });
-
-describe('Parsing folder Observation', () => {
-    testFolder(source + 'Observation');
-});
-
-    describe('Parsing folder ObservationDefinition', () => {
-        testFolder(source + 'ObservationDefinition');
-    });
-
-    describe('Parsing folder OperationDefinition', () => {
-        testFolder(source + 'OperationDefinition');
-    });
-
-    describe('Parsing folder OperationOutcome', () => {
-        testFolder(source + 'OperationOutcome');
-    });
-describe('Parsing folder Organization', () => {
-    testFolder(source + 'Organization');
-});
-
-describe('Parsing folder Questionnaire', () => {
-        testFolder(source + 'Questionnaire');
-    });
-
-describe('Parsing folder QuestionnaireResponse', () => {
-    testFolder(source + 'QuestionnaireResponse');
-});
-
-describe('Parsing folder Parameters', () => {
-    testFolder(source + 'Parameters');
-});
-
-describe('Parsing folder Patient', () => {
-    testFolder(source + 'Patient');
-});
-describe('Parsing folder Practitioner', () => {
-    testFolder(source + 'Practitioner');
-});
-describe('Parsing folder PractitionerRole', () => {
-    testFolder(source + 'PractitionerRole');
-});
-    describe('Parsing folder SearchParameter', () => {
-        testFolder(source + 'SearchParameter');
-    });
-
-    describe('Parsing folder ServiceRequest', () => {
-        testFolder(source + 'ServiceRequest');
-    });
-
-    describe('Parsing folder StructureDefinition', () => {
-        testFolder(source + 'StructureDefinition');
-    });
-
-    describe('Parsing folder StructureMap', () => {
-        testFolder(source + 'StructureMap');
-    });
-
-    describe('Parsing folder Subscription', () => {
-        testFolder(source + 'Subscription');
-    });
-
-    describe('Parsing folder Task', () => {
-        testFolder(source + 'Task');
-    });
-
-    describe('Parsing folder ValueSet', () => {
-        testFolder(source + 'ValueSet');
-    });
-
-// Begin UK Core folder names
-
-    describe('Parsing folder codesystems', () => {
-        testFolder(source + 'codesystems');
-    });
-
-    describe('Parsing folder conceptmaps', () => {
-        testFolder(source + 'conceptmaps');
-    });
-
-    describe('Parsing folder examples', () => {
-        testFolder(source + 'examples');
-    });
-
-
-    describe('Parsing folder structuredefinitions', () => {
-        testFolder(source + 'structuredefinitions');
-    });
-
-    describe('Parsing folder valuesets', () => {
-        testFolder(source + 'valuesets');
-    });
 
 // End UK Core folder names
 /*

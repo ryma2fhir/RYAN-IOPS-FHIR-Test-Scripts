@@ -42,7 +42,7 @@ function testFile(testDescription,file) {
             .send(getJson(file, resource))
             .expect(200)
             .then((response: any) => {
-                    resourceChecks(response)
+                    resourceChecks(response, true)
                 },
                 error => {
                     throw new Error(error.message)
@@ -64,7 +64,7 @@ function testFileWithProfile(profile, testDescription,file) {
             .send(getJson(file, resource))
             .expect(200)
             .then((response: any) => {
-                    resourceChecks(response)
+                    resourceChecks(response, true)
                 },
                 error => {
                     throw new Error(error.message)
@@ -86,7 +86,7 @@ function testFileError(testDescription, file,message) {
             .send(getJson(file, resource))
             //.expect(200)
             .then((response: any) => {
-                    resourceCheckErrorMessage(response,message)
+                    resourceCheckErrorMessage(response,message, true)
                 },
                 error => {
                     throw new Error(error.message)
@@ -108,7 +108,7 @@ function testFileErrorProfile(testDescription, file,message, profile) {
             .send(getJson(file, resource))
             //.expect(200)
             .then((response: any) => {
-                    resourceCheckErrorMessage(response,message)
+                    resourceCheckErrorMessage(response,message, true)
                 },
                 error => {
                     throw new Error(error.message)

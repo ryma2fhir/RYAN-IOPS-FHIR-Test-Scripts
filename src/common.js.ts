@@ -73,31 +73,37 @@ export async function getResource(file: string): Promise<any> {
 
 
 export function getJson(file, resource) {
-    var fileExtension = file.split('.').pop();
-    if (fileExtension == 'xml' || fileExtension == 'XML') {
+    try {
+        var fileExtension = file.split('.').pop();
+        if (fileExtension == 'xml' || fileExtension == 'XML') {
 
 
-        var fhir = new Fhir();
-        var json = fhir.xmlToJson(resource);
-        if (JSON.parse(json).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
+            var fhir = new Fhir();
+            var json = fhir.xmlToJson(resource);
+            if (JSON.parse(json).resourceType == undefined) throw Error('Invalid JSON Missing resource type ' + file)
 
-        return json;
-    } else {
-       // console.log(file);
-        if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type '+ file)
-        if (JSON.parse(resource).resourceType == "Parameters") {
-            var jsonResource = {
-                "resourceType" : "Parameters",
-                "parameter": [
-                    {
-                        "name": "resource",
-                        "resource": JSON.parse(resource)
-                    }
-                ]
-            };
-            return JSON.stringify(jsonResource);
+            return json;
+        } else {
+            // console.log(file);
+            if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type ' + file)
+            if (JSON.parse(resource).resourceType == "Parameters") {
+                var jsonResource = {
+                    "resourceType": "Parameters",
+                    "parameter": [
+                        {
+                            "name": "resource",
+                            "resource": JSON.parse(resource)
+                        }
+                    ]
+                };
+                return JSON.stringify(jsonResource);
+            }
+            return resource;
         }
-        return resource;
+    }
+    catch (e) {
+        console.log('Error processing '+file + ' Error message '+ (e as Error).message)
+        return undefined
     }
 
 }
@@ -240,6 +246,9 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         }
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
+        }
+        if (issue.diagnostics.includes('Could not confirm that the codes provided are in the value set')) {
+            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/usage-context-type')) return false;
         }
         if (issue.diagnostics.includes('Error HTTP 404')) {
             // THis is issues with the Terminology Server not containig UKCore and NHSDigita CocdeSystems
