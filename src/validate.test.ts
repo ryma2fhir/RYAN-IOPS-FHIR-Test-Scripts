@@ -3,6 +3,7 @@ import {basePath, defaultBaseUrl, downloadPackage, getJson, getPatient, resource
 import * as fs from "fs";
 import supertest from "supertest"
 import {jest} from "@jest/globals";
+import {tsTupleType} from "@babel/types";
 
 const args = require('minimist')(process.argv.slice(2))
 //const args = process.argv
@@ -73,73 +74,80 @@ function testFolderAll(dir) {
                 if (fileTop == 'Supporting Information') runTest = false;
                 if (runTest) {
                     list.forEach(function (file) {
-                        if (file.includes('.DS_Store')) return;
-                        file = dir + fileTop + "/" + file;
-                        const resource: any = fs.readFileSync(file, 'utf8');
-                        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-                        jest.setTimeout(40000)
+                        let processFile = true
+                        if (file.includes('.DS_Store')) processFile = false;
+                        if (file.startsWith('.')) processFile = false;
+                        if (processFile) {
+                                file = dir + fileTop + "/" + file;
+                            let resource: any = undefined
+                            try {
+                                resource = fs.readFileSync(file, 'utf8');
+                            } catch (e) {
+                                console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
+                            }
+                            // Initial terminology queries can take a long time to process - cached responses are much more responsive
+                            jest.setTimeout(40000)
 
-                        let fhirResource = getJson(file, resource)
-                        let validate = true
-                        try {
-                            let json = JSON.parse(fhirResource)
-                            if (json.resourceType == "StructureDefinition") {
-                                if (json.kind == "logical") {
-                                    // skip for now
-                                    validate = false
+                            let fhirResource = getJson(file, resource)
+                            let validate = true
+                            try {
+                                let json = JSON.parse(fhirResource)
+                                if (json.resourceType == "StructureDefinition") {
+                                    if (json.kind == "logical") {
+                                        // skip for now
+                                        validate = false
+                                    }
+                                }
+                            } catch (e) {
+                                console.log('Error processing ' + file + ' exception ' + (e as Error).message)
+                                validate = false
+                            }
+
+                            if (validate) {
+                                var fileExtension = file.split('.').pop();
+                                if (fileExtension == 'xml' || fileExtension == 'XML') {
+                                    it('Validate ' + file, async () => {
+
+                                            await client()
+                                                .post('/$validate')
+                                                .retry(3)
+                                                .set("Content-Type", 'application/fhir+xml')
+                                                .set("Accept", 'application/fhir+json')
+                                                .send(resource)
+                                                // .expect(200)
+                                                .then((response: any) => {
+                                                        resourceChecks(response, failOnWarning)
+                                                    },
+                                                    error => {
+
+                                                        if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                                    }
+                                                )
+                                        }
+                                    )
+                                } else {
+                                    it('Validate ' + file, async () => {
+
+                                            await client()
+                                                .post('/$validate')
+                                                .retry(3)
+                                                .set("Content-Type", 'application/fhir+json')
+                                                .set("Accept", 'application/fhir+json')
+                                                .send(fhirResource)
+                                                .expect(200)
+                                                .then((response: any) => {
+                                                        resourceChecks(response, failOnWarning)
+                                                    },
+                                                    error => {
+
+                                                        if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+                                                    }
+                                                )
+                                        }
+                                    )
                                 }
                             }
                         }
-                        catch (e) {
-                            console.log('Error processing ' + file + ' exception '+(e as Error).message)
-                            validate = false
-                        }
-
-                        if (validate) {
-                            var fileExtension = file.split('.').pop();
-                            if (fileExtension == 'xml' || fileExtension == 'XML') {
-                                it('Validate ' + file, async () => {
-
-                                        await client()
-                                            .post('/$validate')
-                                            .retry(3)
-                                            .set("Content-Type", 'application/fhir+xml')
-                                            .set("Accept", 'application/fhir+json')
-                                            .send(resource)
-                                            // .expect(200)
-                                            .then((response: any) => {
-                                                    resourceChecks(response, failOnWarning)
-                                                },
-                                                error => {
-
-                                                    if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                                }
-                                            )
-                                    }
-                                )
-                            } else {
-                                it('Validate ' + file, async () => {
-
-                                        await client()
-                                            .post('/$validate')
-                                            .retry(3)
-                                            .set("Content-Type", 'application/fhir+json')
-                                            .set("Accept", 'application/fhir+json')
-                                            .send(fhirResource)
-                                            .expect(200)
-                                            .then((response: any) => {
-                                                    resourceChecks(response, failOnWarning)
-                                                },
-                                                error => {
-
-                                                    if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                                }
-                                            )
-                                    }
-                                )
-                            }
-                        }
-
                     });
                 }
             }
