@@ -81,11 +81,11 @@ jobs:
           key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
           
       - name: Install npm
-        run: make -C validation install    
+        run: make install    
       
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
-        run: make -C validation configure-validation
+        run: make configure-validation
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
@@ -102,4 +102,4 @@ jobs:
           sleep 60
         
       - name: Run Test
-        run: make -C validation test
+        run: make test
