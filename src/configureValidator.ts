@@ -4,50 +4,65 @@ import { downloadPackage, getJson, resourceChecks } from "./common.js";
 import { tar } from 'zip-a-folder';
 
 
-var jsonminify = require("jsonminify");
-let fileName = 'package.json';
-let source = '../'
-let destination = '../../'
+    var jsonminify = require("jsonminify");
+    let fileName = 'package.json';
+    let source = '../'
+    let destination = '../../'
 
-const args = require('minimist')(process.argv.slice(2))
+    const args = require('minimist')(process.argv.slice(2))
 
-let destinationPath = 'validation-service-fhir-r4/src/main/resources';
+    let destinationPath = 'validation-service-fhir-r4/src/main/resources';
 
 
-var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
-if (process.env.ONTO_URL != undefined) {
-    ontoServer = process.env.ONTO_URL;
-}
-var clientId: string = process.env.ONTO_CLIENT_ID
-var clientSecret: string = process.env.ONTO_CLIENT_SECRET
-
-if (args != undefined) {
-    if (args['source'] != undefined) {
-        source = args['source'];
+    var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
+    if (process.env.ONTO_URL != undefined) {
+        ontoServer = process.env.ONTO_URL;
     }
-    if (args['destination'] != undefined) {
-        destination = args['destination'];
+    var clientId: string = process.env.ONTO_CLIENT_ID
+    var clientSecret: string = process.env.ONTO_CLIENT_SECRET
+
+    if (args != undefined) {
+        if (args['source'] != undefined) {
+            source = args['source'];
+        }
+        if (args['destination'] != undefined) {
+            destination = args['destination'];
+        }
     }
-}
 
 
-destinationPath = destination + destinationPath
-console.log('Destination - ' + destinationPath)
-console.log('Current directory - ' + __dirname)
-var workerDir = __dirname
+    destinationPath = destination + destinationPath
+    console.log('Destination - ' + destinationPath)
+    console.log('Current directory - ' + __dirname)
+    var workerDir = __dirname
 
-class TarMe {
-    static async main(src, destination) {
-        await tar(src, destination);
+    class TarMe {
+        static async main(src, destination) {
+            await tar(src, destination);
+        }
     }
-}
 
-// update manifest file if source supplied, skip otherwise
-var manifest = [];
+    // update manifest file if source supplied, skip otherwise
+    var manifest = [];
 
 
     fileName = source + fileName
 
+    var packageName: string = process.env.PACKAGE_NAME
+    var packageVersion: string = process.env.PACKAGE_NAME
+
+    if (packageName != undefined && packageVersion != undefined) {
+        console.log('Configuring manifest for ' + packageName + ' ' + packageVersion)
+        manifest.push({
+            "packageName": packageName,
+            "version": packageVersion
+        })
+        fs.writeFile(path.join(workerDir, destinationPath + '/manifest.json'), JSON.stringify(manifest, null, 2), function (err) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+    } else
     if (fs.existsSync(fileName)) {
         const file = fs.readFileSync(fileName, 'utf-8');
         const pkg = JSON.parse(file);
@@ -172,38 +187,68 @@ var manifest = [];
                 }
             }
         } else {
-            console.log(manifest);
-            console.log("Error - No source package.json or validator manifest.json found");
+
+                console.log(manifest);
+                console.log("Error - No source package.json or validator manifest.json found");
+
         }
     }
 
-function deleteFile(file) {
-    fs.stat(file, function (err, stats) {
-        //console.log(stats);//here we got all information of file in stats variable
-        if (err) {
-            //return console.error(err);
-        }
-        fs.unlink(file, function (err) {
+    function deleteFile(file) {
+        fs.stat(file, function (err, stats) {
+            //console.log(stats);//here we got all information of file in stats variable
             if (err) {
-                return;
+                //return console.error(err);
             }
-            console.log('file deleted successfully ' + file);
+            fs.unlink(file, function (err) {
+                if (err) {
+                    return;
+                }
+                console.log('file deleted successfully ' + file);
+            });
         });
-    });
-}
+    }
 
 
-function copyExamplesFolder(dir) {
+    function copyExamplesFolder(dir) {
 
-    console.log('Processing ' + dir);
-    if (fs.existsSync(dir)) {
+        console.log('Processing ' + dir);
+        if (fs.existsSync(dir)) {
 
-        const list = fs.readdirSync(dir);
-        list.forEach(function (file) {
-            if (!file.startsWith(".")) {
+            const list = fs.readdirSync(dir);
+            list.forEach(function (file) {
+                if (!file.startsWith(".")) {
+                    let ext: string = path.extname(file)
+                    let root: string = file.substring(0, file.length - ext.length)
+                    let destination = 'temp/package/examples/' + root + '.json';
+
+                    const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+                    const json = getJson(file, resource);
+                    fs.writeFile(destination, jsonminify(json), function (err) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                    });
+                }
+            })
+        } else {
+            console.log('INFO Folder not found  ' + dir);
+        }
+    }
+
+    function copyFolder(dir) {
+
+        console.log('Processing ' + dir);
+        if (fs.existsSync(dir)) {
+
+            const list = fs.readdirSync(dir);
+            list.forEach(function (file) {
                 let ext: string = path.extname(file)
                 let root: string = file.substring(0, file.length - ext.length)
-                let destination = 'temp/package/examples/' + root + '.json';
+                let destination = 'temp/package/' + root + '.json';
+                if (dir.includes('MessageDefinition') || dir.includes('ObservationDefinition')) {
+                    destination = 'temp/package/examples/' + root + '.json';
+                }
 
                 const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
                 const json = getJson(file, resource);
@@ -212,36 +257,8 @@ function copyExamplesFolder(dir) {
                         return console.error(err);
                     }
                 });
-            }
-        })
-    } else {
-        console.log('INFO Folder not found  ' + dir);
+            })
+        } else {
+            console.log('INFO Folder not found  ' + dir);
+        }
     }
-}
-
-function copyFolder(dir) {
-
-    console.log('Processing ' + dir);
-    if (fs.existsSync(dir)) {
-
-        const list = fs.readdirSync(dir);
-        list.forEach(function (file) {
-            let ext: string = path.extname(file)
-            let root: string = file.substring(0, file.length - ext.length)
-            let destination = 'temp/package/' + root + '.json';
-            if (dir.includes('MessageDefinition') || dir.includes('ObservationDefinition')) {
-                destination = 'temp/package/examples/' + root + '.json';
-            }
-
-            const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
-            const json = getJson(file, resource);
-            fs.writeFile(destination, jsonminify(json), function (err) {
-                if (err) {
-                    return console.error(err);
-                }
-            });
-        })
-    } else {
-        console.log('INFO Folder not found  ' + dir);
-    }
-}
