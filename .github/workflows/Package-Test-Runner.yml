@@ -80,6 +80,8 @@ jobs:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
           ONTO_CLIENT_SECRET: ${{ secrets.ONTO_CLIENT_SECRET }}
+          PACKAGE_NAME: fhir.r4.ukcore.stu1
+          PACKAGE_VERSION: 1.0.0-pre-release
         
       - name: Update FHIR Validator dependencies and build
         run: make -C validation-service-fhir-r4 build
