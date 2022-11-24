@@ -161,6 +161,7 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
     testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json')
     testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
+    testFile('Test EPS fhirPath constraint issue (present in 6.2.x HAPI) ','Examples/pass/MedicationRequest-constraints.json')
 });
 
 describe('Testing validation fails invalid FHIR resources', () => {
