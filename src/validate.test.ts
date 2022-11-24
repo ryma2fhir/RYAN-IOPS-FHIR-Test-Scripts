@@ -4,6 +4,7 @@ import * as fs from "fs";
 import supertest from "supertest"
 import {jest} from "@jest/globals";
 import {tsTupleType} from "@babel/types";
+import {StructureDefinition} from "fhir/r4";
 
 const args = require('minimist')(process.argv.slice(2))
 //const args = process.argv
@@ -103,6 +104,13 @@ function testFolderAll(dir) {
                                             // skip for now
                                             validate = false
                                         }
+                                        let structureDefinition : StructureDefinition = json
+                                        test('Check snapshot is not present '+structureDefinition.url, ()=> {
+                                            expect(structureDefinition.snapshot).toBeFalsy()
+                                        })
+                                        test('Check differential is present '+structureDefinition.url, ()=> {
+                                            expect(structureDefinition.differential).toBeDefined()
+                                        })
                                     }
                                 } catch (e) {
                                     console.log('Error processing ' + file + ' exception ' + (e as Error).message)
@@ -164,6 +172,11 @@ function testFolderAll(dir) {
     }
 }
 
+    console.log('Current directory - ' + __dirname)
+    testFolderAll(source )
+
+
+/*
 function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
@@ -187,6 +200,13 @@ function testFolder(dir) {
                             // skip for now
                             validate = false
                         }
+                        let structureDefinition : StructureDefinition = json
+                        test('Check snapshot is not present', ()=> {
+                            expect(structureDefinition.snapshot).toBeNull()
+                        })
+                        test('Check differential is present', ()=> {
+                            expect(structureDefinition.differential).toBeDefined()
+                        })
                     }
                     if (validate) {
                         var fileExtension = file.split('.').pop();
@@ -238,8 +258,10 @@ function testFolder(dir) {
         );
     }
 }
-    console.log('Current directory - ' + __dirname)
-    testFolderAll(source )
+
+ */
+
+
 
 
 
