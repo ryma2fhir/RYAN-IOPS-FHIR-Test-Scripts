@@ -93,8 +93,8 @@ jobs:
           PACKAGE_NAME: ${{github.event.inputs.packagename}}
           PACKAGE_VERSION: ${{github.event.inputs.packageversion}}
         
-      - name: Update FHIR Validator dependencies and build
-        run: make -C validation-service-fhir-r4 build
+      - name: Build FHIR Validator
+        run: cd validation-service-fhir-r4 && mvn clean package
 
       - name: Run FHIR Validator
         run: 
