@@ -81,9 +81,7 @@ jobs:
           key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
           
       - name: Install npm
-        run: make install
-
-      - run: cd  ${{ inputs.working_directory }}     
+        run: make -C validation install    
       
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
