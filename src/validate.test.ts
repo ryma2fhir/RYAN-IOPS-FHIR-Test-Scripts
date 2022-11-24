@@ -72,6 +72,9 @@ function testFolderAll(dir) {
                 if (fileTop == 'ukcore') runTest = false;
                 if (fileTop == 'apim') runTest = false;
                 if (fileTop == 'Supporting Information') runTest = false;
+                // This project needs to avoid these folders
+                if (fileTop == 'validation') runTest = false;
+                if (fileTop == 'validation-service-fhir-r4') runTest = false;
                 if (runTest) {
                     list.forEach(function (file) {
                         let processFile = true
