@@ -21,6 +21,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    
+      - run: echo  ${{ inputs.working_directory }}
+      
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
@@ -80,6 +83,8 @@ jobs:
       - name: Install npm
         run: make install
 
+      - run: cd  ${{ inputs.working_directory }}     
+      
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
         run: make -C validation configure-validation
