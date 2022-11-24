@@ -1,33 +1,32 @@
 {
   "resourceType": "PractitionerRole",
-  "id": "56166769-c1c4-4d07-afa8-132b5dfca645",
+  "id": "6dc16793-61c2-44b8-8d0f-f872101c016e",
   "identifier": [
     {
       "system": "https://fhir.nhs.uk/Id/sds-role-profile-id",
-      "value": "100102238986"
+      "value": "125686540025"
     }
   ],
   "practitioner": {
     "identifier": {
-      "system": "https://fhir.hl7.org.uk/Id/gmc-number",
-      "value": "C9876543"
+      "system": "https://fhir.hl7.org.uk/Id/gmp-number",
+      "value": "G1234567"
     },
-    "display": "Dr Smith"
+    "display": "Dr Razia Ali"
   },
   "organization": {
     "identifier": {
       "system": "https://fhir.nhs.uk/Id/ods-organization-code",
-      "value": "RBA"
+      "value": "M85011"
     },
-    "display": "TAUNTON AND SOMERSET NHS FOUNDATION TRUST"
+    "display": "THE SWAN MEDICAL CENTRE"
   },
   "code": [
     {
       "coding": [
         {
-          "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-SDSJobRoleName",
-          "code": "R8000",
-          "display": "Clinical Practitioner Access Role"
+          "system": "https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode",
+          "code": "R0260"
         }
       ]
     }
@@ -36,9 +35,9 @@
     {
       "coding": [
         {
-          "system": "https://fhir.nhs.uk/CodeSystem/NHSDataModelAndDictionary-clinical-specialty",
-          "code": "310",
-          "display": "Audio Vestibular Medicine"
+          "system": "https://fhir.hl7.org.uk/CodeSystem/UKCore-PracticeSettingCode",
+          "code": "100",
+          "display": "GENERAL SURGERY"
         }
       ]
     }
