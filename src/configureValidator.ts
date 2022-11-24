@@ -49,7 +49,7 @@ import { tar } from 'zip-a-folder';
     fileName = source + fileName
 
     var packageName: string = process.env.PACKAGE_NAME
-    var packageVersion: string = process.env.PACKAGE_NAME
+    var packageVersion: string = process.env.PACKAGE_VERSION
 
     if (packageName != undefined && packageVersion != undefined) {
         console.log('Configuring manifest for ' + packageName + ' ' + packageVersion)
