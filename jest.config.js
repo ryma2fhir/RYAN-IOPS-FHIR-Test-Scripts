@@ -1,15 +1,17 @@
 
 
-module.exports = {
+const config = {
     reporters: [
         "default",
-        "jest-github-actions-reporter"
+        'github-actions',
+        //"jest-github-actions-reporter"
     ],
     testLocationInResults: true,
     transform: {
         '^.+\\.ts?$': 'ts-jest',
     },
-    testRunner : 'jasmine2',
     verbose: true
 };
+
+module.exports = config;
 
