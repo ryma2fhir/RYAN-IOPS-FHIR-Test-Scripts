@@ -157,9 +157,9 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     // Bundle
     testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
 
-    testFileWarning('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json','SearchSet Bundles should have a self link that specifies')
+    testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
-    testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.xml')
+    testFileError('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json','https://fhir.nhs.uk/StructureDefinition/CareConnect-GPC-MedicationRequest-1')
     testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
 });
 

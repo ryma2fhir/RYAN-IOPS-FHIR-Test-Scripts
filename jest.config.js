@@ -5,6 +5,7 @@ module.exports = {
         "default",
         "jest-github-actions-reporter"
     ],
+    testLocationInResults: true,
     transform: {
         '^.+\\.ts?$': 'ts-jest',
     },
