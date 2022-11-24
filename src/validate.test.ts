@@ -8,7 +8,7 @@ import {tsTupleType} from "@babel/types";
 const args = require('minimist')(process.argv.slice(2))
 //const args = process.argv
 
-let source = '../'
+let source = 'gitrepository/'
 let examples: string
 
 let failOnWarning = false;
@@ -22,6 +22,7 @@ if (args!= undefined) {
     }
     if (args['examples']!= undefined) {
         examples = args['folder'];
+        source = '../'
     }
 }
 
