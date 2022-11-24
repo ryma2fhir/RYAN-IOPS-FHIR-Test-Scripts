@@ -57,7 +57,7 @@ import { tar } from 'zip-a-folder';
             "packageName": packageName,
             "version": packageVersion
         })
-        fs.writeFile(path.join(workerDir, destinationPath + '/manifest.json'), JSON.stringify(manifest, null, 2), function (err) {
+        fs.writeFile(path.join(workerDir, '../validation-service-fhir-r4/src/main/resources' + '/manifest.json'), JSON.stringify(manifest, null, 2), function (err) {
             if (err) {
                 return console.error(err);
             }

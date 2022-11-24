@@ -238,32 +238,8 @@ function testFolder(dir) {
         );
     }
 }
+    console.log('Current directory - ' + __dirname)
     testFolderAll(source )
-/*
-    describe('Testing folder resources', () => {
-        testFolderAll(source );
-    });
-
-    describe('Parsing supplied folder ', () => {
-        if (examples != undefined) testFolder(examples);
-    });
-*/
-
-
-// End UK Core folder names
-/*
-    describe('Testing validation api is functioning', () => {
-        console.log(getPatient())
-        it('validation functionality test', async () => {
-            await client()
-                .post('/$validate')
-                .set("Content-Type", "application/fhir+json; fhirVersion=4.0.1")
-                .set("Accept", "application/fhir+json")
-                .send(getPatient())
-                .expect(200)
-        });
-    });
-*/
 
 
 
