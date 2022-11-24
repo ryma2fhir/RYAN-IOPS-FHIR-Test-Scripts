@@ -23,6 +23,9 @@ jobs:
     steps:
     
       - run: echo  ${{ inputs.working_directory }}
+      - run: echo  ${{ github.event.inputs.githubrepo }}
+      - run: echo  ${{ github.event.inputs.packagename }}
+      - run: echo  ${{ github.event.inputs.packageversion }}
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
