@@ -159,7 +159,7 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
 
     testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
-    testFileError('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json','https://fhir.nhs.uk/StructureDefinition/CareConnect-GPC-MedicationRequest-1')
+    testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json')
     testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
 });
 
@@ -170,13 +170,13 @@ describe('Testing validation fails invalid FHIR resources', () => {
     testFileError('Check validation fails when no Scottish CHI Number is supplied','Examples/fail/patient-chi-number.json','Supplied NHS Number is outside the English and Welsh NHS Number')
 
     // PractitionerRole
-    testFileWarning('Check validation fails on PractitionerRole when invalid GMC Number is supplied','Examples/fail/PractitionerRole-invalidGMC.json','GMC must be of the format CNNNNNNN')
+    testFileError('Check validation fails on PractitionerRole when invalid GMC Number is supplied','Examples/fail/PractitionerRole-invalidGMC.json','GMC must be of the format CNNNNNNN')
 
 
     // MedicationRequest
     testFileError('Check validation fails when no medication code is supplied', 'Examples/fail/MedicationRequest-missingMedication.json',undefined)
-    testFileError('Check validation fails when no medication code is supplied','Examples/fail/MedicationRequest-missingMedication.json','MedicationRequest.medication[x]: minimum required = 1')
-    testFileError('Check validation fails when medication code is supplied with the future dm+d system', 'Examples/fail/MedicationRequest-dmdCode.json','CodeableConcept.coding:SNOMED: minimum required = 1')
+  //  testFileError('Check validation fails when no medication code is supplied','Examples/fail/MedicationRequest-missingMedication.json','MedicationRequest.medication[x]: minimum required = 1')
+    testFileError('Check validation fails when medication code is supplied with the future dm+d system', 'Examples/fail/MedicationRequest-dmdCode.json','CodeableConcept.coding:SNOMED')
     testFileError('Check validation fails when identifier is an object not an array (AEA-1820)','Examples/fail/MedicationRequest-invalid-json.json', undefined)
 
     // MedicationDispense
