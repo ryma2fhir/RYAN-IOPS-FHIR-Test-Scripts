@@ -22,7 +22,7 @@ jobs:
       - name: Check out Test Repo - TODO Turn into a paramter
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/NHSDigital/NHSDigital-FHIR-BookingAndReferrals
+          repository: NHSDigital/NHSDigital-FHIR-BookingAndReferrals
           ref: main
           path: gitrepository
 
