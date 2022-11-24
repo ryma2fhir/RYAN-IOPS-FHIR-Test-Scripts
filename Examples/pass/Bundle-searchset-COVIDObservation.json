@@ -1,14 +1,33 @@
 {
   "resourceType": "Bundle",
-  "id" : "c01c8284-5561-4825-9f0d-3bdcaf18c8d4",
+  "id": "c01c8284-5561-4825-9f0d-3bdcaf18c8d4",
   "type": "searchset",
   "total": 2,
+  "link": [
+    {
+      "relation": "self",
+      "url": "http://example.org/FHIR/R4/Observation?patient.identifier=https://fhir.nhs.uk/Id/nhs-number|9686368973"
+    }
+  ],
   "entry": [
     {
-      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120004",
+      "fullUrl": "Observation/edea022a-2d81-11eb-adc1-0242ac120004",
       "resource": {
         "resourceType": "Observation",
-        "id": "SARS-CoV-2-ORGY",
+        "id": "edea022a-2d81-11eb-adc1-0242ac120004",
+        "contained": [
+          {
+            "resourceType": "Patient",
+            "id": "9686368973",
+            "identifier": [
+              {
+                "system": "https://fhir.nhs.uk/Id/nhs-number",
+                "value": "9686368973"
+              }
+            ],
+            "birthDate": "1997-12-28"
+          }
+        ],
         "identifier": [
           {
             "system": "https://fhir.nhs.uk/Id/SpecimenId",
@@ -21,15 +40,16 @@
             {
               "system": "http://snomed.info/sct",
               "code": "871562009",
-              "display": "Detection of Severe acute respiratory syndrome coronavirus 2 (observable entity)"
+              "display": "Detection of SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2)"
             }
           ]
         },
         "subject": {
+          "reference": "#9686368973",
           "identifier": [
             {
               "system": "https://fhir.nhs.uk/Id/nhs-number",
-              "value": "9912003888"
+              "value": "9686368973"
             }
           ]
         },
@@ -49,7 +69,7 @@
             {
               "system": "http://snomed.info/sct",
               "code": "1240471000000102",
-              "display": "Measurement of Severe acute respiratory syndrome coronavirus 2 antigen (observable entity)"
+              "display": "Measurement of COVID-19 antigen"
             }
           ]
         },
@@ -69,25 +89,16 @@
         "performer": [
           {
             "identifier": {
-              "type": {
-                "text": "Processing Lab"
-              },
               "value": "MK"
             }
           },
           {
             "identifier": {
-              "type": {
-                "text": "Testing Centre"
-              },
               "value": "WKE03"
             }
           },
           {
             "identifier": {
-              "type": {
-                "text": "createSource"
-              },
               "value": "electiveCare"
             }
           }
@@ -101,10 +112,23 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:edea022a-2d81-11eb-adc1-0242ac120000",
+      "fullUrl": "Observation/edea022a-2d81-11eb-adc1-0242ac120000",
       "resource": {
         "resourceType": "Observation",
-        "id": "SARS-CoV-2-ORGY",
+        "id": "edea022a-2d81-11eb-adc1-0242ac120000",
+        "contained": [
+          {
+            "resourceType": "Patient",
+            "id": "9686368973",
+            "identifier": [
+              {
+                "system": "https://fhir.nhs.uk/Id/nhs-number",
+                "value": "9686368973"
+              }
+            ],
+            "birthDate": "1997-12-28"
+          }
+        ],
         "identifier": [
           {
             "system": "https://fhir.nhs.uk/Id/SpecimenId",
@@ -117,15 +141,16 @@
             {
               "system": "http://snomed.info/sct",
               "code": "871562009",
-              "display": "Detection of Severe acute respiratory syndrome coronavirus 2 (observable entity)"
+              "display": "Detection of SARS-CoV-2 (severe acute respiratory syndrome coronavirus 2)"
             }
           ]
         },
         "subject": {
+          "reference": "#9686368973",
           "identifier": [
             {
               "system": "https://fhir.nhs.uk/Id/nhs-number",
-              "value": "9912003888"
+              "value": "9686368973"
             }
           ]
         },
@@ -145,7 +170,7 @@
             {
               "system": "http://snomed.info/sct",
               "code": "1240471000000102",
-              "display": "Measurement of Severe acute respiratory syndrome coronavirus 2 antigen (observable entity)"
+              "display": "Measurement of 2019-nCoV antigen"
             }
           ]
         },
@@ -165,25 +190,16 @@
         "performer": [
           {
             "identifier": {
-              "type": {
-                "text": "Processing Lab"
-              },
               "value": "LFD004"
             }
           },
           {
             "identifier": {
-              "type": {
-                "text": "Testing Centre"
-              },
               "value": "WKE03"
             }
           },
           {
             "identifier": {
-              "type": {
-                "text": "createSource"
-              },
               "value": "electiveCare"
             }
           }
