@@ -31,7 +31,7 @@ it('Validator is functioning ',async function () {
 function testFile(testDescription,file) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it(testDescription + ' filename' + file, async () => {
+    test(testDescription + ' filename' + file, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
@@ -53,7 +53,7 @@ function testFile(testDescription,file) {
 function testFileWithProfile(profile, testDescription,file) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it(testDescription + ' filename ' + file + ' profile = '+ profile, async () => {
+    test(testDescription + ' filename ' + file + ' profile = '+ profile, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
@@ -75,7 +75,7 @@ function testFileWithProfile(profile, testDescription,file) {
 function testFileError(testDescription, file,message) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it(testDescription + ' Filename = ' + file, async () => {
+    test(testDescription + ' Filename = ' + file, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
@@ -97,7 +97,7 @@ function testFileError(testDescription, file,message) {
 function testFileErrorProfile(testDescription, file,message, profile) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it(testDescription + ' Filename = ' + file, async () => {
+    test(testDescription + ' Filename = ' + file, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
@@ -120,7 +120,7 @@ function testFileErrorProfile(testDescription, file,message, profile) {
 function testFileWarning(testDescription, file,message) {
     const resource: any = fs.readFileSync(file, 'utf8');
 
-    it(testDescription + ' Filename = ' + file, async () => {
+    test(testDescription + ' Filename = ' + file, async () => {
         // Initial terminology queries can take a long time to process - cached responses are much more responsive
         jest.setTimeout(30000)
         await client()
