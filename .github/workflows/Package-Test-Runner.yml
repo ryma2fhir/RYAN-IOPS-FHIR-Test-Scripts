@@ -33,7 +33,6 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: ${{github.event.inputs.githubrepo}}
-          ref: main
           path: gitrepository
 
       - name: Check out validation-service-fhir-r4
