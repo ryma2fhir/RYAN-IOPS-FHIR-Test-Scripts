@@ -124,9 +124,6 @@ function testFile(dir, fileTop, file)
                     test('Check snapshot is not present', () => {
                         expect(structureDefinition.snapshot).toBeFalsy()
                     })
-                    test('Check differential is present', () => {
-                        expect(structureDefinition.differential).toBeDefined()
-                    })
                 }
             } catch (e) {
                 console.log('Error processing ' + file + ' exception ' + (e as Error).message)
