@@ -142,12 +142,12 @@ function testFile(dir, fileTop, file)
 
                     test('FHIR Validate JSON', async () =>{
                         let operationOutcomeResponse : any = await validateXML(resource)
-                        if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
+                      //  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
                     })
                 } else {
                     test('FHIR Validate JSON', async () =>{
                         let operationOutcomeResponse : any = await validateJSON(fhirResource)
-                        if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
+                      //  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
                     })
 
                 }
@@ -156,9 +156,9 @@ function testFile(dir, fileTop, file)
     )
 }
 
-function validateXML(resource) : any {
+async function validateXML(resource) {
 
-    client()
+    await client()
         .post('/$validate')
         .retry(3)
         .set("Content-Type", 'application/fhir+xml')
@@ -167,7 +167,6 @@ function validateXML(resource) : any {
         // .expect(200)
         .then((response: any) => {
                 resourceChecks(response, failOnWarning)
-                return response
             },
             error => {
 
@@ -175,9 +174,9 @@ function validateXML(resource) : any {
             }
         )
 }
-function validateJSON(fhirResource) : any {
+async function validateJSON(fhirResource): Promise<any> {
 
-    client()
+    await client()
         .post('/$validate')
         .retry(3)
         .set("Content-Type", 'application/fhir+json')
@@ -186,7 +185,6 @@ function validateJSON(fhirResource) : any {
         .expect(200)
         .then((response: any) => {
                 resourceChecks(response, failOnWarning)
-                return response
             },
             error => {
 
