@@ -104,4 +104,4 @@ jobs:
           sleep 60
         
       - name: Run Test
-        run: make test
+        run: make test-package
