@@ -3,7 +3,7 @@ import {basePath, defaultBaseUrl, downloadPackage, getJson, getPatient, resource
 import * as fs from "fs";
 import supertest from "supertest"
 import {jest, expect, describe} from "@jest/globals";
-import {StructureDefinition} from "fhir/r4";
+import {OperationOutcome, StructureDefinition} from "fhir/r4";
 import axios from "axios";
 
 
@@ -139,12 +139,15 @@ function testFile(dir, fileTop, file)
             if (validate) {
                 var fileExtension = file.split('.').pop();
                 if (fileExtension == 'xml' || fileExtension == 'XML') {
+
                     test('FHIR Validate JSON', async () =>{
-                        await validateXML(resource)
+                        let operationOutcomeResponse : any = await validateXML(resource)
+                        if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
                     })
                 } else {
                     test('FHIR Validate JSON', async () =>{
-                        await validateJSON(fhirResource)
+                        let operationOutcomeResponse : any = await validateJSON(fhirResource)
+                        if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
                     })
 
                 }
@@ -153,9 +156,9 @@ function testFile(dir, fileTop, file)
     )
 }
 
-function validateXML(resource) {
+function validateXML(resource) : any {
 
-    return client()
+    client()
         .post('/$validate')
         .retry(3)
         .set("Content-Type", 'application/fhir+xml')
@@ -164,6 +167,7 @@ function validateXML(resource) {
         // .expect(200)
         .then((response: any) => {
                 resourceChecks(response, failOnWarning)
+                return response
             },
             error => {
 
@@ -171,9 +175,9 @@ function validateXML(resource) {
             }
         )
 }
-function validateJSON(fhirResource) {
+function validateJSON(fhirResource) : any {
 
-    return client()
+    client()
         .post('/$validate')
         .retry(3)
         .set("Content-Type", 'application/fhir+json')
@@ -182,6 +186,7 @@ function validateJSON(fhirResource) {
         .expect(200)
         .then((response: any) => {
                 resourceChecks(response, failOnWarning)
+                return response
             },
             error => {
 
