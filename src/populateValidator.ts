@@ -3,7 +3,7 @@ import axios from "axios";
 import {URLSearchParams} from "url";
 import fs from "fs";
 import path from "path";
-import {delay, getJson, resourceChecks, wait} from "./common.js";
+import {delay, getJson} from "./common.js";
 
 const fileName = '../package.json';
 
@@ -14,17 +14,17 @@ const args = require('minimist')(process.argv.slice(2))
 const readThrottle = 10
 const postThrottle = 500
 
-var accessToken: String
+let accessToken: String;
 
-var ontoServer = 'https://ontology.nhs.uk/authoring/fhir'
+let ontoServer = 'https://ontology.nhs.uk/authoring/fhir';
 
 if (process.env.ONTO_CLIENT_ID!= undefined) {
     ontoServer = process.env.ONTO_CLIENT_ID;
 }
-var clientId: string //process.env.ONTO_CLIENT_ID
-var clientSecret: string //process.env.ONTO_CLIENT_SECRET
-var fileNo = 0;
-var postNo = 0;
+let clientId: string; //process.env.ONTO_CLIENT_ID
+let clientSecret: string; //process.env.ONTO_CLIENT_SECRET
+let fileNo = 0;
+let postNo = 0;
 const destinationPath = '/';
 
 if (args!= undefined) {
@@ -79,9 +79,9 @@ async function dldPackage(destinationPath, name,version ) {
         // @ts-ignore
         const buffer = Buffer.from(response.data, 'binary');
 
-        await fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
-        await fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
-        decompress(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), path.join(__dirname,destinationPath + '/' + name +'-' + version)).then(files => {
+        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+        fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
+        decompress(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), path.join(__dirname,destinationPath + '/' + name +'-' + version)).then(() => {
             const dir = path.join(__dirname,destinationPath + '/' + name +'-' + version + '/package')
             if (fs.existsSync(dir)) {
                 processPkg(dir)
@@ -97,7 +97,7 @@ async function dldPackage(destinationPath, name,version ) {
 async function processPkg( dir) {
 
 
-        const list = await fs.readdirSync(dir);
+        const list = fs.readdirSync(dir);
         list.forEach(function (file) {
             if (file.includes('.DS_Store')) return;
             if (file.includes('examples')) return;
@@ -120,7 +120,7 @@ async function processPkg( dir) {
 async function  checkResource(resource : any) {
     fileNo++
     // throttle requests
-    var localFiledNo = fileNo
+    const localFiledNo = fileNo;
     await delay( fileNo * readThrottle)
     console.log(localFiledNo + ' - Checking '+ resource.resourceType + ' url ' + resource.url);
     await axios.get(ontoServer + '/'+resource.resourceType+'?url=' + resource.url, {
@@ -136,7 +136,7 @@ async function  checkResource(resource : any) {
                 postResource(localFiledNo, resource)
             } else {
                 console.log(localFiledNo + ' - Found ' + resource.url)
-                if (bundle.entry != undefined && bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
+                if (bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
             }
     },
         error => {
@@ -156,7 +156,7 @@ async function  checkResource(resource : any) {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             }
-        }).then(result => {
+        }).then(() => {
             console.log(localFileNo + '-'+ localPostNo+ ' - Posted - ' + resource.url)
         }, err => {
             console.log(localFileNo + '-'+ localPostNo+ ' - Post for ' + resource.url + ' failed with ' + err.message)

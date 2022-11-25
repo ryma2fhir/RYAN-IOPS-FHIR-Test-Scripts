@@ -1,13 +1,13 @@
-import {basePath, defaultBaseUrl, downloadPackage, getJson, getPatient, resourceChecks} from "./common.js";
+import {defaultBaseUrl, getJson, resourceChecks} from "./common.js";
 
 import * as fs from "fs";
 import supertest from "supertest"
-import {jest, expect, describe} from "@jest/globals";
-import {OperationOutcome, StructureDefinition} from "fhir/r4";
+import {describe, expect, jest} from "@jest/globals";
+import {StructureDefinition} from "fhir/r4";
 import axios from "axios";
 
 
-    const args = require('minimist')(process.argv.slice(2))
+const args = require('minimist')(process.argv.slice(2))
     //const args = process.argv
 
     let source = '../'
@@ -28,16 +28,13 @@ import axios from "axios";
 
 
     const client = () => {
-        const url = defaultBaseUrl
-        return supertest(url)
+        return supertest(defaultBaseUrl)
     }
-
-    const axiosInstance = axios.create({
-        baseURL: defaultBaseUrl,
-        headers: {'Accept': 'application/fhir+json'}
-    });
-
-    const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
+axios.create({
+    baseURL: defaultBaseUrl,
+    headers: {'Accept': 'application/fhir+json'}
+});
+const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
     if (resource != undefined) {
         let pkg= JSON.parse(resource)
 
@@ -140,15 +137,18 @@ function testFile(dir, fileTop, file)
                 var fileExtension = file.split('.').pop();
                 if (fileExtension == 'xml' || fileExtension == 'XML') {
 
-                    test('FHIR Validate JSON', async () =>{
-                        let operationOutcomeResponse : any = await validateXML(resource)
-                      //  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
-                    })
+                        test('FHIR Validate XML', async () =>{
+                            await validateXML(resource);
+//  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
+                        })
+
                 } else {
-                    test('FHIR Validate JSON', async () =>{
-                        let operationOutcomeResponse : any = await validateJSON(fhirResource)
-                      //  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
-                    })
+
+                        test('FHIR Validate JSON', async () =>{
+                            await validateJSON(fhirResource);
+//  if (operationOutcomeResponse != undefined) console.log((operationOutcomeResponse.body as OperationOutcome).issue.length)
+                        })
+
 
                 }
             }
@@ -156,15 +156,14 @@ function testFile(dir, fileTop, file)
     )
 }
 
-async function validateXML(resource) {
+async function validateXML(resource): Promise<void> {
 
-    await client()
+    return client()
         .post('/$validate')
         .retry(3)
         .set("Content-Type", 'application/fhir+xml')
         .set("Accept", 'application/fhir+json')
         .send(resource)
-        // .expect(200)
         .then((response: any) => {
                 resourceChecks(response, failOnWarning)
             },

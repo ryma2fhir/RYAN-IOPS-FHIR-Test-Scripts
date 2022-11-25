@@ -1,42 +1,11 @@
 import axios from "axios";
-import {OperationOutcome, OperationOutcomeIssue, Patient} from "fhir/r4";
+import {OperationOutcome, OperationOutcomeIssue} from "fhir/r4";
 import fs from "fs";
 import path from "path";
-
-export const basePath = "/FHIR/R4"
-
 var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
 //export let defaultBaseUrl = 'http://lb-fhir-validator-924628614.eu-west-2.elb.amazonaws.com/FHIR/R4';
-
-export async function validate(resource,contentType ) {
-
-    const response = await axios.post(`${defaultBaseUrl}/$validate`,
-        resource,
-        {
-            headers: {
-                'Content-Type': contentType
-            }
-        });
-    return response;
-}
-
-
-
-export const api = (baseUrl = defaultBaseUrl) => ({
-    validate: (resource) => axios.post(`${baseUrl}/$validate`, resource)
-        .then(response => response.data)
-
-})
-
-export function getContentType(file) {
-    var contentType = 'application/fhir+json';
-    var fileExtension = file.split('.').pop();
-    if (fileExtension == 'xml' || fileExtension == 'XML') contentType ='application/fhir+xml';
-    return contentType;
-}
-
 export function resourceChecks(response: any, failOnWarning:boolean) {
 
     const resource: any = response.body;
@@ -62,13 +31,11 @@ export function resourceCheckWarningMessage(response: any, message: string) {
 
 
 export async function getPatient(): Promise<any> {
-    const resource: any = await fs.readFileSync('Examples/pass/patient.json', 'utf8');
-    return resource;
+    return await fs.readFileSync('Examples/pass/patient.json', 'utf8');
 }
 
 export async function getResource(file: string): Promise<any> {
-    const resource: any = await fs.readFileSync(file, 'utf8');
-    return resource;
+    return await fs.readFileSync(file, 'utf8');
 }
 
 
@@ -130,7 +97,6 @@ export async function downloadPackage(destinationPath, name,version ) {
 
 function hasErrorMessage(resource): boolean  {
     const operationOutcome: OperationOutcome = resource;
-    let warn=0;
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
             switch (issue.severity) {
@@ -146,7 +112,6 @@ function hasErrorMessage(resource): boolean  {
 
 function hasWarningMessage(resource): boolean  {
     const operationOutcome: OperationOutcome = resource;
-    let warn=0;
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
             switch (issue.severity) {
@@ -160,7 +125,6 @@ function hasWarningMessage(resource): boolean  {
 
 function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
     const operationOutcome: OperationOutcome = resource;
-    let warn=0;
     let errorMessage = 'None found';
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
@@ -170,6 +134,7 @@ function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
                 case "fatal":
                     errorMessage = getErrorOrWarningFull(issue);
                     if (errorMessage.includes(message)) return true;
+                    break;
                 case "warning":
                     if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
                     break;
@@ -181,7 +146,6 @@ function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
 
 function warningMessageCheck(resource, message) :boolean {
     const operationOutcome: OperationOutcome = resource;
-    let warn=0;
     let errorMessage = 'None found';
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
@@ -197,37 +161,33 @@ function warningMessageCheck(resource, message) :boolean {
 }
 
 function errorsCheck(operationOutcome : OperationOutcome, failOnWarning:boolean) {
-    let warn=0;
+    let issues : String[] = []
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
-            issueCheck(issue, failOnWarning)
+            let str = issueCheck(issue, failOnWarning)
+            if (str != undefined) issues.push(str + '\n')
         }
     }
+    if (issues.length >0) {
+        throw new Error(issues.toString())
+    }
 }
-function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean)  {
+function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean) : string  {
     switch (issue.severity) {
         case "error":
         case "fatal":
-            if (raiseError(issue)) throw new Error(getErrorOrWarningFull(issue))
+            if (raiseError(issue)) return "WARNING "+ getErrorOrWarningFull(issue)
             break;
         case "warning":
-            if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
+            if (raiseWarning(issue, failOnWarning)) return "WARNING "+ getErrorOrWarningFull(issue)
             break;
     }
+    return undefined
 }
 
 export function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
-
-export function wait(ms) {
-    var start = Date.now(),
-        now = start;
-    while (now - start < ms) {
-        now = Date.now();
-    }
-}
-
 function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
     let error = issue.diagnostics;
     if (issue.location != undefined) {
@@ -267,8 +227,8 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
                 // Not defined in UKCore and valueset is extensible
-                if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods')) return false
-                return true;
+                return !issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods');
+
             }
         }
         if (issue.diagnostics.includes('must be of the format')) {
@@ -278,9 +238,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
 
     // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
 
-    if (failOnWarning) {
-        return true
-    } else return false;
+    return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
