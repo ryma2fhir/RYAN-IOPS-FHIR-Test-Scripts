@@ -2,59 +2,69 @@ import {basePath, defaultBaseUrl, downloadPackage, getJson, getPatient, resource
 
 import * as fs from "fs";
 import supertest from "supertest"
-import {jest} from "@jest/globals";
-import {tsTupleType} from "@babel/types";
+import {jest, expect, describe} from "@jest/globals";
 import {StructureDefinition} from "fhir/r4";
-
-const args = require('minimist')(process.argv.slice(2))
-//const args = process.argv
-
-let source = 'gitrepository/'
-let examples: string
-
-let failOnWarning = false;
+import axios from "axios";
 
 
 
-if (args!= undefined) {
-    if (args['source']!= undefined) {
-        source = args['source'];
+    const args = require('minimist')(process.argv.slice(2))
+    //const args = process.argv
 
+    let source = 'gitrepository/'
+    let examples: string
+
+    let failOnWarning = false;
+
+    if (args!= undefined) {
+        if (args['source']!= undefined) {
+            source = args['source'];
+
+        }
+        if (args['examples']!= undefined) {
+            examples = args['folder'];
+            source = '../'
+        }
     }
-    if (args['examples']!= undefined) {
-        examples = args['folder'];
-        source = '../'
+
+
+
+
+    const client = () => {
+        const url = defaultBaseUrl
+        return supertest(url)
     }
-}
 
+    const axiosInstance = axios.create({
+        baseURL: defaultBaseUrl,
+        headers: {'Accept': 'application/fhir+json'}
+    });
 
-test('Validator is functioning ',async function () {
-    await client().get('/metadata').expect(200)
-});
+    const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
+    if (resource != undefined) {
+        let pkg= JSON.parse(resource)
 
-
-const client = () => {
-    const url = defaultBaseUrl
-    return supertest(url)
-}
-
-const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
-if (resource != undefined) {
-    let pkg= JSON.parse(resource)
-
-    if (pkg.dependencies != undefined) {
-        for (let key in pkg.dependencies) {
-            if (key.startsWith('fhir.r4.ukcore')) {
-                failOnWarning = true;
-                console.log('ukcore dependency found, enabled STRICT validation')
+        if (pkg.dependencies != undefined) {
+            for (let key in pkg.dependencies) {
+                if (key.startsWith('fhir.r4.ukcore')) {
+                    failOnWarning = true;
+                    console.log('ukcore dependency found, enabled STRICT validation')
+                }
             }
         }
     }
-}
 
-async function validateFHIR(fhirResource: any) {
+    /*
+    describe('Test Environment', ()=> {
+        test('Validator is functioning ', async function () {
+            await client().get('/metadata').expect(200)
+        })
+    });
+*/
+    console.log('Current directory - ' + __dirname)
+    testFolderAll(source )
 
-}
+
 
 function testFolderAll(dir) {
 
@@ -63,7 +73,7 @@ function testFolderAll(dir) {
         list.forEach(function (fileTop) {
             if (fs.lstatSync(source+fileTop).isDirectory()) {
 
-                describe("Testing " + fileTop,() => {
+                describe(fileTop,() => {
                     const list = fs.readdirSync(dir + fileTop);
                     let runTest = true
                     if (fileTop.startsWith('.')) runTest = false;
@@ -85,184 +95,104 @@ function testFolderAll(dir) {
                             if (file.includes('.DS_Store')) processFile = false;
                             if (file.startsWith('.')) processFile = false;
                             if (processFile) {
-                                file = dir + fileTop + "/" + file;
-                                let resource: any = undefined
-                                try {
-                                    resource = fs.readFileSync(file, 'utf8');
-                                } catch (e) {
-                                    console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
-                                }
-                                // Initial terminology queries can take a long time to process - cached responses are much more responsive
-                                jest.setTimeout(40000)
-
-                                let fhirResource = getJson(file, resource)
-                                let validate = true
-                                try {
-                                    let json = JSON.parse(fhirResource)
-                                    if (json.resourceType == "StructureDefinition") {
-                                        if (json.kind == "logical") {
-                                            // skip for now
-                                            validate = false
-                                        }
-                                        let structureDefinition : StructureDefinition = json
-                                        test('Check snapshot is not present '+structureDefinition.url, ()=> {
-                                            expect(structureDefinition.snapshot).toBeFalsy()
-                                        })
-                                        test('Check differential is present '+structureDefinition.url, ()=> {
-                                            expect(structureDefinition.differential).toBeDefined()
-                                        })
-                                    }
-                                } catch (e) {
-                                    console.log('Error processing ' + file + ' exception ' + (e as Error).message)
-                                    validate = false
-                                }
-
-                                if (validate) {
-                                    var fileExtension = file.split('.').pop();
-                                    if (fileExtension == 'xml' || fileExtension == 'XML') {
-                                        test('Validate ' + file, async () => {
-
-                                                await client()
-                                                    .post('/$validate')
-                                                    .retry(3)
-                                                    .set("Content-Type", 'application/fhir+xml')
-                                                    .set("Accept", 'application/fhir+json')
-                                                    .send(resource)
-                                                    // .expect(200)
-                                                    .then((response: any) => {
-                                                            resourceChecks(response, failOnWarning)
-                                                        },
-                                                        error => {
-
-                                                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                                        }
-                                                    )
-                                            }
-                                        )
-                                    } else {
-                                        test('Validate ' + file, async () => {
-
-                                                await client()
-                                                    .post('/$validate')
-                                                    .retry(3)
-                                                    .set("Content-Type", 'application/fhir+json')
-                                                    .set("Accept", 'application/fhir+json')
-                                                    .send(fhirResource)
-                                                    .expect(200)
-                                                    .then((response: any) => {
-                                                            resourceChecks(response, failOnWarning)
-                                                        },
-                                                        error => {
-
-                                                            if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                                        }
-                                                    )
-                                            }
-                                        )
-                                    }
-                                }
+                                testFile(dir, fileTop, file)
                             }
                         })
                     }
-                }
-
-                )
+                })
             }
         });
     }
 }
 
-    console.log('Current directory - ' + __dirname)
-    testFolderAll(source )
-
-
-/*
-function testFolder(dir) {
-
-    if (fs.existsSync(dir)) {
-        const list = fs.readdirSync(dir);
-        list.forEach(function (file) {
-
-                // @ts-ignore
-                // @ts-ignore
-            describe("Testing " + file,() => {
-                    if (file.includes('.DS_Store')) return;
-                    file = dir + "/" + file;
-                    const resource: any = fs.readFileSync(file, 'utf8');
-                    // Initial terminology queries can take a long time to process - cached responses are much more responsive
-                    jest.setTimeout(40000)
-
-                    let fhirResource = getJson(file, resource)
-                    let json = JSON.parse(fhirResource)
-                    let validate = true
-                    if (json.resourceType == "StructureDefinition") {
-                        if (json.kind == "logical") {
-                            // skip for now
-                            validate = false
-                        }
-                        let structureDefinition : StructureDefinition = json
-                        test('Check snapshot is not present', ()=> {
-                            expect(structureDefinition.snapshot).toBeNull()
-                        })
-                        test('Check differential is present', ()=> {
-                            expect(structureDefinition.differential).toBeDefined()
-                        })
-                    }
-                    if (validate) {
-                        var fileExtension = file.split('.').pop();
-                        if (fileExtension == 'xml' || fileExtension == 'XML') {
-                            test('Validate ' + file, async () => {
-
-                                    await client()
-                                        .post('/$validate')
-                                        .retry(3)
-                                        .set("Content-Type", 'application/fhir+xml')
-                                        .set("Accept", 'application/fhir+json')
-                                        .send(resource)
-                                        // .expect(200)
-                                        .then((response: any) => {
-                                                resourceChecks(response, failOnWarning)
-                                            },
-                                            error => {
-
-                                                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                            }
-                                        )
-                                }
-                            )
-                        } else {
-                            test('Validate ' + file, async () => {
-
-                                    await client()
-                                        .post('/$validate')
-                                        .retry(3)
-                                        .set("Content-Type", 'application/fhir+json')
-                                        .set("Accept", 'application/fhir+json')
-                                        .send(fhirResource)
-                                        .expect(200)
-                                        .then((response: any) => {
-                                                resourceChecks(response, failOnWarning)
-                                            },
-                                            error => {
-
-                                                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
-                                            }
-                                        )
-                                }
-                            )
-                        }
-                    }
-                }
-            )
+function testFile(dir, fileTop, file)
+{
+    describe(file, () => {
+            file = dir + fileTop + "/" + file;
+            let resource: any = undefined
+            try {
+                resource = fs.readFileSync(file, 'utf8');
+            } catch (e) {
+                console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
             }
-        );
-    }
+            // Initial terminology queries can take a long time to process - cached responses are much more responsive
+            jest.setTimeout(40000)
+
+            let fhirResource = getJson(file, resource)
+            let validate = true
+            try {
+                let json = JSON.parse(fhirResource)
+                if (json.resourceType == "StructureDefinition") {
+                    if (json.kind == "logical") {
+                        // skip for now
+                        validate = false
+                    }
+                    let structureDefinition: StructureDefinition = json
+                    test('Check snapshot is not present', () => {
+                        expect(structureDefinition.snapshot).toBeFalsy()
+                    })
+                    test('Check differential is present', () => {
+                        expect(structureDefinition.differential).toBeDefined()
+                    })
+                }
+            } catch (e) {
+                console.log('Error processing ' + file + ' exception ' + (e as Error).message)
+                validate = false
+            }
+
+            if (validate) {
+                var fileExtension = file.split('.').pop();
+                if (fileExtension == 'xml' || fileExtension == 'XML') {
+                    test('FHIR Validate JSON', async () =>{
+                        await validateXML(resource)
+                    })
+                } else {
+                    test('FHIR Validate JSON', async () =>{
+                        await validateJSON(fhirResource)
+                    })
+
+                }
+            }
+        }
+    )
 }
 
- */
+function validateXML(resource) {
 
+    return client()
+        .post('/$validate')
+        .retry(3)
+        .set("Content-Type", 'application/fhir+xml')
+        .set("Accept", 'application/fhir+json')
+        .send(resource)
+        // .expect(200)
+        .then((response: any) => {
+                resourceChecks(response, failOnWarning)
+            },
+            error => {
 
+                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+            }
+        )
+}
+function validateJSON(fhirResource) {
 
+    return client()
+        .post('/$validate')
+        .retry(3)
+        .set("Content-Type", 'application/fhir+json')
+        .set("Accept", 'application/fhir+json')
+        .send(fhirResource)
+        .expect(200)
+        .then((response: any) => {
+                resourceChecks(response, failOnWarning)
+            },
+            error => {
 
+                if (!error.message.includes('Async callback was not invoked within the')) throw new Error(error.message)
+            }
+        )
+
+}
 
 

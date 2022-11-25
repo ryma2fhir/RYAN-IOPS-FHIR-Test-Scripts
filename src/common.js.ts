@@ -41,7 +41,7 @@ export function resourceChecks(response: any, failOnWarning:boolean) {
 
     const resource: any = response.body;
     expect(resource.resourceType).toEqual('OperationOutcome');
-    expect(errorsCheck(resource, failOnWarning))
+    errorsCheck(resource, failOnWarning)
 }
 
 export function resourceCheckErrorMessage(response: any, message: string, failOnWarning:boolean) {
@@ -196,26 +196,24 @@ function warningMessageCheck(resource, message) :boolean {
     throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
 
-function errorsCheck(resource, failOnWarning:boolean) {
-    const operationOutcome: OperationOutcome = resource;
+function errorsCheck(operationOutcome : OperationOutcome, failOnWarning:boolean) {
     let warn=0;
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
-
-            switch (issue.severity) {
-                case "error":
-                case "fatal":
-                    if (raiseError(issue)) throw new Error(getErrorOrWarningFull(issue))
-                    break;
-                case "warning":
-                    if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
-                    warn++;
-                    break;
-            }
+            issueCheck(issue, failOnWarning)
         }
     }
-   // if (warn>5) console.log("Warnings "+warn);
-
+}
+function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean)  {
+    switch (issue.severity) {
+        case "error":
+        case "fatal":
+            if (raiseError(issue)) throw new Error(getErrorOrWarningFull(issue))
+            break;
+        case "warning":
+            if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
+            break;
+    }
 }
 
 export function delay(ms: number) {
