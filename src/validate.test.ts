@@ -7,11 +7,10 @@ import {StructureDefinition} from "fhir/r4";
 import axios from "axios";
 
 
-
     const args = require('minimist')(process.argv.slice(2))
     //const args = process.argv
 
-    let source = 'gitrepository/'
+    let source = '../'
     let examples: string
 
     let failOnWarning = false;
@@ -26,8 +25,6 @@ import axios from "axios";
             source = '../'
         }
     }
-
-
 
 
     const client = () => {
@@ -54,13 +51,12 @@ import axios from "axios";
         }
     }
 
-    /*
     describe('Test Environment', ()=> {
         test('Validator is functioning ', async function () {
             await client().get('/metadata').expect(200)
         })
     });
-*/
+
     console.log('Current directory - ' + __dirname)
     testFolderAll(source )
 
