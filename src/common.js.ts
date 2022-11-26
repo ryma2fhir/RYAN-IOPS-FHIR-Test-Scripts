@@ -300,8 +300,10 @@ export function testFileError(testDescription, file,message) {
         });
         test(testDescription, async () => {
             expect(resource).toBeDefined()
-            const response = await client.post('/$validate', resource)
-            expect(response.status).toEqual(200)
+            const response = await client.post('/$validate', resource).catch(function (error) {
+                return error.response
+            })
+            expect(response.status === 200 || response.status === 400).toBeTruthy()
             resourceCheckErrorMessage(response,message, true)
         })
     });
@@ -321,9 +323,12 @@ export function testFileErrorProfile(testDescription, file,message, profile) {
         });
         test(testDescription, async () => {
             expect(resource).toBeDefined()
-            const response = await client.post('/$validate?profile='+profile, resource)
-            expect(response.status).toEqual(200)
+            const response = await client.post('/$validate?profile='+profile, resource).catch(function (error) {
+                return error.response
+            })
+            expect(response.status === 200 || response.status === 400).toBeTruthy()
             resourceCheckErrorMessage(response,message, true)
+            expect(response.status).toEqual(200)
         })
     });
 }
@@ -344,8 +349,9 @@ export function testFileWarning(testDescription, file,message) {
         test(testDescription, async () => {
             expect(resource).toBeDefined()
             const response = await client.post('/$validate', resource)
-            expect(response.status).toEqual(200)
+            expect(response.status === 200 || response.status === 400).toBeTruthy()
             resourceCheckWarningMessage(response,message)
+            expect(response.status).toEqual(200)
         })
     });
 }
@@ -366,9 +372,12 @@ export function testFileValidator(testDescription,file) {
         });
         test(testDescription, async () => {
             expect(resource).toBeDefined()
-            const response = await client.post('/$validate', resource)
-            expect(response.status).toEqual(200)
+            const response = await client.post('/$validate', resource).catch(function (error) {
+                return error.response
+            })
+            expect(response.status === 200 || response.status === 400).toBeTruthy()
             resourceChecks(response, true)
+            expect(response.status).toEqual(200)
         })
     });
 }
@@ -415,8 +424,12 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
             if (validate) {
                 test('FHIR Validation', async () => {
                     expect(resource).toBeDefined()
-                    const response = await client.post('/$validate', resource)
+                    const response = await client.post('/$validate', resource).catch(function (error) {
+                        return error.response
+                    })
+                    expect(response.status === 200 || response.status === 400).toBeTruthy()
                     resourceChecks(response, failOnWarning)
+                    expect(response.status).toEqual(200)
                 });
             }
         }
