@@ -1,167 +1,53 @@
 import {
-    defaultBaseUrl,
-    getJson,
-    getPatient,
-    getResource,
-    resourceCheckErrorMessage,
-    resourceChecks,
-    resourceCheckWarningMessage
+    getFhirClientJSON, testFileError, testFileErrorProfile, testFileValidator, testFileWarning,
 } from "./common.js";
-import supertest from "supertest"
-import {jest} from "@jest/globals";
-import fs from "fs";
+import {describe, expect, jest} from "@jest/globals";
+import {AxiosInstance} from "axios";
+
+
 
 const args = require('minimist')(process.argv.slice(2))
-const client = () => {
-    const url = defaultBaseUrl
-    //console.log(url)
-    return supertest(url)
-}
+
 
 let terminology = true;
+jest.setTimeout(40*1000)
 
 
 
+describe('Test Environment', ()=> {
+    let client: AxiosInstance;
+    beforeAll(async () => {
+        client = await getFhirClientJSON();
+    });
+    test('Validator is functioning ', async function () {
 
+        const result = await client.get('/metadata')
+        expect(result.status).toEqual(200)
 
-it('Validator is functioning ',async function () {
-    await client().get('/metadata').expect(200)
+    })
 });
-
-function testFile(testDescription,file) {
-    const resource: any = fs.readFileSync(file, 'utf8');
-
-    test(testDescription + ' filename' + file, async () => {
-        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-        jest.setTimeout(30000)
-        await client()
-            .post('/$validate')
-            .retry(2)
-            .set("Content-Type", 'application/fhir+json')
-            .set("Accept", 'application/fhir+json')
-            .send(getJson(file, resource))
-            .expect(200)
-            .then((response: any) => {
-                    resourceChecks(response, true)
-                },
-                error => {
-                    throw new Error(error.message)
-                })
-    });
-}
-
-function testFileWithProfile(profile, testDescription,file) {
-    const resource: any = fs.readFileSync(file, 'utf8');
-
-    test(testDescription + ' filename ' + file + ' profile = '+ profile, async () => {
-        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-        jest.setTimeout(30000)
-        await client()
-            .post('/$validate?profile='+profile)
-            .retry(2)
-            .set("Content-Type", 'application/fhir+json')
-            .set("Accept", 'application/fhir+json')
-            .send(getJson(file, resource))
-            .expect(200)
-            .then((response: any) => {
-                    resourceChecks(response, true)
-                },
-                error => {
-                    throw new Error(error.message)
-                })
-    });
-}
-
-function testFileError(testDescription, file,message) {
-    const resource: any = fs.readFileSync(file, 'utf8');
-
-    test(testDescription + ' Filename = ' + file, async () => {
-        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-        jest.setTimeout(30000)
-        await client()
-            .post('/$validate')
-            .retry(2)
-            .set("Content-Type", 'application/fhir+json')
-            .set("Accept", 'application/fhir+json')
-            .send(getJson(file, resource))
-            //.expect(200)
-            .then((response: any) => {
-                    resourceCheckErrorMessage(response,message, true)
-                },
-                error => {
-                    throw new Error(error.message)
-                })
-    });
-}
-
-function testFileErrorProfile(testDescription, file,message, profile) {
-    const resource: any = fs.readFileSync(file, 'utf8');
-
-    test(testDescription + ' Filename = ' + file, async () => {
-        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-        jest.setTimeout(30000)
-        await client()
-            .post('/$validate?profile='+profile)
-            .retry(2)
-            .set("Content-Type", 'application/fhir+json')
-            .set("Accept", 'application/fhir+json')
-            .send(getJson(file, resource))
-            //.expect(200)
-            .then((response: any) => {
-                    resourceCheckErrorMessage(response,message, true)
-                },
-                error => {
-                    throw new Error(error.message)
-                })
-    });
-}
-
-
-function testFileWarning(testDescription, file,message) {
-    const resource: any = fs.readFileSync(file, 'utf8');
-
-    test(testDescription + ' Filename = ' + file, async () => {
-        // Initial terminology queries can take a long time to process - cached responses are much more responsive
-        jest.setTimeout(30000)
-        await client()
-            .post('/$validate')
-            .retry(2)
-            .set("Content-Type", 'application/fhir+json')
-            .set("Accept", 'application/fhir+json')
-            .send(getJson(file, resource))
-            .expect(200)
-            .then((response: any) => {
-                    resourceCheckWarningMessage(response,message)
-                },
-                error => {
-                    throw new Error(error.message)
-                })
-    });
-}
-
-
 
 describe('Testing validation passes for valid HL7 FHIR resources', () => {
     // Patient
-    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/patient.json')
+    testFileValidator('Test HL7 FHIR resource passes validation ','Examples/pass/patient.json')
 
     // MedicationRequest
-    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
+    testFileValidator('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationRequest-pass.json')
 
     // MedicationDispense
-    testFile('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
+    testFileValidator('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
     // PractitionerRole
-    testFile('Test HL7 FHIR resource passes validation PractitionerRole','Examples/pass/PractitionerRole-pass.json')
+    testFileValidator('Test HL7 FHIR resource passes validation PractitionerRole','Examples/pass/PractitionerRole-pass.json')
 
     // Bundle
-    testFile('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
+    testFileValidator('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
 
-    testFile('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
-    testFile('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
-    testFile('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json')
-    testFile('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
-    testFile('Test EPS fhirPath constraint issue (present in 6.2.x HAPI) ','Examples/pass/MedicationRequest-constraints.json')
+    testFileValidator('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
+    testFileValidator('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
+    testFileValidator('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json')
+    testFileValidator('Test prescription-order-response is tested with correct NHSDigital-MedicationRequest-Outcome profile and not NHSDigital-MedicationRequest (AEA-1805) ','Examples/pass/outpatient-four-items-cancel-subsequent-response-morphine.json')
+    testFileValidator('Test EPS fhirPath constraint issue (present in 6.2.x HAPI) ','Examples/pass/MedicationRequest-constraints.json')
 });
 
 describe('Testing validation fails invalid FHIR resources', () => {

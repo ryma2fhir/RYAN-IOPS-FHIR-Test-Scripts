@@ -16,7 +16,6 @@
     "js-untar": "^2.0.0",
     "jsonminify": "^0.4.1",
     "minimist": "^1.2.5",
-    "supertest": "^4.0.2",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.11.0",
     "tslib": "^2.3.1",

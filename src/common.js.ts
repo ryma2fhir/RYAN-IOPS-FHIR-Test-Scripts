@@ -1,21 +1,44 @@
-import axios from "axios";
-import {OperationOutcome, OperationOutcomeIssue} from "fhir/r4";
+import axios, {AxiosInstance} from "axios";
+import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import fs from "fs";
 import path from "path";
+import {describe, expect} from "@jest/globals";
 var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
 //export let defaultBaseUrl = 'http://lb-fhir-validator-924628614.eu-west-2.elb.amazonaws.com/FHIR/R4';
+
+// See also https://github.com/awslabs/fhir-works-on-aws-deployment/blob/mainline/integration-tests/utils.ts
+export const getFhirClientJSON = async () => {
+    return axios.create({
+        headers: {
+            'Content-Type': 'application/fhir+json',
+            'Accept': 'application/fhir+json'
+        },
+        baseURL : defaultBaseUrl
+    });
+};
+
+export const getFhirClientXML = async () => {
+    return axios.create({
+        headers: {
+            'Content-Type': 'application/fhir+xml',
+            'Accept': 'application/fhir+json'
+        },
+        baseURL : defaultBaseUrl
+    });
+};
+
 export function resourceChecks(response: any, failOnWarning:boolean) {
 
-    const resource: any = response.body;
+    const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
     errorsCheck(resource, failOnWarning)
 }
 
 export function resourceCheckErrorMessage(response: any, message: string, failOnWarning:boolean) {
 
-    const resource: any = response.body;
+    const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(hasErrorMessage(resource)).toEqual(true)
     if (message != undefined) expect(errorMessageCheck(resource,message, failOnWarning))
@@ -23,7 +46,7 @@ export function resourceCheckErrorMessage(response: any, message: string, failOn
 
 export function resourceCheckWarningMessage(response: any, message: string) {
 
-    const resource: any = response.body;
+    const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(hasWarningMessage(resource)).toEqual(true)
     if (message != undefined) expect(warningMessageCheck(resource,message))
@@ -262,4 +285,142 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
     }
     return true;
 }
+
+export function testFileError(testDescription, file,message) {
+    describe(file, () => {
+        const resource: any = fs.readFileSync(file, 'utf8');
+        let client: AxiosInstance;
+        beforeAll(async () => {
+            var fileExtension = file.split('.').pop();
+            if (fileExtension == 'xml' || fileExtension == 'XML') {
+                client = await getFhirClientXML();
+            } else {
+                client = await getFhirClientJSON();
+            }
+        });
+        test(testDescription, async () => {
+            expect(resource).toBeDefined()
+            const response = await client.post('/$validate', resource)
+            expect(response.status).toEqual(200)
+            resourceCheckErrorMessage(response,message, true)
+        })
+    });
+}
+
+export function testFileErrorProfile(testDescription, file,message, profile) {
+    describe(file, () => {
+        const resource: any = fs.readFileSync(file, 'utf8');
+        let client: AxiosInstance;
+        beforeAll(async () => {
+            var fileExtension = file.split('.').pop();
+            if (fileExtension == 'xml' || fileExtension == 'XML') {
+                client = await getFhirClientXML();
+            } else {
+                client = await getFhirClientJSON();
+            }
+        });
+        test(testDescription, async () => {
+            expect(resource).toBeDefined()
+            const response = await client.post('/$validate?profile='+profile, resource)
+            expect(response.status).toEqual(200)
+            resourceCheckErrorMessage(response,message, true)
+        })
+    });
+}
+
+
+export function testFileWarning(testDescription, file,message) {
+    describe(file, () => {
+        const resource: any = fs.readFileSync(file, 'utf8');
+        let client: AxiosInstance;
+        beforeAll(async () => {
+            var fileExtension = file.split('.').pop();
+            if (fileExtension == 'xml' || fileExtension == 'XML') {
+                client = await getFhirClientXML();
+            } else {
+                client = await getFhirClientJSON();
+            }
+        });
+        test(testDescription, async () => {
+            expect(resource).toBeDefined()
+            const response = await client.post('/$validate', resource)
+            expect(response.status).toEqual(200)
+            resourceCheckWarningMessage(response,message)
+        })
+    });
+}
+
+
+export function testFileValidator(testDescription,file) {
+
+    describe(file, () => {
+        const resource: any = fs.readFileSync(file, 'utf8');
+        let client: AxiosInstance;
+        beforeAll(async () => {
+            var fileExtension = file.split('.').pop();
+            if (fileExtension == 'xml' || fileExtension == 'XML') {
+                client = await getFhirClientXML();
+            } else {
+                client = await getFhirClientJSON();
+            }
+        });
+        test(testDescription, async () => {
+            expect(resource).toBeDefined()
+            const response = await client.post('/$validate', resource)
+            expect(response.status).toEqual(200)
+            resourceChecks(response, true)
+        })
+    });
+}
+
+export function testFile(dir, fileTop, fileName, failOnWarning)
+{
+    let client: AxiosInstance;
+    let file = dir + fileTop + "/" + fileName;
+    let resource: any = undefined
+    let json = undefined
+    try {
+        resource = fs.readFileSync(file, 'utf8');
+        json = JSON.parse(getJson(file, resource))
+    } catch (e) {
+        console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
+    }
+    let validate = true
+
+    describe(fileName, () => {
+
+            beforeAll(async () => {
+                if (json.resourceType == "StructureDefinition") {
+                    if (json.kind == "logical") {
+                        // skip for now
+                        validate = false
+                    }
+                }
+                var fileExtension = file.split('.').pop();
+                if (fileExtension == 'xml' || fileExtension == 'XML') {
+                    client = await getFhirClientXML();
+                } else {
+                    client = await getFhirClientJSON();
+                }
+            });
+
+            test('Resource checks', () => {
+                expect(resource).toBeDefined()
+                if (json.resourceType == "StructureDefinition") {
+                    let structureDefinition: StructureDefinition = json
+                    expect(structureDefinition.snapshot).toBeFalsy()
+                }
+            })
+
+            if (validate) {
+                test('FHIR Validation', async () => {
+                    expect(resource).toBeDefined()
+                    const response = await client.post('/$validate', resource)
+                    resourceChecks(response, failOnWarning)
+                });
+            }
+        }
+    )
+}
+
 
