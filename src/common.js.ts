@@ -1,5 +1,5 @@
 import axios, {AxiosInstance} from "axios";
-import {MessageDefinition, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {Bundle, MessageDefinition, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import fs from "fs";
 import path from "path";
 
@@ -407,9 +407,22 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                     client = await getFhirClientJSON();
                 }
             });
-
+            test('Best Practice Tests', () => {
+                if (json.meta ! = undefined) {
+                    expect(json.meta.profile == undefined).toBeTruthy()
+                }
+                if (json.resourceType === 'Bundle') {
+                    let bundle : Bundle = json
+                    for (let entry of bundle.entry) {
+                        if (entry.resource !== undefined && entry.resource.meta != undefined) {
+                            expect(entry.resource.meta.profile == undefined).toBeTruthy()
+                        }
+                    }
+                }
+            })
             test('Profile has no snapshot and Resource is present', () => {
                 expect(resource).toBeDefined()
+
                 if (json.resourceType == "StructureDefinition") {
                     let structureDefinition: StructureDefinition = json
                     expect(structureDefinition.snapshot).toBeFalsy()
@@ -435,7 +448,6 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
             }
             if (validate) {
                 test('FHIR Validation', async () => {
-                    expect(resource).toBeDefined()
                     const response = await client.post('/$validate', resource).catch(function (error) {
                         return error.response
                     })
