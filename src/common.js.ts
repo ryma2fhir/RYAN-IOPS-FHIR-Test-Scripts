@@ -395,17 +395,11 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
     } catch (e) {
         console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
     }
-    let validate = true
 
     describe(fileName, () => {
 
             beforeAll(async () => {
-                if (json.resourceType == "StructureDefinition") {
-                    if (json.kind == "logical") {
-                        // skip for now
-                        validate = false
-                    }
-                }
+
                 var fileExtension = file.split('.').pop();
                 if (fileExtension == 'xml' || fileExtension == 'XML') {
                     client = await getFhirClientXML();
@@ -431,6 +425,13 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                     }
 
                 })
+            }
+            let validate = true
+            if (json != undefined && json.resourceType == "StructureDefinition") {
+                if (json.kind == "logical") {
+                    // skip for now
+                    validate = false
+                }
             }
             if (validate) {
                 test('FHIR Validation', async () => {
