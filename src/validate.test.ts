@@ -1,13 +1,8 @@
 import {
-    getFhirClientJSON, getFhirClientXML,
-    getJson,
-    resourceCheckErrorMessage,
-    resourceChecks,
-    resourceCheckWarningMessage, testFile
+    getFhirClientJSON, testFile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
-import {StructureDefinition} from "fhir/r4";
 import axios, {AxiosInstance} from "axios";
 
 // Initial terminology queries can take a long time to process - cached responses are much more responsive

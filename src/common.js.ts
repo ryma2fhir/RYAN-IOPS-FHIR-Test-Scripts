@@ -1,8 +1,7 @@
 import axios, {AxiosInstance} from "axios";
-import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {MessageDefinition, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import fs from "fs";
 import path from "path";
-import {describe, expect} from "@jest/globals";
 var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
@@ -413,14 +412,24 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                 }
             });
 
-            test('Resource checks', () => {
+            test('Profile and Resource checks', () => {
                 expect(resource).toBeDefined()
                 if (json.resourceType == "StructureDefinition") {
                     let structureDefinition: StructureDefinition = json
                     expect(structureDefinition.snapshot).toBeFalsy()
                 }
-            })
 
+            })
+            test('FHIR Message checks', () => {
+
+                if (json.resourceType == "MessageDefinition") {
+                    let messageDefinition: MessageDefinition = json
+                    for (let focus  of messageDefinition.focus) {
+                        // Having a messageHeader be the focus of a MessageHeader makes no sense - potential loop
+                        expect(focus.code !== 'MessageHeader').toBeTruthy()
+                    }
+                }
+            })
             if (validate) {
                 test('FHIR Validation', async () => {
                     expect(resource).toBeDefined()
