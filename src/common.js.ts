@@ -420,18 +420,17 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                     let structureDefinition: StructureDefinition = json
                     expect(structureDefinition.snapshot).toBeFalsy()
                 }
-
             })
-            test('FHIR Message checks', () => {
-
-                if (json.resourceType == "MessageDefinition") {
+            if (json.resourceType == "MessageDefinition") {
+                test('FHIR Message checks', () => {
                     let messageDefinition: MessageDefinition = json
-                    for (let focus  of messageDefinition.focus) {
+                    for (let focus of messageDefinition.focus) {
                         // Having a messageHeader be the focus of a MessageHeader makes no sense - potential loop
                         expect(focus.code !== 'MessageHeader').toBeTruthy()
                     }
-                }
-            })
+
+                })
+            }
             if (validate) {
                 test('FHIR Validation', async () => {
                     expect(resource).toBeDefined()
