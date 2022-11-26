@@ -92,7 +92,9 @@ function testFolderAll(dir) {
                             if (file.includes('.DS_Store')) processFile = false;
                             if (file.startsWith('.')) processFile = false;
                             if (processFile) {
-                                testFile(dir, fileTop, file,failOnWarning)
+                                if (!fs.lstatSync(source + fileTop).isDirectory()) {
+                                    testFile(dir, fileTop, file, failOnWarning)
+                                }
                             }
                         })
                     }
