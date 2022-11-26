@@ -414,7 +414,7 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                 }
             });
 
-            test('Profile and Resource checks', () => {
+            test('Profile has no snapshot and Resource is present', () => {
                 expect(resource).toBeDefined()
                 if (json.resourceType == "StructureDefinition") {
                     let structureDefinition: StructureDefinition = json
@@ -422,11 +422,12 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                 }
             })
             if (json.resourceType == "MessageDefinition") {
-                test('FHIR Message checks', () => {
+                test('FHIR Message - check MessageDefinition.focus does not contain MessageHeader or other Definitions', () => {
                     let messageDefinition: MessageDefinition = json
                     for (let focus of messageDefinition.focus) {
                         // Having a messageHeader be the focus of a MessageHeader makes no sense - potential loop
                         expect(focus.code !== 'MessageHeader').toBeTruthy()
+                        expect(focus.code.endsWith('Definition')).toBeFalsy()
                     }
 
                 })
