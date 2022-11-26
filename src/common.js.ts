@@ -2,6 +2,8 @@ import axios, {AxiosInstance} from "axios";
 import {MessageDefinition, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import fs from "fs";
 import path from "path";
+
+// This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
 
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
