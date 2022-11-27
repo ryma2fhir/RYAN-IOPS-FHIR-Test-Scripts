@@ -51,7 +51,10 @@ export function resourceCheckErrorMessage(response: any, message: string, failOn
     expect(resource.resourceType).toEqual('OperationOutcome');
 
     expect(hasErrorMessage(resource)).toEqual(true)
-    if (message != undefined) expect(checkForErrorMessage(resource,message, failOnWarning))
+    if (message != undefined) {
+        const error = getErrors(resource,failOnWarning)
+        expect(error).toContain(message)
+    }
 }
 
 export function resourceCheckWarningMessage(response: any, message: string) {
@@ -155,18 +158,18 @@ function hasWarningMessage(resource): boolean  {
     }
     return false;
 }
-
-function checkForErrorMessage(resource, message, failOnWarning:boolean) :boolean {
+/*
+function checkForErrorMessage(resource, message, failOnWarning:boolean) : string {
     const operationOutcome: OperationOutcome = resource;
-    let errorMessage = 'None found';
+    let errorMessage : string[]= [];
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
 
             switch (issue.severity) {
                 case "error":
                 case "fatal":
-                    errorMessage = getErrorOrWarningFull(issue);
-                    if (errorMessage.includes(message)) return true;
+                    errorMessage.pu getErrorOrWarningFull(issue);
+                    if (errorMessage.includes(message)) errorMessage += errorMessage;
                     break;
                 case "warning":
                     if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
@@ -174,9 +177,10 @@ function checkForErrorMessage(resource, message, failOnWarning:boolean) :boolean
             }
         }
     }
-    throw new Error('Expected: ' + message + ' Found: '+errorMessage)
+    return errorMessage;
+    //throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
-
+*/
 function checkForWarningMessage(resource, message) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let errorMessage = 'None found';
