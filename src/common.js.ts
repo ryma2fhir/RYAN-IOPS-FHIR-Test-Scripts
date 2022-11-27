@@ -37,11 +37,11 @@ export const getFhirClientXML = async () => {
     });
 };
 
-export function resourceChecks(response: any, failOnWarning:boolean) {
+export function resourceChecks(response: any, failOnWarning:boolean)  {
 
     const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
-    errorsCheck(resource, failOnWarning)
+    hasErrors(resource, failOnWarning)
 }
 
 export function resourceCheckErrorMessage(response: any, message: string, failOnWarning:boolean) {
@@ -49,7 +49,7 @@ export function resourceCheckErrorMessage(response: any, message: string, failOn
     const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(hasErrorMessage(resource)).toEqual(true)
-    if (message != undefined) expect(errorMessageCheck(resource,message, failOnWarning))
+    if (message != undefined) expect(checkForErrorMessage(resource,message, failOnWarning))
 }
 
 export function resourceCheckWarningMessage(response: any, message: string) {
@@ -57,7 +57,7 @@ export function resourceCheckWarningMessage(response: any, message: string) {
     const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
     expect(hasWarningMessage(resource)).toEqual(true)
-    if (message != undefined) expect(warningMessageCheck(resource,message))
+    if (message != undefined) expect(checkForWarningMessage(resource,message))
 }
 
 
@@ -154,7 +154,7 @@ function hasWarningMessage(resource): boolean  {
     return false;
 }
 
-function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
+function checkForErrorMessage(resource, message, failOnWarning:boolean) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let errorMessage = 'None found';
     if (operationOutcome.issue !== undefined) {
@@ -175,7 +175,7 @@ function errorMessageCheck(resource, message, failOnWarning:boolean) :boolean {
     throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
 
-function warningMessageCheck(resource, message) :boolean {
+function checkForWarningMessage(resource, message) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let errorMessage = 'None found';
     if (operationOutcome.issue !== undefined) {
@@ -191,7 +191,7 @@ function warningMessageCheck(resource, message) :boolean {
     throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
 
-function errorsCheck(operationOutcome : OperationOutcome, failOnWarning:boolean) {
+function hasErrors(operationOutcome : OperationOutcome, failOnWarning:boolean): boolean {
     let issues : String[] = []
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
@@ -202,6 +202,7 @@ function errorsCheck(operationOutcome : OperationOutcome, failOnWarning:boolean)
     if (issues.length >0) {
         throw new Error(issues.toString())
     }
+    return false;
 }
 function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean) : string  {
     switch (issue.severity) {
