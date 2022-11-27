@@ -41,13 +41,15 @@ export function resourceChecks(response: any, failOnWarning:boolean)  {
 
     const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
-    hasErrors(resource, failOnWarning)
+    const errorMessage = getErrors(resource, failOnWarning)
+    expect(errorMessage).toBeFalsy()
 }
 
 export function resourceCheckErrorMessage(response: any, message: string, failOnWarning:boolean) {
 
     const resource: any = response.data;
     expect(resource.resourceType).toEqual('OperationOutcome');
+
     expect(hasErrorMessage(resource)).toEqual(true)
     if (message != undefined) expect(checkForErrorMessage(resource,message, failOnWarning))
 }
@@ -191,7 +193,7 @@ function checkForWarningMessage(resource, message) :boolean {
     throw new Error('Expected: ' + message + ' Found: '+errorMessage)
 }
 
-function hasErrors(operationOutcome : OperationOutcome, failOnWarning:boolean): boolean {
+function getErrors(operationOutcome : OperationOutcome, failOnWarning:boolean): string {
     let issues : String[] = []
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
@@ -200,9 +202,9 @@ function hasErrors(operationOutcome : OperationOutcome, failOnWarning:boolean): 
         }
     }
     if (issues.length >0) {
-        throw new Error(issues.toString())
+        return issues.toString()
     }
-    return false;
+    return undefined;
 }
 function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean) : string  {
     switch (issue.severity) {
