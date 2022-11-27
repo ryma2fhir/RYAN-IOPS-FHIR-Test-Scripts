@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import path from "path";
-import {downloadPackage, getJson, isDefinition, isIgnore, resourceChecks} from "./common.js";
+import {downloadPackage, getJson, isDefinition, isIgnore} from "./common.js";
 import { tar } from 'zip-a-folder';
 
 
-    var jsonminify = require("jsonminify");
-    let fileName = 'package.json';
+const jsonminify = require("jsonminify");
+let fileName = 'package.json';
     let source = '../'
     let destination = '../../'
 
@@ -14,13 +14,10 @@ import { tar } from 'zip-a-folder';
     let destinationPath = 'validation-service-fhir-r4/src/main/resources';
 
 
-    var ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/'
-    if (process.env.ONTO_URL != undefined) {
+let ontoServer: string = 'https://ontology.nhs.uk/authoring/fhir/';
+if (process.env.ONTO_URL != undefined) {
         ontoServer = process.env.ONTO_URL;
     }
-    var clientId: string = process.env.ONTO_CLIENT_ID
-    var clientSecret: string = process.env.ONTO_CLIENT_SECRET
-
     if (args != undefined) {
         if (args['source'] != undefined) {
             source = args['source'];
@@ -34,7 +31,8 @@ import { tar } from 'zip-a-folder';
     destinationPath = destination + destinationPath
     console.log('Destination - ' + destinationPath)
     console.log('Current directory - ' + __dirname)
-    var workerDir = __dirname
+
+    const workerDir = __dirname;
 
     class TarMe {
         static async main(src, destination) {
@@ -43,13 +41,13 @@ import { tar } from 'zip-a-folder';
     }
 
     // update manifest file if source supplied, skip otherwise
-    var manifest = [];
+    let manifest = [];
 
 
     fileName = source + fileName
 
-    var packageName: string = process.env.PACKAGE_NAME
-    var packageVersion: string = process.env.PACKAGE_VERSION
+    const packageName: string = process.env.PACKAGE_NAME;
+    const packageVersion: string = process.env.PACKAGE_VERSION;
 
     if (packageName != undefined && packageVersion != undefined) {
         console.log('Configuring manifest for ' + packageName + ' ' + packageVersion)
@@ -181,11 +179,13 @@ import { tar } from 'zip-a-folder';
             deleteFile('temp/package/.DS_Store.json');
             deleteFile('temp/package/examples/.DS_Store.json');
 
-            TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'));
+            TarMe.main(path.join(__dirname, '../temp'), path.join(__dirname, destinationPath + '/' + pkg.name + '-' + pkg.version + '.tgz'))
+                .then(function () {
+                });
 
         }
     } else {
-        var manifestFile = path.join(workerDir, destinationPath + '/manifest.json');
+        const manifestFile = path.join(workerDir, destinationPath + '/manifest.json');
         if (fs.existsSync(manifestFile)) {
             console.log("Reading manifest file");
             const file = fs.readFileSync(manifestFile, 'utf-8');
@@ -207,7 +207,7 @@ import { tar } from 'zip-a-folder';
     }
 
     function deleteFile(file) {
-        fs.stat(file, function (err, stats) {
+        fs.stat(file, function (err) {
             //console.log(stats);//here we got all information of file in stats variable
             if (err) {
                 //return console.error(err);
