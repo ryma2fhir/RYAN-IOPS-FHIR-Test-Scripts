@@ -3,7 +3,7 @@
 const config = {
     reporters: [
         "default",
-        'github-actions',
+      //  'github-actions',
         "jest-github-actions-reporter"
     ],
     testLocationInResults: true,
