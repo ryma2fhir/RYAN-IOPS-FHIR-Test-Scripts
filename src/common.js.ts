@@ -1,5 +1,12 @@
 import axios, {AxiosInstance} from "axios";
-import {Bundle, MessageDefinition, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {
+    Bundle, DomainResource,
+    MessageDefinition,
+    OperationOutcome,
+    OperationOutcomeIssue,
+    Patient,
+    StructureDefinition
+} from "fhir/r4";
 import fs from "fs";
 import path from "path";
 
@@ -357,6 +364,46 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
+export function isIgnore(folderName : string) : boolean {
+
+    if (folderName.startsWith('.')) return true;
+    if (folderName == 'Diagrams') return true;
+    if (folderName == 'Diagams') return true;
+    if (folderName == 'FML') return true;
+    if (folderName == 'dist') return true;
+    if (folderName == 'documents') return true;
+    if (folderName == 'nhsdtheme') return true;
+    if (folderName == 'ukcore') return true;
+    if (folderName == 'UKCore') return true;
+    if (folderName == 'apim') return true;
+    if (folderName == 'Supporting Information') return true;
+    // This project needs to avoid these folders
+    if (folderName == 'validation') return true;
+    if (folderName == 'validation-service-fhir-r4') return true;
+    // For BARS
+    if (folderName == 'guides') return true;
+    return false;
+}
+
+export function isDefinition(fileNameOriginal : string) : boolean {
+   // console.log(fileNameOriginal);
+    let fileName = fileNameOriginal.toUpperCase();
+
+    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
+    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
+    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
+    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
+    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
+    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
+    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
+    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
+
+    return false;
+}
 
 export function testFileValidator(testDescription,file) {
 
@@ -383,10 +430,10 @@ export function testFileValidator(testDescription,file) {
     });
 }
 
-export function testFile(dir, fileTop, fileName, failOnWarning)
+export function testFile(dir: string, folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
 {
     let client: AxiosInstance;
-    let file = dir + fileTop + "/" + fileName;
+    let file = dir + folderName + "/" + fileName;
     let resource: any = undefined
     let json = undefined
     try {
@@ -407,7 +454,7 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                     client = await getFhirClientJSON();
                 }
             });
-            test('Best Practice Tests', () => {
+            test('Implementation Guide Best Practice', () => {
                 if (json.meta ! = undefined) {
                     expect(json.meta.profile == undefined).toBeTruthy()
                 }
@@ -428,6 +475,7 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                     expect(structureDefinition.snapshot).toBeFalsy()
                 }
             })
+
             if (json.resourceType == "MessageDefinition") {
                 test('FHIR Message - check MessageDefinition.focus does not contain MessageHeader or other Definitions', () => {
                     let messageDefinition: MessageDefinition = json
@@ -447,17 +495,30 @@ export function testFile(dir, fileTop, fileName, failOnWarning)
                 }
             }
             if (validate) {
-                test('FHIR Validation', async () => {
-                    const response = await client.post('/$validate', resource).catch(function (error) {
+                if (!isUKore) {
+                    test('FHIR Validation', async () => {
+                        const response = await client.post('/$validate', resource).catch(function (error) {
+                            return error.response
+                        })
+                        expect(response.status === 200 || response.status === 400).toBeTruthy()
+                        resourceChecks(response, failOnWarning)
+                        expect(response.status).toEqual(200)
+                    });
+                }
+
+                test('FHIR Validation - UKCore', async () => {
+                    const response = await client.post('/$validate?profile=https://fhir.hl7.org.uk/StructureDefinition/UKCore-' + json.resourceType, resource).catch(function (error) {
                         return error.response
                     })
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
                     resourceChecks(response, failOnWarning)
                     expect(response.status).toEqual(200)
-                });
+                })
+
             }
         }
     )
 }
+
 
 

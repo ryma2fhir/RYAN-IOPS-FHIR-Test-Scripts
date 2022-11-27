@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, testFile
+    getFhirClientJSON, isIgnore, testFile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -14,6 +14,8 @@ const args = require('minimist')(process.argv.slice(2))
 
     let source = '../'
     let examples: string
+
+    let isUKCore = false
 
     let failOnWarning = false;
 
@@ -31,7 +33,10 @@ const args = require('minimist')(process.argv.slice(2))
     const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
     if (resource != undefined) {
         let pkg= JSON.parse(resource)
-
+        if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
+            isUKCore = true;
+            console.log('Is UKCore');
+        }
         if (pkg.dependencies != undefined) {
             for (let key in pkg.dependencies) {
                 if (key.startsWith('fhir.r4.ukcore')) {
@@ -72,28 +77,16 @@ function testFolderAll(dir) {
 
                 describe(fileTop,() => {
                     const list = fs.readdirSync(dir + fileTop);
-                    let runTest = true
-                    if (fileTop.startsWith('.')) runTest = false;
-                    if (fileTop == 'Diagrams') runTest = false;
-                    if (fileTop == 'Diagams') runTest = false;
-                    if (fileTop == 'FML') runTest = false;
-                    if (fileTop == 'dist') runTest = false;
-                    if (fileTop == 'documents') runTest = false;
-                    if (fileTop == 'nhsdtheme') runTest = false;
-                    if (fileTop == 'ukcore') runTest = false;
-                    if (fileTop == 'apim') runTest = false;
-                    if (fileTop == 'Supporting Information') runTest = false;
-                    // This project needs to avoid these folders
-                    if (fileTop == 'validation') runTest = false;
-                    if (fileTop == 'validation-service-fhir-r4') runTest = false;
+                    let runTest = !isIgnore(fileTop)
+
                     if (runTest) {
                         list.forEach(function (file) {
-                            let processFile = true
-                            if (file.includes('.DS_Store')) processFile = false;
-                            if (file.startsWith('.')) processFile = false;
+                            let processFile = !isIgnore(file)
+                           // if (file.includes('.DS_Store')) processFile = false;
+                          //  if (file.startsWith('.')) processFile = false;
                             if (processFile) {
                                 if (!fs.lstatSync(source + fileTop+ "/" + file).isDirectory()) {
-                                    testFile(dir, fileTop, file, failOnWarning)
+                                    testFile(dir, fileTop, file, failOnWarning, isUKCore)
                                 }
                             }
                         })

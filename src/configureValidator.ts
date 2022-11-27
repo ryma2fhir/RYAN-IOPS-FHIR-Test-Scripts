@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import { downloadPackage, getJson, resourceChecks } from "./common.js";
+import {downloadPackage, getJson, isDefinition, isIgnore, resourceChecks} from "./common.js";
 import { tar } from 'zip-a-folder';
 
 
@@ -109,8 +109,19 @@ import { tar } from 'zip-a-folder';
                     return console.error(err);
                 }
             });
-
-
+            const list = fs.readdirSync(source);
+            list.forEach(function (fileName) {
+                if (!isIgnore(fileName)) {
+                    if (fs.lstatSync(source + fileName).isDirectory()) {
+                        if (isDefinition(fileName)) {
+                            copyFolder(source + fileName);
+                        } else {
+                            copyExamplesFolder(source + fileName);
+                        }
+                    }
+                }
+            });
+/*
             copyFolder(source + 'CapabilityStatement');
 
             copyFolder(source + 'ConceptMap');
@@ -140,6 +151,7 @@ import { tar } from 'zip-a-folder';
             copyFolder(source + 'codesystems');
             copyFolder(source + 'conceptmaps');
             copyFolder(source + 'structuredefinitions');
+            copyFolder(source + 'structuredefinitions');
             copyFolder(source + 'valuesets');
 
             // End UK Core folder names
@@ -163,7 +175,7 @@ import { tar } from 'zip-a-folder';
             copyExamplesFolder(source + 'Encounter');
             copyExamplesFolder(source + 'EpisodeOfCare');
             copyExamplesFolder(source + 'DocumentReference');
-
+*/
             console.log('Creating temporary package ' + pkg.name + '-' + pkg.version);
             console.log('Deleting temporary files');
             deleteFile('temp/package/.DS_Store.json');
@@ -212,7 +224,7 @@ import { tar } from 'zip-a-folder';
 
     function copyExamplesFolder(dir) {
 
-        console.log('Processing ' + dir);
+        console.log('Processing Examples Folder ' + dir);
         if (fs.existsSync(dir)) {
 
             const list = fs.readdirSync(dir);
@@ -223,6 +235,7 @@ import { tar } from 'zip-a-folder';
                     let destination = 'temp/package/examples/' + root + '.json';
 
                     const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+                    // TODO This may not be 100% - if we can use XML in packages we should do
                     const json = getJson(file, resource);
                     fs.writeFile(destination, jsonminify(json), function (err) {
                         if (err) {
@@ -238,7 +251,7 @@ import { tar } from 'zip-a-folder';
 
     function copyFolder(dir) {
 
-        console.log('Processing ' + dir);
+        console.log('Processing Definition Folder ' + dir);
         if (fs.existsSync(dir)) {
 
             const list = fs.readdirSync(dir);
