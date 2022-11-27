@@ -457,7 +457,7 @@ export function testFile(dir: string, folderName: string, fileName: string, fail
                     client = await getFhirClientJSON();
                 }
             });
-            test('Implementation Guide Best Practice', () => {
+            test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
                 if (json.meta ! = undefined) {
                     expect(json.meta.profile == undefined).toBeTruthy()
                 }
