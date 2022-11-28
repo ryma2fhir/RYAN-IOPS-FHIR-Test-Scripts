@@ -69,10 +69,10 @@ jobs:
       - name: Install npm
         run: make install
         
-      - name: Update FHIR Validator dependencies and build
+      - name: Update FHIR Validator install
         run: make -C validation-service-fhir-r4 install
         
-      - name: Update FHIR Validator dependencies and build
+      - name: Update FHIR Validator build
         run: make -C validation-service-fhir-r4 build
 
       - name: Run FHIR Validator
