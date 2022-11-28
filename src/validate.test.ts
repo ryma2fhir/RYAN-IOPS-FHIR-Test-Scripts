@@ -69,12 +69,16 @@ const args = require('minimist')(process.argv.slice(2))
 
     // Experiment to writeback additional information
     const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
+    console.log('GitSummary Text = '+gitHubSummary)
     if (fs.existsSync(gitSummaryFile)) {
+        console.log('Git Summary found :' + gitSummaryFile)
         try {
             fs.appendFileSync(gitSummaryFile, gitHubSummary);
         } catch (e) {
             console.log('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
         }
+    } else {
+        console.log('Git Summary not found :' + gitSummaryFile)
     }
 
 
