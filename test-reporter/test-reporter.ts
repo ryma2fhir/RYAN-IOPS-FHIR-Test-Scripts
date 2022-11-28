@@ -12,7 +12,7 @@ export default class TestReporter implements CustomReporter {
         let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
         gitHubSummary += ' :heart_on_fire: Failed '+ results.numFailedTests+' '+NEW_LINE;
         gitHubSummary += ' :green_heart: Passed '+ results.numPassedTests+' '+NEW_LINE;
-
+        gitHubSummary += NEW_LINE+NEW_LINE;
         for(let parent of results.testResults) {
             for(let result of parent.testResults) {
                 if (result.status == 'passed') gitHubSummary += ':heavy_check_mark:'
