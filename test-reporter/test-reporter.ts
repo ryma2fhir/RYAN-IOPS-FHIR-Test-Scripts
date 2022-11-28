@@ -26,7 +26,7 @@ export default class TestReporter implements CustomReporter {
             for(let result of parent.testResults) {
                 let group = result.fullName.split(result.title)
                 if (lastGroupName == '' || (group.length>0 && lastGroupName != group[0])) {
-                    lastGroupName = group[0]
+                    lastGroupName = group[0].trim()
                     gitHubSummary +=  '#### '+ lastGroupName + ' '+NEW_LINE;
                     gitHubSummary +=  '['+lastGroupName.replace(" ","/")+'](../../blob/main/'+ lastGroupName.replace(" ","/") + ') '+NEW_LINE;
                 }
