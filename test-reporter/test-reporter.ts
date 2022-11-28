@@ -19,8 +19,7 @@ export default class TestReporter implements CustomReporter {
                 let group = result.fullName.split(result.title)
                 if (lastGroupName == '' || (group.length>0 && lastGroupName != group[0])) {
                     lastGroupName = group[0]
-                    gitHubSummary +=  lastGroupName
-                    gitHubSummary += ' '+NEW_LINE;
+                    gitHubSummary +=  '#### '+ lastGroupName + ' '+NEW_LINE;
                 }
                 if (result.status == 'passed') gitHubSummary += ':heavy_check_mark:'
                 if (result.status == 'failed') gitHubSummary += ':x:'
