@@ -8,6 +8,7 @@ import axios, {AxiosInstance} from "axios";
 // Initial terminology queries can take a long time to process - cached responses are much more responsive
 jest.setTimeout(40*1000)
 
+let gitHubSummary = '### Report \n';
 
 const args = require('minimist')(process.argv.slice(2))
     //const args = process.argv
@@ -35,13 +36,14 @@ const args = require('minimist')(process.argv.slice(2))
         let pkg= JSON.parse(resource)
         if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
             isUKCore = true;
-            console.log('Is UKCore');
+            gitHubSummary += 'Detected UKCore /n';
+
         }
         if (pkg.dependencies != undefined) {
             for (let key in pkg.dependencies) {
                 if (key.startsWith('fhir.r4.ukcore')) {
                     failOnWarning = true;
-                    console.log('ukcore dependency found, enabled STRICT validation')
+                    gitHubSummary += 'ukcore dependency found, enabled STRICT validation'
                 }
             }
         }
@@ -60,11 +62,20 @@ const args = require('minimist')(process.argv.slice(2))
         })
     });
 
-    console.log('Current directory - ' + __dirname)
+    gitHubSummary += 'Current directory - ' + __dirname
 
     // Main body of the tests
     testFolderAll(source )
 
+    // Experiment to writeback additional information
+    const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
+    if (fs.existsSync(gitSummaryFile)) {
+        try {
+            fs.appendFileSync(gitSummaryFile, gitHubSummary);
+        } catch (e) {
+            console.log('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
+        }
+    }
 
 
 
