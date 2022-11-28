@@ -19,6 +19,9 @@ export default class TestReporter implements CustomReporter {
                 if (result.status == 'failed') gitHubSummary += ':x:'
                 gitHubSummary +=  result.fullName
                 gitHubSummary += ' '+NEW_LINE;
+                for (let error of result.failureMessages) {
+                    gitHubSummary += NEW_LINE + ' - ' + error + NEW_LINE+ NEW_LINE
+                }
             }
         }
 
