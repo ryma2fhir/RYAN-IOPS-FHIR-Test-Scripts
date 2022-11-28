@@ -256,11 +256,12 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         }
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-
+/*
         if (issue.diagnostics.includes('http://snomed.info/sct')) {
             if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false
             if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-VaccineCode')) return false
         }
+*/
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
