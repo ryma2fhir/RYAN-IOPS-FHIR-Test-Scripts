@@ -10,6 +10,14 @@ export default class TestReporter implements CustomReporter {
 
     onRunComplete(_: Set<TestContext>, results: AggregatedResult) {
         let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
+        const gitrepoBranch = process.env.GITHUB_REF_NAME
+        const gitrepoName = process.env.GITHUB_REPOSITORY
+        if (gitrepoBranch != null) {
+            gitHubSummary += ' Branch '+ gitrepoBranch+' '+NEW_LINE;
+        }
+        if (gitrepoName != null) {
+            gitHubSummary += ' Name '+ gitrepoName+' '+NEW_LINE+NEW_LINE;
+        }
         gitHubSummary += ' :x: Failed '+ results.numFailedTests+' '+NEW_LINE;
         gitHubSummary += ' :heavy_check_mark: Passed '+ results.numPassedTests+' '+NEW_LINE;
         gitHubSummary += NEW_LINE+NEW_LINE;
@@ -20,6 +28,7 @@ export default class TestReporter implements CustomReporter {
                 if (lastGroupName == '' || (group.length>0 && lastGroupName != group[0])) {
                     lastGroupName = group[0]
                     gitHubSummary +=  '#### '+ lastGroupName + ' '+NEW_LINE;
+                    gitHubSummary +=  '['+lastGroupName.replace(" ","/")+'](../../blob/main/'+ lastGroupName.replace(" ","/") + ') '+NEW_LINE;
                 }
                 if (result.status == 'passed') gitHubSummary += ' * :heavy_check_mark:'
                 if (result.status == 'failed') gitHubSummary += ' * :x:'
