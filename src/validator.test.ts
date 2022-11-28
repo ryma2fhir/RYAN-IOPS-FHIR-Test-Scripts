@@ -3,6 +3,7 @@ import {
 } from "./common.js";
 import {describe, expect, jest} from "@jest/globals";
 import {AxiosInstance} from "axios";
+import fs from "fs";
 
 
 
@@ -12,7 +13,7 @@ const args = require('minimist')(process.argv.slice(2))
 let terminology = true;
 jest.setTimeout(40*1000)
 
-
+let gitHubSummary = '### :fire: Report \n';
 
 describe('Test Environment', ()=> {
     let client: AxiosInstance;
@@ -91,7 +92,18 @@ describe('Terminology Tests', () => {
     }
 });
 
-
+const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
+console.log('GitSummary Text = '+gitHubSummary)
+if (fs.existsSync(gitSummaryFile)) {
+    console.log('Git Summary found :' + gitSummaryFile)
+    try {
+        fs.appendFileSync(gitSummaryFile, gitHubSummary);
+    } catch (e) {
+        console.log('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
+    }
+} else {
+    console.log('Git Summary not found :' + gitSummaryFile)
+}
 
 
 
