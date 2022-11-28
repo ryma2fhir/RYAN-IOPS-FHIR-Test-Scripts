@@ -21,9 +21,9 @@ export default class TestReporter implements CustomReporter {
                     lastGroupName = group[0]
                     gitHubSummary +=  '#### '+ lastGroupName + ' '+NEW_LINE;
                 }
-                if (result.status == 'passed') gitHubSummary += ':heavy_check_mark:'
-                if (result.status == 'failed') gitHubSummary += ':x:'
-                gitHubSummary +=  "    " + result.title +NEW_LINE;
+                if (result.status == 'passed') gitHubSummary += '    :heavy_check_mark:'
+                if (result.status == 'failed') gitHubSummary += '    :x:'
+                gitHubSummary +=  " " + result.title +NEW_LINE;
                 for (let error of result.failureMessages) {
                     gitHubSummary += NEW_LINE + ' - ' + error + NEW_LINE+ NEW_LINE
                 }
