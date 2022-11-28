@@ -8,7 +8,7 @@ import axios, {AxiosInstance} from "axios";
 // Initial terminology queries can take a long time to process - cached responses are much more responsive
 jest.setTimeout(40*1000)
 
-let gitHubSummary = '### Report \n';
+let gitHubSummary = '### :fire: Report \n';
 
 const args = require('minimist')(process.argv.slice(2))
     //const args = process.argv
