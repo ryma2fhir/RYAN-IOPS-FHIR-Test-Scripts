@@ -1,6 +1,7 @@
 import {Reporter, TestContext} from '@jest/reporters';
 import { AggregatedResult } from '@jest/test-result';
 import fs from "fs";
+import {NEW_LINE} from "../src/common.js";
 
 type CustomReporter = Pick<Reporter, "onRunComplete">;
 
@@ -8,19 +9,16 @@ export default class TestReporter implements CustomReporter {
     constructor() {}
 
     onRunComplete(_: Set<TestContext>, results: AggregatedResult) {
-        let gitHubSummary = '/n/n### :fire: Report /n';
-        gitHubSummary += ' :heart_on_fire: Failed '+ results.numFailedTests+' /n';
-        gitHubSummary += ' :green_heart: Passed '+ results.numPassedTests+' /n';
+        let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
+        gitHubSummary += ' :heart_on_fire: Failed '+ results.numFailedTests+' '+NEW_LINE;
+        gitHubSummary += ' :green_heart: Passed '+ results.numPassedTests+' '+NEW_LINE;
 
         for(let parent of results.testResults) {
             for(let result of parent.testResults) {
-
-               // console.log(result)
-                // result.title + '/n - ' +
-                gitHubSummary +=  result.fullName
                 if (result.status == 'passed') gitHubSummary += ':heavy_check_mark:'
                 if (result.status == 'failed') gitHubSummary += ':x:'
-                gitHubSummary += ' /n';
+                gitHubSummary +=  result.fullName
+                gitHubSummary += ' '+NEW_LINE;
             }
         }
 

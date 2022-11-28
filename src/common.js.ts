@@ -13,6 +13,8 @@ import path from "path";
 // This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
 
+export const NEW_LINE = '\n';
+
 export let defaultBaseUrl = 'http://localhost:9001/FHIR/R4';
 //export let defaultBaseUrl = 'http://lb-fhir-validator-924628614.eu-west-2.elb.amazonaws.com/FHIR/R4';
 

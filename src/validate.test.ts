@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, isIgnore, testFile
+    getFhirClientJSON, isIgnore, NEW_LINE, testFile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -8,7 +8,7 @@ import axios, {AxiosInstance} from "axios";
 // Initial terminology queries can take a long time to process - cached responses are much more responsive
 jest.setTimeout(40*1000)
 
-let gitHubSummary = '### :fire: Report \n';
+let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
 const args = require('minimist')(process.argv.slice(2))
     //const args = process.argv
@@ -36,14 +36,14 @@ const args = require('minimist')(process.argv.slice(2))
         let pkg= JSON.parse(resource)
         if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
             isUKCore = true;
-            gitHubSummary += 'Detected UKCore /n';
+            gitHubSummary += 'Detected UKCore '+NEW_LINE;
 
         }
         if (pkg.dependencies != undefined) {
             for (let key in pkg.dependencies) {
                 if (key.startsWith('fhir.r4.ukcore')) {
                     failOnWarning = true;
-                    gitHubSummary += 'ukcore dependency found, enabled STRICT validation'
+                    gitHubSummary += 'ukcore dependency found, enabled STRICT validation'+NEW_LINE
                 }
             }
         }

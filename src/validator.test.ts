@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, testFileError, testFileErrorProfile, testFileValidator, testFileWarning,
+    getFhirClientJSON, NEW_LINE, testFileError, testFileErrorProfile, testFileValidator, testFileWarning,
 } from "./common.js";
 import {describe, expect, jest} from "@jest/globals";
 import {AxiosInstance} from "axios";
@@ -13,7 +13,7 @@ const args = require('minimist')(process.argv.slice(2))
 let terminology = true;
 jest.setTimeout(40*1000)
 
-let gitHubSummary = '### :fire: Report \n';
+let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
 describe('Test Environment', ()=> {
     let client: AxiosInstance;
