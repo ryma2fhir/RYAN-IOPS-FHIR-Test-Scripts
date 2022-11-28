@@ -3,8 +3,8 @@
 const config = {
     reporters: [
         "default",
-        'github-actions'
-       // "jest-github-actions-reporter"
+        'github-actions',
+        '<rootDir>/test-reporter/index.js'
     ],
     testLocationInResults: true,
     transform: {
