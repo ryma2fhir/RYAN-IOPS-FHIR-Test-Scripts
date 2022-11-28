@@ -72,10 +72,18 @@ jobs:
       - name: Update FHIR Validator dependencies and build
         run: make -C validation-service-fhir-r4 build
 
+      - name: FHIR Validator
+        run: |
+          echo "### Starting :fire_engine: FHIR Validator" >> $GITHUB_STEP_SUMMARY
+      
       - name: Run FHIR Validator
         run: 
           nohup java -jar validation-service-fhir-r4/target/fhir-validator-0.0.1-SNAPSHOT.jar &
           sleep 120
         
+      - name: FHIR Test Scripts
+        run: |
+          echo "### :fire: FHIR Test Scripts" >> $GITHUB_STEP_SUMMARY
+          
       - name: Run Test
         run: npm run integration-test
