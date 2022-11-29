@@ -204,11 +204,11 @@ function getErrors(operationOutcome : OperationOutcome, failOnWarning:boolean): 
     if (operationOutcome.issue !== undefined) {
         for (const issue of operationOutcome.issue) {
             let str = issueCheck(issue, failOnWarning)
-            if (str != undefined) issues.push(str + '\n')
+            if (str != undefined) issues.push(str )
         }
     }
     if (issues.length >0) {
-        return issues.toString()
+        return issues.join(NEW_LINE)
     }
     return undefined;
 }

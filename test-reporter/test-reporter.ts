@@ -35,7 +35,7 @@ export default class TestReporter implements CustomReporter {
                         if (lastGroupName == '' || (group.length > 0 && lastGroupName != group[0])) {
                             lastGroupName = group[0]
                             if (lastGroupName.includes('.') && gitrepoBranch != undefined) {
-                                gitHubSummary += '[' + lastGroupName.replace(" ", "/") + '](../../blob/' + gitrepoBranch + '/' + lastGroupName.replace(" ", "/") + ') ' + NEW_LINE;
+                                gitHubSummary += '[' + (lastGroupName.replace(" ", "/")).trim() + ']('+('../../blob/' + gitrepoBranch + '/' + lastGroupName.replace(" ", "/")).trim() + ') ' + NEW_LINE;
                             } else {
                                 gitHubSummary += '#### ' + lastGroupName + ' ' + NEW_LINE;
                             }
@@ -44,9 +44,12 @@ export default class TestReporter implements CustomReporter {
                         if (result.status == 'failed') gitHubSummary += ' * :x:'
                         gitHubSummary += " " + result.title + NEW_LINE;
                         if (status =='issues') {
-                            // Only list errors for summary
+                            // Only list errors for issues section
                             for (let error of result.failureMessages) {
-                                error = error.split(NEW_LINE).join(NEW_LINE + ' > ');
+                                // Remove the stack, does not mean anything to modellers
+                                var pattern = 'at ';
+                                error = error.split(NEW_LINE).filter(function (str) { return !(str.trim().startsWith(pattern)); })
+                                 .join(NEW_LINE + ' > ');
                                 gitHubSummary += NEW_LINE + ' > ' + error + NEW_LINE + NEW_LINE
                             }
                         }
