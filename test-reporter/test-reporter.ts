@@ -25,11 +25,12 @@ export default class TestReporter implements CustomReporter {
         gitHubSummary += NEW_LINE+NEW_LINE;
         for(let parent of results.testResults) {
             let lastGroupName='';
-            for (let status of ['failed','passed']) {
-                if (status == 'failed') gitHubSummary += '### Fail'+NEW_LINE+NEW_LINE;
-                if (status == 'passed') gitHubSummary += '### Pass'+NEW_LINE+NEW_LINE;
+            for (let status of ['issues','summary']) {
+                if (status == 'issues') gitHubSummary += '### Issues'+NEW_LINE+NEW_LINE;
+                if (status == 'issues') gitHubSummary += '### Summary'+NEW_LINE+NEW_LINE;
                 for (let result of parent.testResults) {
-                    if (result.status == status) {
+                    if ((status == 'issues' && result.status == 'failed') ||
+                        (status == 'summary') ) {
                         let group = result.fullName.split(result.title)
                         if (lastGroupName == '' || (group.length > 0 && lastGroupName != group[0])) {
                             lastGroupName = group[0]
@@ -42,9 +43,12 @@ export default class TestReporter implements CustomReporter {
                         if (result.status == 'passed') gitHubSummary += ' * :white_check_mark:'
                         if (result.status == 'failed') gitHubSummary += ' * :x:'
                         gitHubSummary += " " + result.title + NEW_LINE;
-                        for (let error of result.failureMessages) {
-                            error = error.replace(NEW_LINE,NEW_LINE + ' > ')
-                            gitHubSummary += NEW_LINE + ' > ' + error + NEW_LINE + NEW_LINE
+                        if (status =='issues') {
+                            // Only list errors for summary
+                            for (let error of result.failureMessages) {
+                                error = error.split(NEW_LINE).join(NEW_LINE + ' > ');
+                                gitHubSummary += NEW_LINE + ' > ' + error + NEW_LINE + NEW_LINE
+                            }
                         }
                     }
                 }
