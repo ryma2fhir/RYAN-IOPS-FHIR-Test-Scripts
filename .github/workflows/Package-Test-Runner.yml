@@ -105,3 +105,8 @@ jobs:
         
       - name: Run Test
         run: make test-package
+        env:
+          CI: true
+          PACKAGE_REPO: ${{github.event.inputs.githubrepo}}
+          PACKAGE_NAME: ${{github.event.inputs.packagename}}
+          PACKAGE_VERSION: ${{github.event.inputs.packageversion}}
