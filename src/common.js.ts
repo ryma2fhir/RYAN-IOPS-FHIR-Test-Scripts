@@ -470,9 +470,11 @@ export function testFile(dir: string, folderName: string, fileName: string, fail
                 }
                 if (json.resourceType === 'Bundle') {
                     let bundle : Bundle = json
-                    for (let entry of bundle.entry) {
-                        if (entry.resource !== undefined && entry.resource.meta != undefined) {
-                            expect(entry.resource.meta.profile == undefined).toBeTruthy()
+                    if (bundle.entry != undefined) {
+                        for (let entry of bundle.entry) {
+                            if (entry.resource !== undefined && entry.resource.meta != undefined) {
+                                expect(entry.resource.meta.profile == undefined).toBeTruthy()
+                            }
                         }
                     }
                 }
@@ -514,16 +516,17 @@ export function testFile(dir: string, folderName: string, fileName: string, fail
                         resourceChecks(response, failOnWarning)
                         expect(response.status).toEqual(200)
                     });
-                }
+                } else {
 
-                test('FHIR Validation - UKCore', async () => {
-                    const response = await client.post('/$validate?profile=https://fhir.hl7.org.uk/StructureDefinition/UKCore-' + json.resourceType, resource).catch(function (error) {
-                        return error.response
+                    test('FHIR Validation - UKCore', async () => {
+                        const response = await client.post('/$validate?profile=https://fhir.hl7.org.uk/StructureDefinition/UKCore-' + json.resourceType, resource).catch(function (error) {
+                            return error.response
+                        })
+                        expect(response.status === 200 || response.status === 400).toBeTruthy()
+                        resourceChecks(response, failOnWarning)
+                        expect(response.status).toEqual(200)
                     })
-                    expect(response.status === 200 || response.status === 400).toBeTruthy()
-                    resourceChecks(response, failOnWarning)
-                    expect(response.status).toEqual(200)
-                })
+                }
 
             }
         }
