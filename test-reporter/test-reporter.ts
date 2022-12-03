@@ -6,11 +6,17 @@ import * as process from "process";
 
 type CustomReporter = Pick<Reporter, "onRunComplete">;
 
+
+
 export default class TestReporter implements CustomReporter {
     constructor() {}
 
+
+
     onRunComplete(_: Set<TestContext>, results: AggregatedResult) {
         let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
+
+
         let gitrepoBranch = process.env.GITHUB_REF_NAME
         const gitrepoName = process.env.GITHUB_REPOSITORY
 
@@ -62,6 +68,7 @@ export default class TestReporter implements CustomReporter {
                                 var pattern = 'at ';
                                 error = error.split(NEW_LINE).filter(function (str) { return !(str.trim().startsWith(pattern)); })
                                  .join(NEW_LINE + ' > ');
+                                error = this.urlify(error)
                                 gitHubSummary += NEW_LINE + ' > ' + error + NEW_LINE + NEW_LINE
                             }
                         }
@@ -83,4 +90,15 @@ export default class TestReporter implements CustomReporter {
             console.info('Git Summary not found :' + gitSummaryFile)
         }
     }
+
+    urlify(text: string): string {
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+            function getSimplifierUrl(url: string) {
+                return 'https://simplifier.net/resolve?fhirVersion=R4&scope='+  process.env.PACKAGE_NAME +'@' +  process.env.PACKAGE_VERSION + '&canonical='+url
+            }
+            return '<a href="' + getSimplifierUrl(url) + '">' + url + '</a>';
+        })
+    }
+
 }
