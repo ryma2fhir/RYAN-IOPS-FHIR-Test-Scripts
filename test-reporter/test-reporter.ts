@@ -3,6 +3,7 @@ import { AggregatedResult } from '@jest/test-result';
 import fs from "fs";
 import {NEW_LINE} from "../src/common.js";
 import * as process from "process";
+import * as console from "console";
 
 type CustomReporter = Pick<Reporter, "onRunComplete">;
 
@@ -95,9 +96,10 @@ export default class TestReporter implements CustomReporter {
         var urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, function(url) {
             function getSimplifierUrl(url: string) {
-                return 'https://simplifier.net/resolve?fhirVersion=R4&scope='+  process.env.PACKAGE_NAME +'@' +  process.env.PACKAGE_VERSION + '&canonical='+url
+                url = url.replace(')','')
+                return '[' + url + ']('+ 'https://simplifier.net/resolve?fhirVersion=R4&scope='+  process.env.PACKAGE_NAME +'@' +  process.env.PACKAGE_VERSION + '&canonical='+url + ')'
             }
-            return '<a href="' + getSimplifierUrl(url) + '">' + url + '</a>';
+            return getSimplifierUrl(url);
         })
     }
 
