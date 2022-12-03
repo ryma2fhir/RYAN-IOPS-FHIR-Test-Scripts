@@ -87,12 +87,14 @@ const args = require('minimist')(process.argv.slice(2))
         console.info('Git Summary not found : ' + gitSummaryFile)
     }
 
-
+function testDescription(folder: string) : string {
+    return folder.split('/').pop()
+}
 
 function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
-        describe(dir.replace('../',''),() => {
+        describe(testDescription(dir),() => {
             console.info('Test folder: '+dir)
             const list = fs.readdirSync(dir);
             list.forEach(function (file) {

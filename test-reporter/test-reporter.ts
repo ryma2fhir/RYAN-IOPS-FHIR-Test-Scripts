@@ -12,6 +12,7 @@ export default class TestReporter implements CustomReporter {
         let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
         let gitrepoBranch = process.env.GITHUB_REF_NAME
         const gitrepoName = process.env.GITHUB_REPOSITORY
+
         if (gitrepoBranch != null) {
             gitHubSummary += ' Branch '+ gitrepoBranch+' '+NEW_LINE;
         } else {
@@ -35,11 +36,12 @@ export default class TestReporter implements CustomReporter {
                         if (lastGroupName == '' || (group.length > 0 && lastGroupName != group[0])) {
                             lastGroupName = group[0]
                             if (lastGroupName.includes('.') && gitrepoBranch != undefined) {
+                                // may be able to get rid of this
                                 let destination = process.env.PACKAGE_REPO
                                 if (destination != undefined) {
-                                    gitHubSummary += '[' + (lastGroupName.replace(" ", "/")).trim() + '](' + ('https://github.com/' + destination + '/blob/main/' + lastGroupName.replace(" ", "/")).trim() + ') ' + NEW_LINE;
+                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('https://github.com/' + gitrepoName + '/blob/' + gitrepoBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
                                 } else {
-                                    gitHubSummary += '[' + (lastGroupName.replace(" ", "/")).trim() + '](' + ('../../blob/' + gitrepoBranch + '/' + lastGroupName.replace(" ", "/")).trim() + ') ' + NEW_LINE;
+                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('../../blob/' + gitrepoBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
                                 }
                             } else {
                                 gitHubSummary += '#### ' + lastGroupName + ' ' + NEW_LINE;
