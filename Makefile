@@ -6,7 +6,7 @@ test:
 
 
 test-package:
-	npm test -- --source=gitrepository/
+	npm test -- --source=gitrepository
 
 configure-validation:
 	npm start

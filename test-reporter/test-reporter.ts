@@ -64,16 +64,16 @@ export default class TestReporter implements CustomReporter {
         }
 
         const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
-        console.log('GitSummary Text = '+gitHubSummary)
+        console.info('GitSummary Text = '+gitHubSummary)
         if (fs.existsSync(gitSummaryFile)) {
-            console.log('Git Summary found :' + gitSummaryFile)
+            console.info('Git Summary found :' + gitSummaryFile)
             try {
                 fs.appendFileSync(gitSummaryFile, gitHubSummary);
             } catch (e) {
-                console.log('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
+                console.error('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
             }
         } else {
-            console.log('Git Summary not found :' + gitSummaryFile)
+            console.info('Git Summary not found :' + gitSummaryFile)
         }
     }
 }

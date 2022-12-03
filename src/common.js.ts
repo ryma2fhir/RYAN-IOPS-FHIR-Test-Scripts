@@ -9,6 +9,7 @@ import {
 } from "fhir/r4";
 import fs from "fs";
 import path from "path";
+import * as console from "console";
 
 // This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
@@ -89,7 +90,7 @@ export function getJson(file, resource) {
 
             return json;
         } else {
-            // console.log(file);
+
             if (JSON.parse(resource).resourceType == undefined) throw Error('Invalid JSON Missing resource type ' + file)
             if (JSON.parse(resource).resourceType == "Parameters") {
                 var jsonResource = {
@@ -107,7 +108,7 @@ export function getJson(file, resource) {
         }
     }
     catch (e) {
-        console.log('Error processing '+file + ' Error message '+ (e as Error).message)
+        //console.error('Error processing '+file + ' Error message '+ (e as Error).message)
         return undefined
     }
 
@@ -115,7 +116,7 @@ export function getJson(file, resource) {
 
 export async function downloadPackage(destinationPath, name,version ) {
     const url = 'https://packages.simplifier.net/' + name + '/' + version;
-    console.log('Download from ' + url);
+    console.info('Download from ' + url);
     try {
         const response = await axios.get(url, {
             responseType: 'arraybuffer'
@@ -126,7 +127,7 @@ export async function downloadPackage(destinationPath, name,version ) {
 
         fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
         fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
-        console.log('Updated dependency ' + url);
+        console.info('Updated dependency ' + url);
     } catch (exception) {
         process.stderr.write(`ERROR received from ${url}: ${exception}\n`);
         throw new Error('Unable to download package '+url);
@@ -144,7 +145,6 @@ function hasErrorMessage(resource): boolean  {
             }
         }
     }
-    // if (warn>5) console.log("Warnings "+warn);
     return false;
 }
 
@@ -297,7 +297,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         }
        // if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
-            console.log(issue.diagnostics)
+            console.error(issue.diagnostics)
             return false
         }
     }
@@ -374,7 +374,7 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnore(folderName : string) : boolean {
+export function isIgnoreFolder(folderName : string) : boolean {
 
     if (folderName.startsWith('.')) return true;
     if (folderName == 'Diagrams') return true;
@@ -395,8 +395,28 @@ export function isIgnore(folderName : string) : boolean {
     return false;
 }
 
+export function isIgnoreFile(directory : string, fileName : string) : boolean {
+    var fileExtension = fileName.split('.').pop().toUpperCase();
+    let file = directory +'/'+ fileName
+    if (fileName == 'fhirpkg.lock.json') return true;
+    if (fileName == 'package.json') return true;
+    if (fileExtension == 'JSON' || fileExtension == 'XML') {
+        let json = undefined
+        if (directory.indexOf('FHIR') > 0) return false;
+        try {
+            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
+            if (json.resourceType != undefined) return false;
+            else {
+                console.info('File ignored : ' + file)
+            }
+        } catch (e) {
+            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+        }
+    } return true;
+}
+
 export function isDefinition(fileNameOriginal : string) : boolean {
-   // console.log(fileNameOriginal);
+   // console.info(fileNameOriginal);
     let fileName = fileNameOriginal.toUpperCase();
 
     if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
@@ -440,17 +460,17 @@ export function testFileValidator(testDescription,file) {
     });
 }
 
-export function testFile(dir: string, folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
+export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
 {
     let client: AxiosInstance;
-    let file = dir + folderName + "/" + fileName;
+    let file = folderName + "/" + fileName;
     let resource: any = undefined
     let json = undefined
     try {
         resource = fs.readFileSync(file, 'utf8');
         json = JSON.parse(getJson(file, resource))
     } catch (e) {
-        console.log('Error reading ' + file + ' Error message ' + (e as Error).message)
+        throw new Error('Error with ' + file + ' Error message ' + (e as Error).message)
     }
 
     describe(fileName, () => {

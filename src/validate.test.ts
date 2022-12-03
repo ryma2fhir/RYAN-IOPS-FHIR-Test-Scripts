@@ -1,9 +1,10 @@
 import {
-    getFhirClientJSON, isIgnore, NEW_LINE, testFile
+    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
 import axios, {AxiosInstance} from "axios";
+import * as console from "console";
 
 // Initial terminology queries can take a long time to process - cached responses are much more responsive
 jest.setTimeout(40*1000)
@@ -31,22 +32,27 @@ const args = require('minimist')(process.argv.slice(2))
         }
     }
 
-    const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
-    if (resource != undefined) {
-        let pkg= JSON.parse(resource)
-        if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
-            isUKCore = true;
-            gitHubSummary += 'Detected UKCore '+NEW_LINE;
+    try {
+        const resource: any = fs.readFileSync(source + '/package.json', 'utf8')
+        if (resource != undefined) {
+            let pkg = JSON.parse(resource)
+            if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
+                isUKCore = true;
+                gitHubSummary += 'Detected UKCore ' + NEW_LINE;
 
-        }
-        if (pkg.dependencies != undefined) {
-            for (let key in pkg.dependencies) {
-                if (key.startsWith('fhir.r4.ukcore')) {
-                    failOnWarning = true;
-                    gitHubSummary += 'ukcore dependency found, enabled STRICT validation'+NEW_LINE
+            }
+            if (pkg.dependencies != undefined) {
+                for (let key in pkg.dependencies) {
+                    if (key.startsWith('fhir.r4.ukcore')) {
+                        failOnWarning = true;
+                        gitHubSummary += 'ukcore dependency found, enabled STRICT validation' + NEW_LINE
+                    }
                 }
             }
         }
+    } catch (e) {
+        gitHubSummary += 'No package.json found, applying UKCore validation rule ' + NEW_LINE;
+        failOnWarning = true;
     }
 
     describe('Test Environment', ()=> {
@@ -65,49 +71,39 @@ const args = require('minimist')(process.argv.slice(2))
     gitHubSummary += 'Current directory - ' + __dirname
 
     // Main body of the tests
-    testFolderAll(source )
+    testFolder(source )
 
     // Experiment to writeback additional information
     const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
-    console.log('GitSummary Text = '+gitHubSummary)
+    console.info('GitSummary Text = '+gitHubSummary)
     if (fs.existsSync(gitSummaryFile)) {
-        console.log('Git Summary found :' + gitSummaryFile)
+        console.info('Git Summary found : ' + gitSummaryFile)
         try {
             fs.appendFileSync(gitSummaryFile, gitHubSummary);
         } catch (e) {
-            console.log('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
+            console.info('Error processing '+ gitSummaryFile + ' Error message '+ (e as Error).message)
         }
     } else {
-        console.log('Git Summary not found :' + gitSummaryFile)
+        console.info('Git Summary not found : ' + gitSummaryFile)
     }
 
 
 
-function testFolderAll(dir) {
+function testFolder(dir) {
 
     if (fs.existsSync(dir)) {
-        const list = fs.readdirSync(dir);
-        list.forEach(function (fileTop) {
-            if (fs.lstatSync(source+fileTop).isDirectory()) {
-
-                describe(fileTop,() => {
-                    const list = fs.readdirSync(dir + fileTop);
-                    let runTest = !isIgnore(fileTop)
-
-                    if (runTest) {
-                        list.forEach(function (file) {
-                            let processFile = !isIgnore(file)
-                           // if (file.includes('.DS_Store')) processFile = false;
-                          //  if (file.startsWith('.')) processFile = false;
-                            if (processFile) {
-                                if (!fs.lstatSync(source + fileTop+ "/" + file).isDirectory()) {
-                                    testFile(dir, fileTop, file, failOnWarning, isUKCore)
-                                }
-                            }
-                        })
+        describe(dir.replace('../',''),() => {
+            console.info('Test folder: '+dir)
+            const list = fs.readdirSync(dir);
+            list.forEach(function (file) {
+                if (fs.lstatSync(dir +'/'+file).isDirectory()) {
+                    if (!isIgnoreFolder(file)) testFolder(dir+ "/" + file)
+                } else {
+                    if (!isIgnoreFile(dir,file)) {
+                        testFile( dir, file, failOnWarning, isUKCore)
                     }
-                })
-            }
+                }
+            })
         });
     }
 }

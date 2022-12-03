@@ -37,7 +37,7 @@ if (args!= undefined) {
 }
 
     if (clientId != undefined && clientSecret != undefined) {
-        console.log('Configuring NHS Onto Server connection')
+        console.info('Configuring NHS Onto Server connection')
         const params = new URLSearchParams();
         params.append('grant_type', 'client_credentials');
         params.append('client_id', clientId);
@@ -48,8 +48,7 @@ if (args!= undefined) {
             accessToken = data.access_token
             processPackages()
         },err =>{
-            console.log('oops')
-            console.log(err)
+            console.error(err)
         })
     }
 
@@ -60,7 +59,7 @@ if (args!= undefined) {
 
             if (pkg.dependencies != undefined) {
                 for( let key in pkg.dependencies) {
-                    console.log('Using package '+ key + '-' + pkg.dependencies[key])
+                    console.info('Using package '+ key + '-' + pkg.dependencies[key])
                     dldPackage(destinationPath,key,pkg.dependencies[key] );
 
                 }
@@ -70,7 +69,7 @@ if (args!= undefined) {
 
 async function dldPackage(destinationPath, name,version ) {
     const url = 'https://packages.simplifier.net/' + name + '/' + version;
-    console.log('Download from ' + url);
+    console.info('Download from ' + url);
     try {
         const response = await axios.get(url, {
             responseType: 'arraybuffer'
@@ -122,7 +121,7 @@ async function  checkResource(resource : any) {
     // throttle requests
     const localFiledNo = fileNo;
     await delay( fileNo * readThrottle)
-    console.log(localFiledNo + ' - Checking '+ resource.resourceType + ' url ' + resource.url);
+    console.info(localFiledNo + ' - Checking '+ resource.resourceType + ' url ' + resource.url);
     await axios.get(ontoServer + '/'+resource.resourceType+'?url=' + resource.url, {
         headers: {
             'Authorization': 'Bearer '+accessToken
@@ -132,16 +131,16 @@ async function  checkResource(resource : any) {
 
         if (bundle.resourceType == 'Bundle')
             if ((bundle.entry == undefined || bundle.entry.length == 0 )) {
-                console.log(localFiledNo + ' - Not found, adding ' + resource.url)
+                console.info(localFiledNo + ' - Not found, adding ' + resource.url)
                 postResource(localFiledNo, resource)
             } else {
-                console.log(localFiledNo + ' - Found ' + resource.url)
-                if (bundle.entry.length > 1) console.log('WARN ' + resource.url + ' = ' + bundle.entry.length )
+                console.info(localFiledNo + ' - Found ' + resource.url)
+                if (bundle.entry.length > 1) console.info('WARN ' + resource.url + ' = ' + bundle.entry.length )
             }
     },
         error => {
-            console.log(localFiledNo + ' - Search failed for '+ resource.resourceType + ' url=' + resource.url + ' failed with ' + error.message)
-            //console.log(error)
+            console.info(localFiledNo + ' - Search failed for '+ resource.resourceType + ' url=' + resource.url + ' failed with ' + error.message)
+            //console.info(error)
         }
         )
 }
@@ -151,16 +150,16 @@ async function  checkResource(resource : any) {
         postNo++;
         const localPostNo = postNo
         await delay(postThrottle * postNo)
-        console.log(localFileNo + '-'+ localPostNo +' Posting '+  resource.url);
+        console.info(localFileNo + '-'+ localPostNo +' Posting '+  resource.url);
         await axios.post(ontoServer + '/'+resource.resourceType, resource, {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             }
         }).then(() => {
-            console.log(localFileNo + '-'+ localPostNo+ ' - Posted - ' + resource.url)
+            console.info(localFileNo + '-'+ localPostNo+ ' - Posted - ' + resource.url)
         }, err => {
-            console.log(localFileNo + '-'+ localPostNo+ ' - Post for ' + resource.url + ' failed with ' + err.message)
-            if (err.data != undefined) console.log(err.data)
+            console.info(localFileNo + '-'+ localPostNo+ ' - Post for ' + resource.url + ' failed with ' + err.message)
+            if (err.data != undefined) console.info(err.data)
 
         })
     }
