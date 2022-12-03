@@ -97,6 +97,7 @@ export default class TestReporter implements CustomReporter {
         return text.replace(urlRegex, function(url) {
             function getSimplifierUrl(url: string) {
                 url = url.replace(')','')
+                if (process.env.PACKAGE_NAME == undefined) return '[' + url + ']('+ 'https://simplifier.net/resolve?fhirVersion=R4&scope=uk.nhsdigital.r4&canonical='+url + ')'
                 return '[' + url + ']('+ 'https://simplifier.net/resolve?fhirVersion=R4&scope='+  process.env.PACKAGE_NAME +'@' +  process.env.PACKAGE_VERSION + '&canonical='+url + ')'
             }
             return getSimplifierUrl(url);
