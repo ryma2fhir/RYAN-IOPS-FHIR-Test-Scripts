@@ -7,6 +7,8 @@ on:
     inputs:
       githubrepo:
         default: "NHSDigital/NHSDigital-FHIR-BookingAndReferrals"
+      githubranch:
+        default: "main"
       packagename: 
         default: "fhir.r4.ukcore.stu1"
       packageversion: 
@@ -24,6 +26,7 @@ jobs:
     
       - run: echo  ${{ inputs.working_directory }}
       - run: echo  ${{ github.event.inputs.githubrepo }}
+      - run: echo  ${{ github.event.inputs.githubranch }}
       - run: echo  ${{ github.event.inputs.packagename }}
       - run: echo  ${{ github.event.inputs.packageversion }}
       
@@ -108,5 +111,7 @@ jobs:
         env:
           CI: true
           PACKAGE_REPO: ${{github.event.inputs.githubrepo}}
+          GITHUB_REPOSITORY: ${{github.event.inputs.githubrepo}}
+          GITHUB_REF_NAME: ${{github.event.inputs.githubranch}}
           PACKAGE_NAME: ${{github.event.inputs.packagename}}
           PACKAGE_VERSION: ${{github.event.inputs.packageversion}}
