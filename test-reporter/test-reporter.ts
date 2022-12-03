@@ -41,10 +41,12 @@ export default class TestReporter implements CustomReporter {
                                 let destination = process.env.TEST_REPO
                                 let destinationBranch = process.env.TEST_BRANCH
                                 if (destinationBranch == undefined) destinationBranch = 'main'
+                                let name = (lastGroupName.trim().split(' ').join('/'))
+                                name = name.replace('gitrepository/','')
                                 if (destination != undefined) {
-                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('https://github.com/' + destination + '/blob/' + destinationBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
+                                    gitHubSummary += '[' + name + '](' + ('https://github.com/' + destination + '/blob/' + destinationBranch + '/' + name) + ') ' + NEW_LINE;
                                 } else {
-                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('../../blob/' + gitrepoBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
+                                    gitHubSummary += '[' + name + '](' + ('../../blob/' + gitrepoBranch + '/' + name) + ') ' + NEW_LINE;
                                 }
                             } else {
                                 gitHubSummary += '#### ' + lastGroupName + ' ' + NEW_LINE;
