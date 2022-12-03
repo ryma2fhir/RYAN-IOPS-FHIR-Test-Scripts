@@ -110,8 +110,7 @@ jobs:
         run: make test-package
         env:
           CI: true
-          PACKAGE_REPO: ${{github.event.inputs.githubrepo}}
-          GITHUB_REPOSITORY: ${{github.event.inputs.githubrepo}}
-          GITHUB_REF_NAME: ${{github.event.inputs.githubranch}}
+          TEST_REPO: ${{github.event.inputs.githubrepo}}
+          TEST_BRANCH: ${{github.event.inputs.githubranch}}
           PACKAGE_NAME: ${{github.event.inputs.packagename}}
           PACKAGE_VERSION: ${{github.event.inputs.packageversion}}
