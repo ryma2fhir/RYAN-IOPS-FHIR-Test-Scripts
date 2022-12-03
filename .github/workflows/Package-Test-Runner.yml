@@ -10,9 +10,9 @@ on:
       githubranch:
         default: "main"
       packagename: 
-        default: "fhir.r4.ukcore.stu1"
+        default: "uk.nhsdigital.r4.test"
       packageversion: 
-        default: "1.0.0-pre-release"
+        default: "2.7.6-prerelease"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
