@@ -2,6 +2,7 @@ import {Reporter, TestContext} from '@jest/reporters';
 import { AggregatedResult } from '@jest/test-result';
 import fs from "fs";
 import {NEW_LINE} from "../src/common.js";
+import * as process from "process";
 
 type CustomReporter = Pick<Reporter, "onRunComplete">;
 
@@ -37,9 +38,11 @@ export default class TestReporter implements CustomReporter {
                             lastGroupName = group[0]
                             if (lastGroupName.includes('.') && gitrepoBranch != undefined) {
                                 // may be able to get rid of this
-                                let destination = process.env.PACKAGE_REPO
+                                let destination = process.env.TEST_REPO
+                                let destinationBranch = process.env.TEST_BRANCH
+                                if (destinationBranch == undefined) destinationBranch = 'main'
                                 if (destination != undefined) {
-                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('https://github.com/' + gitrepoName + '/blob/' + gitrepoBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
+                                    gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('https://github.com/' + destination + '/blob/' + destinationBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
                                 } else {
                                     gitHubSummary += '[' + (lastGroupName.trim().split(' ').join('/')) + '](' + ('../../blob/' + gitrepoBranch + '/' + lastGroupName.trim().split(' ').join('/')) + ') ' + NEW_LINE;
                                 }
