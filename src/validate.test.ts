@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
+    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile, testYAMLfile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -8,6 +8,7 @@ import * as console from "console";
 
 // Initial terminology queries can take a long time to process - cached responses are much more responsive
 jest.setTimeout(40*1000)
+
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
@@ -73,6 +74,7 @@ const args = require('minimist')(process.argv.slice(2))
     // Main body of the tests
     testFolder(source, source)
 
+
     // Experiment to writeback additional information
     const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
     console.info('GitSummary Text = '+gitHubSummary)
@@ -87,28 +89,55 @@ const args = require('minimist')(process.argv.slice(2))
         console.info('Git Summary not found : ' + gitSummaryFile)
     }
 
-function testDescription(folder: string) : string {
-    return folder.split('/').pop()
-}
+    function testDescription(folder: string) : string {
+        return folder.split('/').pop()
+    }
 
-function testFolder(dir : string, source: string) {
+    function testFolder(dir : string, source: string) {
 
-    if (fs.existsSync(dir)) {
-        if (dir == source ) {
-            testFolderContent(dir,source)
-        } else {
-            describe(testDescription(dir), () => {
-                testFolderContent(dir, source)
-            });
+        if (fs.existsSync(dir)) {
+            if (dir == source ) {
+                testFolderContent(dir,source)
+            } else {
+                describe(testDescription(dir), () => {
+                    testFolderContent(dir, source)
+                });
+            }
         }
     }
+
+/*
+function testFolderOAS(dir : string, source: string) {
+
+if (fs.existsSync(dir)) {
+       testFolderContentOAS(dir,source)
 }
+}
+
+function testFolderContentOAS(dir : string, source: string) {
+   console.info('Test folder: '+dir)
+   const list = fs.readdirSync(dir);
+   list.forEach(function (file) {
+       if (fs.lstatSync(dir +'/'+file).isDirectory()) {
+           if (!isIgnoreFolder(file)) testFolderOAS(dir+ "/" + file, source)
+       } else {
+           if (file.toUpperCase().endsWith('YAML')) {
+               console.info('Yaml: ' + file)
+               testYAMLfile(dir, file)
+           }
+       }
+   })
+}
+
+*/
+
     function testFolderContent(dir : string, source: string) {
         console.info('Test folder: '+dir)
         const list = fs.readdirSync(dir);
         list.forEach(function (file) {
             if (fs.lstatSync(dir +'/'+file).isDirectory()) {
                 if (!isIgnoreFolder(file)) testFolder(dir+ "/" + file, source)
+
             } else {
                 if (!isIgnoreFile(dir,file)) {
                     testFile( dir, file, failOnWarning, isUKCore)
@@ -116,6 +145,7 @@ function testFolder(dir : string, source: string) {
             }
         })
     }
+
 
 
 

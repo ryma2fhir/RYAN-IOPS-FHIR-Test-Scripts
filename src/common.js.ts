@@ -30,6 +30,16 @@ export const getFhirClientJSON = async () => {
     });
 };
 
+export const getFhirClientOAS = async () => {
+    return axios.create({
+        headers: {
+            'Content-Type': 'text/vnd.yaml',
+            'Accept': 'application/json'
+        },
+        baseURL : 'http://localhost:9001'
+    });
+};
+
 export const getFhirClientXML = async () => {
     return axios.create({
         headers: {
@@ -458,6 +468,154 @@ export function testFileValidator(testDescription,file) {
             expect(response.status).toEqual(200)
         })
     });
+
+
+}
+
+export function testYAMLfile(dir,file) {
+    let input = undefined
+    let clientOAS: AxiosInstance;
+    let response : any = undefined
+    try {
+        input = fs.readFileSync(dir + '/' + file, 'utf8');
+      //  console.info(input)
+    } catch (e) {
+        throw new Error('Error with ' + file + ' Error message ' + (e as Error).message)
+    }
+    describe('Test YAML: ' + file,  () => {
+        let resourceMap = new Map<string, string>()
+
+        beforeAll(async () => {
+            clientOAS= await getFhirClientOAS()
+
+             response = await clientOAS.post('/convertOAS', input).catch(function (error) {
+                 return error.response
+             })
+            let json : any = response.data
+            if (json != undefined && json.paths != undefined) {
+                let paths = json.paths
+                for (const key in paths) {
+                    if (paths.hasOwnProperty(key)) {
+                        let operation = paths[key]
+                        for (const keyOp in operation) {
+                            if (operation.hasOwnProperty(keyOp)) {
+                                resourceMap = processOperation(operation[keyOp], resourceMap)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        test('OAS JSON is valid', () => {
+
+            expect(response).toBeTruthy()
+        })
+        test(' test stuff', ()=>{
+            for (let [key, value] of resourceMap) {
+
+              // async issues TODO  testExample(value,key)
+            }
+        })
+        /*
+        describe(' describe stuff', ()=>{
+            for (let [key, value] of resourceMap) {
+
+                testExample(value,key)
+            }
+        })*/
+    })
+}
+
+function processOperation (operation, resourceMap :Map<string, string>):Map<string, string> {
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+
+            if (keyOp =='requestBody') processRequestBody(operation[keyOp],resourceMap)
+            if (keyOp =='responses') processRespones(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+
+function processContent (operation, resourceMap :Map<string, string>):Map<string, string> {
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+            if (keyOp == 'application/fhir+json') processFHIR(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+
+function processFHIR (operation, resourceMap :Map<string, string>) :Map<string, string>{
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+            if (keyOp == 'example') {
+               // console.log(JSON.stringify(operation[keyOp]))
+                resourceMap.set(resourceMap.size + ' request',operation[keyOp])
+            }
+            if (keyOp == 'examples') processExamples(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+
+function processExamples (operation, resourceMap :Map<string, string>) :Map<string, string> {
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+            if (keyOp == 'example')
+            {
+               // console.log(JSON.stringify(operation[keyOp].value))
+                resourceMap.set(resourceMap.size + ' response',operation[keyOp].value)
+            }
+        }
+    }
+    return resourceMap
+}
+function processRespones (operation, resourceMap :Map<string, string>) :Map<string, string>{
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+            processResponse(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+function processResponse (operation, resourceMap :Map<string, string>):Map<string, string> {
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+            if (keyOp =='content') processContent(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+function processRequestBody (operation, resourceMap :Map<string, string>):Map<string, string> {
+    for (const keyOp in operation){
+        if(operation.hasOwnProperty(keyOp)){
+
+            if (keyOp =='content') processContent(operation[keyOp],resourceMap)
+        }
+    }
+    return resourceMap
+}
+
+function testExample(resource, name) {
+    if (resource.resourceType == undefined) return
+    let client: AxiosInstance;
+    describe(name, () => {
+        beforeAll(async () => {
+            client = await getFhirClientJSON();
+        });
+        test('FHIR Validation', async ()=>{
+            test('FHIR Validation', async () => {
+                const response = await client.post('/$validate', resource).catch(function (error) {
+                    return error.response
+                })
+                expect(response.status === 200 || response.status === 400).toBeTruthy()
+                resourceChecks(response, true)
+                expect(response.status).toEqual(200)
+            });
+        })
+    })
 }
 
 export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
