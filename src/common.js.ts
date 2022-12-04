@@ -387,6 +387,7 @@ export function testFileWarning(testDescription, file,message) {
 export function isIgnoreFolder(folderName : string) : boolean {
 
     if (folderName.startsWith('.')) return true;
+    if (folderName == 'node_modules') return true;
     if (folderName == 'Diagrams') return true;
     if (folderName == 'Diagams') return true;
     if (folderName == 'FML') return true;
@@ -472,41 +473,49 @@ export function testFileValidator(testDescription,file) {
 
 }
 
-export function testYAMLfile(dir,file) {
+export function processYAMLfile(dir,file) {
+    console.info('Yaml: ' + file)
     let input = undefined
-    let clientOAS: AxiosInstance;
-    let response : any = undefined
     try {
         input = fs.readFileSync(dir + '/' + file, 'utf8');
       //  console.info(input)
     } catch (e) {
         throw new Error('Error with ' + file + ' Error message ' + (e as Error).message)
     }
-    describe('Test YAML: ' + file,  () => {
-        let resourceMap = new Map<string, string>()
 
-        beforeAll(async () => {
-            clientOAS= await getFhirClientOAS()
-
-             response = await clientOAS.post('/convertOAS', input).catch(function (error) {
-                 return error.response
-             })
-            let json : any = response.data
-            if (json != undefined && json.paths != undefined) {
-                let paths = json.paths
-                for (const key in paths) {
-                    if (paths.hasOwnProperty(key)) {
-                        let operation = paths[key]
-                        for (const keyOp in operation) {
-                            if (operation.hasOwnProperty(keyOp)) {
-                                resourceMap = processOperation(operation[keyOp], resourceMap)
-                            }
+    let resourceMap = new Map<string, string>()
+    getFhirClientOAS().then(( clientOAS)=> {
+        clientOAS.post('/convertOAS', input).catch(function (error) {
+            return error.response
+        }).then(response => {
+            console.info(response)
+        let json: any = response.data
+        if (json != undefined && json.paths != undefined) {
+            let paths = json.paths
+            for (const key in paths) {
+                if (paths.hasOwnProperty(key)) {
+                    let operation = paths[key]
+                    for (const keyOp in operation) {
+                        if (operation.hasOwnProperty(keyOp)) {
+                            resourceMap = processOperation(operation[keyOp], resourceMap)
                         }
                     }
                 }
             }
+        }
+        for (let [key, value] of resourceMap) {
+            console.info(key)
+            console.info(value)
+            fs.writeFile(path.join(dir, '/' + key + '.json'), JSON.stringify(value), function (err) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
+        }
         })
+    })
 
+/*
         test('OAS JSON is valid', () => {
 
             expect(response).toBeTruthy()
@@ -523,8 +532,8 @@ export function testYAMLfile(dir,file) {
 
                 testExample(value,key)
             }
-        })*/
-    })
+        })
+    })*/
 }
 
 function processOperation (operation, resourceMap :Map<string, string>):Map<string, string> {

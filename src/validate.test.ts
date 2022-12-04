@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile, testYAMLfile
+    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -105,31 +105,6 @@ const args = require('minimist')(process.argv.slice(2))
             }
         }
     }
-
-/*
-function testFolderOAS(dir : string, source: string) {
-
-if (fs.existsSync(dir)) {
-       testFolderContentOAS(dir,source)
-}
-}
-
-function testFolderContentOAS(dir : string, source: string) {
-   console.info('Test folder: '+dir)
-   const list = fs.readdirSync(dir);
-   list.forEach(function (file) {
-       if (fs.lstatSync(dir +'/'+file).isDirectory()) {
-           if (!isIgnoreFolder(file)) testFolderOAS(dir+ "/" + file, source)
-       } else {
-           if (file.toUpperCase().endsWith('YAML')) {
-               console.info('Yaml: ' + file)
-               testYAMLfile(dir, file)
-           }
-       }
-   })
-}
-
-*/
 
     function testFolderContent(dir : string, source: string) {
         console.info('Test folder: '+dir)

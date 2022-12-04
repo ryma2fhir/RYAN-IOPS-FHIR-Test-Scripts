@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import path from "path";
-import {downloadPackage, getJson, isDefinition, isIgnoreFolder} from "./common.js";
+import {downloadPackage, getJson, isDefinition, isIgnoreFolder, processYAMLfile} from "./common.js";
 import { tar } from 'zip-a-folder';
+import * as console from "console";
 
 
 const jsonminify = require("jsonminify");
@@ -50,6 +51,9 @@ if (process.env.ONTO_URL != undefined) {
     const packageVersion: string = process.env.PACKAGE_VERSION;
 
     if (packageName != undefined && packageVersion != undefined) {
+        // Extract FHIR from OAS
+        processFolderOAS(source, source);
+
         console.info('Configuring manifest for ' + packageName + ' ' + packageVersion)
         manifest.push({
             "packageName": packageName,
@@ -60,6 +64,35 @@ if (process.env.ONTO_URL != undefined) {
                 return console.error(err);
             }
         });
+
+
+
+        // process OAS files and extract FHIR Examples?
+        function processFolderOAS(dir : string, source: string) {
+        //    console.info(dir)
+            if (fs.existsSync(dir)) {
+                processFolderContentOAS(dir,source)
+            }
+        }
+
+        function processFolderContentOAS(dir : string, source: string) {
+          //  console.info('Process folder: '+dir)
+            const list = fs.readdirSync(dir);
+            list.forEach(function (file) {
+                if (fs.lstatSync(dir +'/'+file).isDirectory()) {
+                    if (!isIgnoreFolder(file)) processFolderOAS(dir+ "/" + file, source)
+                } else {
+                    if (file.toUpperCase().endsWith('YAML')) {
+
+                        processYAMLfile(dir, file)
+                    }
+                }
+            })
+        }
+
+
+
+
     } else
     if (fs.existsSync(fileName)) {
         const file = fs.readFileSync(fileName, 'utf-8');
@@ -119,61 +152,7 @@ if (process.env.ONTO_URL != undefined) {
                     }
                 }
             });
-/*
-            copyFolder(source + 'CapabilityStatement');
 
-            copyFolder(source + 'ConceptMap');
-
-            copyFolder(source + 'CodeSystem');
-
-            copyFolder(source + 'MessageDefinition');
-
-            copyFolder(source + 'NamingSystem');
-
-            copyFolder(source + 'ObservationDefinition');
-
-            copyFolder(source + 'OperationDefinition');
-
-            copyFolder(source + 'Questionnaire');
-
-            copyFolder(source + 'SearchParameter');
-
-            copyFolder(source + 'StructureDefinition');
-
-            copyFolder(source + 'ValueSet');
-
-            copyFolder(source + 'StructureMap');
-
-            // Begin UK Core folder names
-
-            copyFolder(source + 'codesystems');
-            copyFolder(source + 'conceptmaps');
-            copyFolder(source + 'structuredefinitions');
-            copyFolder(source + 'structuredefinitions');
-            copyFolder(source + 'valuesets');
-
-            // End UK Core folder names
-
-            copyExamplesFolder(source + 'OperationOutcome');
-            copyExamplesFolder(source + 'Bundle');
-            copyExamplesFolder(source + 'Task');
-            copyExamplesFolder(source + 'Parameters');
-            copyExamplesFolder(source + 'Examples');
-            copyExamplesFolder(source + 'ServiceRequest');
-            copyExamplesFolder(source + 'Questionnaire');
-
-            copyExamplesFolder(source + 'CommunicationRequest');
-            copyExamplesFolder(source + 'HealthcareService');
-            copyExamplesFolder(source + 'Immunization');
-            copyExamplesFolder(source + 'Observation');
-            copyExamplesFolder(source + 'Patient');
-            copyExamplesFolder(source + 'Practitioner');
-            copyExamplesFolder(source + 'PractitionerRole');
-            copyExamplesFolder(source + 'Organization');
-            copyExamplesFolder(source + 'Encounter');
-            copyExamplesFolder(source + 'EpisodeOfCare');
-            copyExamplesFolder(source + 'DocumentReference');
-*/
             console.info('Creating temporary package ' + pkg.name + '-' + pkg.version);
             console.info('Deleting temporary files');
             deleteFile('temp/package/.DS_Store.json');
