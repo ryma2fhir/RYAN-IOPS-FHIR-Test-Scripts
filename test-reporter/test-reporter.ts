@@ -12,12 +12,8 @@ type CustomReporter = Pick<Reporter, "onRunComplete">;
 export default class TestReporter implements CustomReporter {
     constructor() {}
 
-
-
     onRunComplete(_: Set<TestContext>, results: AggregatedResult) {
         let gitHubSummary = NEW_LINE + NEW_LINE+'### :fire: Report '+NEW_LINE;
-
-
         let gitrepoBranch = process.env.GITHUB_REF_NAME
         const gitrepoName = process.env.GITHUB_REPOSITORY
 
@@ -34,6 +30,7 @@ export default class TestReporter implements CustomReporter {
         gitHubSummary += NEW_LINE+NEW_LINE;
         for(let parent of results.testResults) {
             let lastGroupName='';
+
             for (let status of ['issues','summary']) {
                 if (status == 'issues') gitHubSummary += '### Issues'+NEW_LINE+NEW_LINE;
                 if (status == 'issues') gitHubSummary += '### Summary'+NEW_LINE+NEW_LINE;
@@ -43,13 +40,12 @@ export default class TestReporter implements CustomReporter {
                         let group = result.fullName.split(result.title)
                         if (lastGroupName == '' || (group.length > 0 && lastGroupName != group[0])) {
                             lastGroupName = group[0]
-                            if (lastGroupName.includes('.') && gitrepoBranch != undefined) {
+                            if (lastGroupName.includes('.')) {
                                 // may be able to get rid of this
                                 let destination = process.env.TEST_REPO
                                 let destinationBranch = process.env.TEST_BRANCH
                                 if (destinationBranch == undefined) destinationBranch = 'main'
-                                let name = (lastGroupName.trim().split(' ').join('/'))
-                                name = name.replace('gitrepository/','')
+                                let name = result.ancestorTitles.join('/')
                                 if (destination != undefined) {
                                     gitHubSummary += '[' + name + '](' + ('https://github.com/' + destination + '/blob/' + destinationBranch + '/' + name) + ') ' + NEW_LINE;
                                 } else {

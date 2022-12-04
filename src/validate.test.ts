@@ -71,7 +71,7 @@ const args = require('minimist')(process.argv.slice(2))
     gitHubSummary += 'Current directory - ' + __dirname
 
     // Main body of the tests
-    testFolder(source )
+    testFolder(source, source)
 
     // Experiment to writeback additional information
     const gitSummaryFile = process.env.GITHUB_STEP_SUMMARY
@@ -91,24 +91,31 @@ function testDescription(folder: string) : string {
     return folder.split('/').pop()
 }
 
-function testFolder(dir) {
+function testFolder(dir : string, source: string) {
 
     if (fs.existsSync(dir)) {
-        describe(testDescription(dir),() => {
-            console.info('Test folder: '+dir)
-            const list = fs.readdirSync(dir);
-            list.forEach(function (file) {
-                if (fs.lstatSync(dir +'/'+file).isDirectory()) {
-                    if (!isIgnoreFolder(file)) testFolder(dir+ "/" + file)
-                } else {
-                    if (!isIgnoreFile(dir,file)) {
-                        testFile( dir, file, failOnWarning, isUKCore)
-                    }
-                }
-            })
-        });
+        if (dir == source ) {
+            testFolderContent(dir,source)
+        } else {
+            describe(testDescription(dir), () => {
+                testFolderContent(dir, source)
+            });
+        }
     }
 }
+    function testFolderContent(dir : string, source: string) {
+        console.info('Test folder: '+dir)
+        const list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+            if (fs.lstatSync(dir +'/'+file).isDirectory()) {
+                if (!isIgnoreFolder(file)) testFolder(dir+ "/" + file, source)
+            } else {
+                if (!isIgnoreFile(dir,file)) {
+                    testFile( dir, file, failOnWarning, isUKCore)
+                }
+            }
+        })
+    }
 
 
 
