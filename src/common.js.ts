@@ -1,15 +1,15 @@
 import axios, {AxiosInstance} from "axios";
 import {
-    Bundle, DomainResource,
+    Bundle,
     MessageDefinition,
     OperationOutcome,
     OperationOutcomeIssue,
-    Patient,
     StructureDefinition
 } from "fhir/r4";
 import fs from "fs";
 import path from "path";
 import * as console from "console";
+import SwaggerParser from "@apidevtools/swagger-parser";
 
 // This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
@@ -484,12 +484,11 @@ export function processYAMLfile(dir,file) {
     }
 
     let resourceMap = new Map<string, string>()
-    getFhirClientOAS().then(( clientOAS)=> {
-        clientOAS.post('/convertOAS', input).catch(function (error) {
-            return error.response
-        }).then(response => {
-            console.info(response)
-        let json: any = response.data
+
+
+    SwaggerParser.parse(dir + '/' + file).then(api => {
+
+        let json: any = api
         if (json != undefined && json.paths != undefined) {
             let paths = json.paths
             for (const key in paths) {
@@ -497,135 +496,99 @@ export function processYAMLfile(dir,file) {
                     let operation = paths[key]
                     for (const keyOp in operation) {
                         if (operation.hasOwnProperty(keyOp)) {
-                            resourceMap = processOperation(operation[keyOp], resourceMap)
+                            resourceMap = processOperation(key+'-'+keyOp,operation[keyOp], resourceMap)
                         }
                     }
                 }
             }
         }
         for (let [key, value] of resourceMap) {
-            console.info(key)
-            console.info(value)
             fs.writeFile(path.join(dir, '/' + key + '.json'), JSON.stringify(value), function (err) {
                 if (err) {
                     return console.error(err);
                 }
             });
         }
-        })
-    })
-
-/*
-        test('OAS JSON is valid', () => {
-
-            expect(response).toBeTruthy()
-        })
-        test(' test stuff', ()=>{
-            for (let [key, value] of resourceMap) {
-
-              // async issues TODO  testExample(value,key)
-            }
-        })
-        /*
-        describe(' describe stuff', ()=>{
-            for (let [key, value] of resourceMap) {
-
-                testExample(value,key)
-            }
-        })
-    })*/
+        console.info('SWAGGER END')
+    });
 }
 
-function processOperation (operation, resourceMap :Map<string, string>):Map<string, string> {
-    for (const keyOp in operation){
-        if(operation.hasOwnProperty(keyOp)){
+function processOperation (key,operation, resourceMap :Map<string, string>):Map<string, string> {
 
-            if (keyOp =='requestBody') processRequestBody(operation[keyOp],resourceMap)
-            if (keyOp =='responses') processRespones(operation[keyOp],resourceMap)
+    let name = key.split('/').join('-')
+    name = name.split('{').join('-')
+    name = name.split('}').join('-')
+    if (name.startsWith('-')) name=name.replace('-','')
+    for (const keyOp in operation){
+        console.info(keyOp)
+        if(operation.hasOwnProperty(keyOp)){
+            if (keyOp =='requestBody') processRequestBody(name + '-'+ keyOp ,operation[keyOp],resourceMap)
+            if (keyOp =='responses') processRespones(name +'-'+ keyOp,operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
 
-function processContent (operation, resourceMap :Map<string, string>):Map<string, string> {
+function processContent (name, operation, resourceMap :Map<string, string>):Map<string, string> {
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
-            if (keyOp == 'application/fhir+json') processFHIR(operation[keyOp],resourceMap)
+            if (keyOp == 'application/fhir+json') processFHIR(name, operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
 
-function processFHIR (operation, resourceMap :Map<string, string>) :Map<string, string>{
+function processFHIR (name,operation, resourceMap :Map<string, string>) :Map<string, string>{
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
             if (keyOp == 'example') {
                // console.log(JSON.stringify(operation[keyOp]))
-                resourceMap.set(resourceMap.size + ' request',operation[keyOp])
+                resourceMap.set(name + '-' + resourceMap.size,operation[keyOp])
             }
-            if (keyOp == 'examples') processExamples(operation[keyOp],resourceMap)
+            if (keyOp == 'examples') processExamples(name, operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
 
-function processExamples (operation, resourceMap :Map<string, string>) :Map<string, string> {
+function processExamples (name, operation, resourceMap :Map<string, string>) :Map<string, string> {
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
             if (keyOp == 'example')
             {
                // console.log(JSON.stringify(operation[keyOp].value))
-                resourceMap.set(resourceMap.size + ' response',operation[keyOp].value)
+                resourceMap.set(name + '-' + resourceMap.size,operation[keyOp].value)
             }
         }
     }
     return resourceMap
 }
-function processRespones (operation, resourceMap :Map<string, string>) :Map<string, string>{
+function processRespones (name, operation, resourceMap :Map<string, string>) :Map<string, string>{
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
-            processResponse(operation[keyOp],resourceMap)
+            processResponse(name, operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
-function processResponse (operation, resourceMap :Map<string, string>):Map<string, string> {
+function processResponse (name, operation, resourceMap :Map<string, string>):Map<string, string> {
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
-            if (keyOp =='content') processContent(operation[keyOp],resourceMap)
+            if (keyOp =='content') processContent(name, operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
-function processRequestBody (operation, resourceMap :Map<string, string>):Map<string, string> {
+function processRequestBody (name, operation, resourceMap :Map<string, string>):Map<string, string> {
     for (const keyOp in operation){
         if(operation.hasOwnProperty(keyOp)){
 
-            if (keyOp =='content') processContent(operation[keyOp],resourceMap)
+            if (keyOp =='content') processContent(name, operation[keyOp],resourceMap)
         }
     }
     return resourceMap
 }
 
-function testExample(resource, name) {
-    if (resource.resourceType == undefined) return
-    let client: AxiosInstance;
-    describe(name, () => {
-        beforeAll(async () => {
-            client = await getFhirClientJSON();
-        });
-        test('FHIR Validation', async ()=>{
-            test('FHIR Validation', async () => {
-                const response = await client.post('/$validate', resource).catch(function (error) {
-                    return error.response
-                })
-                expect(response.status === 200 || response.status === 400).toBeTruthy()
-                resourceChecks(response, true)
-                expect(response.status).toEqual(200)
-            });
-        })
-    })
-}
 
 export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
 {
@@ -652,7 +615,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             });
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
-                if (json.meta ! = undefined) {
+                if (json.meta != undefined) {
                     expect(json.meta.profile == undefined).toBeTruthy()
                 }
                 if (json.resourceType === 'Bundle') {
