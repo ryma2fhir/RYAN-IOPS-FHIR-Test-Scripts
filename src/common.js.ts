@@ -10,7 +10,10 @@ import fs from "fs";
 import path from "path";
 import * as console from "console";
 import SwaggerParser from "@apidevtools/swagger-parser";
-import buildBySources from "@jridgewell/trace-mapping/dist/types/by-source";
+import {OpenAPI} from "openapi-types";
+import Document = OpenAPI.Document;
+import Parameter = OpenAPI.Parameter;
+
 
 // This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
@@ -171,29 +174,7 @@ function hasWarningMessage(resource): boolean  {
     }
     return false;
 }
-/*
-function checkForErrorMessage(resource, message, failOnWarning:boolean) : string {
-    const operationOutcome: OperationOutcome = resource;
-    let errorMessage : string[]= [];
-    if (operationOutcome.issue !== undefined) {
-        for (const issue of operationOutcome.issue) {
 
-            switch (issue.severity) {
-                case "error":
-                case "fatal":
-                    errorMessage.pu getErrorOrWarningFull(issue);
-                    if (errorMessage.includes(message)) errorMessage += errorMessage;
-                    break;
-                case "warning":
-                    if (raiseWarning(issue, failOnWarning)) throw new Error(getErrorOrWarningFull(issue))
-                    break;
-            }
-        }
-    }
-    return errorMessage;
-    //throw new Error('Expected: ' + message + ' Found: '+errorMessage)
-}
-*/
 function checkForWarningMessage(resource, message) :boolean {
     const operationOutcome: OperationOutcome = resource;
     let errorMessage = 'None found';
@@ -489,7 +470,11 @@ export function processYAMLfile(dir,file) {
     let resourceMap = new Map<string, string>()
 
 
-    SwaggerParser.parse(dir + '/' + file).then(api => {
+    SwaggerParser.parse(dir + '/' + file)
+        .catch((e)=> {
+
+        })
+        .then(api => {
 
         let json: any = api
         if (json != undefined && json.paths != undefined) {
@@ -512,7 +497,8 @@ export function processYAMLfile(dir,file) {
                 }
             });
         }
-        console.info('SWAGGER END')
+        buildCapabilityStatement(dir,file,api)
+
     });
 }
 
@@ -523,7 +509,7 @@ function processOperation (key,operation, resourceMap :Map<string, string>):Map<
     name = name.split('}').join('-')
     if (name.startsWith('-')) name=name.replace('-','')
     for (const keyOp in operation){
-        console.info(keyOp)
+
         if(operation.hasOwnProperty(keyOp)){
             if (keyOp =='requestBody') processRequestBody(name + '-'+ keyOp ,operation[keyOp],resourceMap)
             if (keyOp =='responses') processRespones(name +'-'+ keyOp,operation[keyOp],resourceMap)
@@ -596,6 +582,70 @@ function ignoreSearchParameter(name: string) {
     if (name == '_count') return true;
     return false;
 }
+
+export function buildCapabilityStatement(dir: string, file, api: any | void) {
+
+
+    if (api != undefined && api.paths != undefined) {
+        let date = new Date().toISOString()
+        let cs : CapabilityStatement = {
+            fhirVersion: "4.0.1",
+            resourceType: "CapabilityStatement",
+            date : date,
+            format: [
+                "application/fhir+json"
+            ],
+            kind: "requirements",
+            status: "draft",
+            rest: [
+                {
+                    mode:"server",
+                    resource : []
+                }
+            ]
+        };
+
+        for (const path in api.paths) {
+
+            let resource = path.replace(/\/+$/, '').split('/').pop()
+
+            let entry = {
+                type: resource,
+                searchParam : []
+            }
+
+            if (api.paths.hasOwnProperty(path)) {
+                if (api.paths[path].get != undefined) {
+                    let get = api.paths[path].get
+
+                    if (get.parameters != null) {
+                        for (const parameterId in get.parameters) {
+                            let parameter: any = get.parameters[parameterId]
+                            if (parameter.in != undefined && parameter.in == 'query') {
+                                // TODO need to get correct type, default to string
+                                entry.searchParam.push({
+                                    name: parameter.name,
+                                    type: 'string'
+
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+            cs.rest[0].resource.push(entry)
+        }
+        let name = file.split('.')[0]
+        fs.writeFile(path.join(dir, '/' + name + '-generated.json'), JSON.stringify(cs), function (err) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+
+    }
+}
+
+
 
 
 export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
@@ -699,7 +749,6 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                                     }
                                 })
                             }
-
                         }
                     }
                 })

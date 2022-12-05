@@ -1,6 +1,13 @@
 import * as fs from "fs";
 import path from "path";
-import {downloadPackage, getJson, isDefinition, isIgnoreFolder, processYAMLfile} from "./common.js";
+import {
+    buildCapabilityStatement,
+    downloadPackage,
+    getJson,
+    isDefinition,
+    isIgnoreFolder,
+    processYAMLfile
+} from "./common.js";
 import { tar } from 'zip-a-folder';
 import * as console from "console";
 
@@ -82,9 +89,10 @@ if (process.env.ONTO_URL != undefined) {
                 if (fs.lstatSync(dir +'/'+file).isDirectory()) {
                     if (!isIgnoreFolder(file)) processFolderOAS(dir+ "/" + file, source)
                 } else {
-                    if (file.toUpperCase().endsWith('YAML')) {
+                    if (file.toUpperCase().endsWith('YAML') || file.toUpperCase().endsWith('YML')) {
 
                         processYAMLfile(dir, file)
+
                     }
                 }
             })

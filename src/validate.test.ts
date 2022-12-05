@@ -106,7 +106,8 @@ const args = require('minimist')(process.argv.slice(2))
         }
     }
 
-    function testFolderContent(dir : string, source: string) {
+
+function testFolderContent(dir : string, source: string) {
         console.info('Test folder: '+dir)
         const list = fs.readdirSync(dir);
         list.forEach(function (file) {
