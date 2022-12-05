@@ -1,15 +1,16 @@
 import axios, {AxiosInstance} from "axios";
 import {
-    Bundle,
+    Bundle, CapabilityStatement,
     MessageDefinition,
     OperationOutcome,
-    OperationOutcomeIssue,
+    OperationOutcomeIssue, SearchParameter,
     StructureDefinition
 } from "fhir/r4";
 import fs from "fs";
 import path from "path";
 import * as console from "console";
 import SwaggerParser from "@apidevtools/swagger-parser";
+import buildBySources from "@jridgewell/trace-mapping/dist/types/by-source";
 
 // This is only used for converting between XML and Json. Potentially replace with a service
 var Fhir = require('fhir').Fhir;
@@ -591,6 +592,11 @@ function processRequestBody (name, operation, resourceMap :Map<string, string>):
     return resourceMap
 }
 
+function ignoreSearchParameter(name: string) {
+    if (name == '_count') return true;
+    return false;
+}
+
 
 export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
 {
@@ -649,6 +655,53 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         expect(focus.code.endsWith('Definition')).toBeFalsy()
                     }
 
+                })
+            }
+            if (json.resourceType == "CapabilityStatement") {
+                describe('FHIR CapabilityStatement', () => {
+                    let capabilityStatement: CapabilityStatement = json
+                    if (capabilityStatement != undefined
+                        && capabilityStatement.rest != undefined
+                        && capabilityStatement.rest.length > 0
+                        && capabilityStatement.rest[0].resource != undefined) {
+                        for (let resource of capabilityStatement.rest[0].resource) {
+                            if (resource.searchParam != undefined && resource.searchParam.length > 0) {
+                                describe(resource.type + ' Search Parameter', () => {
+                                    for (let searchParameter of resource.searchParam) {
+                                        if (searchParameter.name != undefined) {
+                                            let resourceName = resource.type
+                                            if (!ignoreSearchParameter(searchParameter.name)) {
+                                                describe(searchParameter.name, () => {
+                                                    test('Verify SearchParameter', async () => {
+
+                                                        const response = await client.get('/SearchParameter?code=' + searchParameter.name + '&base=' + resourceName).catch(function (error) {
+                                                            return error.response
+                                                        })
+                                                        expect(response.status).toEqual(200)
+                                                        expect(response.data).toBeDefined()
+                                                        var resource = response.data
+                                                        expect(resource.resourceType == 'Bundle').toBeTruthy()
+                                                        var bundle: Bundle = resource
+                                                        expect(bundle.entry).toBeDefined()
+                                                        expect(bundle.entry.length > 0).toBeTruthy()
+                                                        expect(bundle.entry[0].resource).toBeDefined()
+                                                        expect(bundle.entry[0].resource.resourceType == 'SearchParameter').toBeTruthy()
+                                                        var search : SearchParameter = bundle.entry[0].resource as SearchParameter
+                                                        expect(search.type).toBeDefined()
+                                                        expect(searchParameter.type).toBeDefined()
+                                                        // TODO this needs group involvement before elaboration
+                                                        //  expect(search.type == searchParameter.type).toBeTruthy()
+
+                                                    })
+                                                })
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+
+                        }
+                    }
                 })
             }
             let validate = true
