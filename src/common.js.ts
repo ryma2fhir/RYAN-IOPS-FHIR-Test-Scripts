@@ -258,11 +258,13 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Could not confirm that the codes provided are in the value set')) {
             if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/usage-context-type')) return false;
         }
+        /*
         if (issue.diagnostics.includes('Error HTTP 404')) {
             // THis is issues with the Terminology Server not containig UKCore and NHSDigita CocdeSystems
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/Workflow-Code')) return false;
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDataModelAndDictionary-treatment-function')) return false;
         }
+         */
         if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
         }
