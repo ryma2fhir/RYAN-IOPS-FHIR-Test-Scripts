@@ -592,6 +592,8 @@ export function buildCapabilityStatement(dir: string, file, api: any | void) {
             fhirVersion: "4.0.1",
             resourceType: "CapabilityStatement",
             date : date,
+            publisher: "IOPS Test Scripts",
+            description: "Automatically generated from OAS file",
             format: [
                 "application/fhir+json"
             ],
@@ -609,31 +611,38 @@ export function buildCapabilityStatement(dir: string, file, api: any | void) {
 
             let resource = path.replace(/\/+$/, '').split('/').pop()
 
-            let entry = {
-                type: resource,
-                searchParam : []
-            }
+            // Need to check this is a FHIR resource
+            if (!resource.includes('{') && resource.match('^[A-Z].*'))  {
+                let entry = {
+                    type: resource,
+                    profile: 'http://hl7.org/fhir/StructureDefinition/'+resource,
+                    searchParam: []
+                }
 
-            if (api.paths.hasOwnProperty(path)) {
-                if (api.paths[path].get != undefined) {
-                    let get = api.paths[path].get
+                if (api.paths.hasOwnProperty(path)) {
+                    if (api.paths[path].get != undefined) {
+                        let get = api.paths[path].get
 
-                    if (get.parameters != null) {
-                        for (const parameterId in get.parameters) {
-                            let parameter: any = get.parameters[parameterId]
-                            if (parameter.in != undefined && parameter.in == 'query') {
-                                // TODO need to get correct type, default to string
-                                entry.searchParam.push({
-                                    name: parameter.name,
-                                    type: 'string'
+                        if (get.parameters != null) {
+                            for (const parameterId in get.parameters) {
+                                let parameter: any = get.parameters[parameterId]
+                                if (parameter.in != undefined && parameter.in == 'query') {
+                                    // TODO need to get correct type, default to string
+                                    entry.searchParam.push({
+                                        name: parameter.name,
+                                        type: 'string'
 
-                                })
+                                    })
+                                }
                             }
                         }
                     }
                 }
+                // Only currently testing search parameters, so only add these
+                if (entry.searchParam.length>0) {
+                    cs.rest[0].resource.push(entry)
+                }
             }
-            cs.rest[0].resource.push(entry)
         }
         let name = file.split('.')[0]
         fs.writeFile(path.join(dir, '/' + name + '-generated.json'), JSON.stringify(cs), function (err) {
