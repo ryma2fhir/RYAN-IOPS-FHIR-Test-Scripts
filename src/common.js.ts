@@ -289,7 +289,7 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
         if (issue.diagnostics.includes('http://read.info/ctv3')) {
             if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode')) return false
         }
-       // if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
+        if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
         if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
             console.error(issue.diagnostics)
             return false
