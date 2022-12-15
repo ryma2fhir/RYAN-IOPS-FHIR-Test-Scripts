@@ -734,7 +734,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                                             let resourceName = resource.type
                                             if (!ignoreSearchParameter(searchParameter.name)) {
                                                 describe(searchParameter.name, () => {
-                                                    test('Verify SearchParameter', async () => {
+                                                    test('Verify '+resource.type + ' SearchParameter  = '+searchParameter.name, async () => {
 
                                                         const response = await client.get('/SearchParameter?code=' + searchParameter.name + '&base=' + resourceName).catch(function (error) {
                                                             return error.response
