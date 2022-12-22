@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       githubrepo:
-        default: "NHSDigital/NHSDigital-FHIR-BookingAndReferrals"
+        default: "NHSDigital/NHSDigital-FHIR-ImplementationGuide"
       githubranch:
-        default: "main"
+        default: "master"
       packagename: 
-        default: "uk.nhsdigital.r4.test"
+        default: "fhir.r4.ukcore.stu1"
       packageversion: 
-        default: "2.7.6-prerelease"
+        default: "1.0.0"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
