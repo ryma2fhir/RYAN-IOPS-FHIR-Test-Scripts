@@ -1,4 +1,4 @@
-# Simplifier Implementation Guide Validation
+# Simplifier Implementation Guide Page Content Validation
 
 The validator works by scraping the webpage within website.txt for any internal webpage links within the Simplifier Guide. These webpages are then validated individually. 
 
@@ -61,3 +61,10 @@ It is possible to add common words that are correct into the dictionary.
 Cannot ignore capitalised terms, so NHS will stil be checked and will need to be added to the personal dictionary.
 Cannot ignore words with numbers, so 'HL7' wil be spell checked as 'HL', and of course will come up as a mispelt word.
 
+---
+
+## Workflows Related to this Validator
+These are found within `.github/workflows`
+- errorChecker.yml
+- linkChecker.yml
+- spellChecker.yml
