@@ -1,0 +1,28 @@
+# Action for the IGPageContentValidator to check any bad hyperlinks within the IG webpages
+name: run Link Checker
+
+on: 
+  push:
+    paths:
+      - IGPageContentValidator/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt install python3-bs4 python3-dnspython python3-requests
+          pip3 install linkchecker
+      - name: Check input link is valid #Checks link is valid. Used as exit code 1 muted in 'execute linkchecker'
+        run: |
+          echo 'exit codes can be found at https://everything.curl.dev/usingcurl/returns'
+          curl $(head -n 1 ./IGPageContentValidator/website.txt) -s -f -o /dev/null
+      
+      - name: Execute Link Check # exit code 1 muted as linkchecker sets it if a link is not valid. This causes the GitHub action to fail.
+        run: |
+          linkchecker -r 2 --check-extern --no-status -f linkcheckerrc $(head -n 1 ./IGPageContentValidator/website.txt) || test $? = 1;
