@@ -1,4 +1,4 @@
-https://simplifier.net/guide/HL7FHIRUKCoreDesignandDevelopmentApproach/Home?version=current
+https://simplifier.net/guide/NHSE-Design-and-Development-Approach/Home/Management/Development-and-Release-Management?version=current
 
 ### IMPORTANT INFO ###
 # Add website link on the first line. Single Link only, no multiple. 
