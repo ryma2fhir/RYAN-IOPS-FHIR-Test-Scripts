@@ -176,7 +176,7 @@
 # Don't download files larger than the given number of bytes
 maxfilesizedownload=9999999
 # Don't parse files larger than the given number of bytes
-#maxfilesizeparse=1048576
+#maxfilesizeparse=9048576
 # Maximum number of URLs to check. New URLs will not be queued after the
 # given number of URLs is checked. Example:
 #maxnumurls=153
