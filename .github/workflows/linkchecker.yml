@@ -25,4 +25,4 @@ jobs:
       
       - name: Execute Link Check # exit code 1 muted as linkchecker sets it if a link is not valid. This causes the GitHub action to fail.
         run: |
-          linkchecker -r 2 --check-extern --no-status -f linkcheckerrc $(head -n 1 ./IGPageContentValidator/website.txt) || test $? = 1;
+          linkchecker -r 2 --check-extern --no-status -f ./IGPageContentValidator/linkcheckerrc $(head -n 1 ./IGPageContentValidator/website.txt) || test $? = 1;
