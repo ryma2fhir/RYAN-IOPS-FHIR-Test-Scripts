@@ -1,6 +1,6 @@
-https://github.com/NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN/tree/develop/structuredefinitions
+https://simplifier.net/guide/uk-core-implementation-guide-stu2-prerelease?version=current
 
-### IMPORTANT INFO ### 
+### IMPORTANT INFO ###
 # Add website link on the first line. Single Link only, no multiple. 
 # Needs to be on the https://simplifier.net/ domain.
 # All relevant pages to be scanned need to have a link from the website link above, e.g. within the banner.
