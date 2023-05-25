@@ -1,4 +1,4 @@
-https://simplifier.net/guide/UK-Core-Implementation-Guide-STU2/Home?version=current
+https://simplifier.net/guide/uk-core-implementation-guide-stu2/Home?version=1.1.2-pre-release
 
 ### IMPORTANT INFO ### 
 # Add website link on the first line. Single Link only, no multiple. 
