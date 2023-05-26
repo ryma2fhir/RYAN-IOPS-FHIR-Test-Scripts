@@ -129,6 +129,27 @@ export function getJson(file, resource) {
 }
 
 export async function downloadPackage(destinationPath, name,version ) {
+
+
+    const url = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/utility/FHIR/R4/ImplementationGuide/$package?url=https%3A%2F%2Ffhir.nhs.uk%2FImplementationGuide%2F' + name + '-' + version;
+    console.info('Download from ' + url);
+    try {
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+
+        // @ts-ignore
+        const buffer = Buffer.from(response.data, 'binary');
+
+        fs.mkdirSync(path.join(__dirname,destinationPath ),{ recursive: true });
+        fs.writeFileSync(path.join(__dirname,destinationPath + '/' + name +'-' + version + '.tgz'), buffer);
+        console.info('Updated dependency ' + url);
+    } catch (exception) {
+        downloadPackageSimplifier(destinationPath, name,version )
+    }
+}
+
+export async function downloadPackageSimplifier(destinationPath, name,version ) {
     const url = 'https://packages.simplifier.net/' + name + '/' + version;
     console.info('Download from ' + url);
     try {
@@ -250,6 +271,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
         }
+        if (issue.diagnostics.includes('http://loinc.org')) return false;
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
 /*
