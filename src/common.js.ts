@@ -229,7 +229,7 @@ function issueCheck(issue: OperationOutcomeIssue, failOnWarning:boolean) : strin
     switch (issue.severity) {
         case "error":
         case "fatal":
-            if (raiseError(issue)) return "WARNING "+ getErrorOrWarningFull(issue)
+            if (raiseError(issue)) return "ERROR "+ getErrorOrWarningFull(issue)
             break;
         case "warning":
             if (raiseWarning(issue, failOnWarning)) return "WARNING "+ getErrorOrWarningFull(issue)
@@ -271,8 +271,12 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
         }
+
+        // LOINC Related warnings
         if (issue.diagnostics.includes('http://loinc.org')) return false;
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
+        if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
+
         if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
 /*
         if (issue.diagnostics.includes('http://snomed.info/sct')) {
@@ -305,6 +309,8 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
 
         // List of errors to ignore
         if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
+        // Ignore LOINC Errors for now
+        if (issue.diagnostics.includes('http://loinc.org')) return false;
         // fault with current 5.5.1 validation
         if ( issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
         if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
@@ -399,6 +405,7 @@ export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName == 'node_modules') return true;
     if (folderName == 'Diagrams') return true;
     if (folderName == 'Diagams') return true;
+    if (folderName == 'diagrams') return true;
     if (folderName == 'FML') return true;
     if (folderName == 'dist') return true;
     if (folderName == 'documents') return true;
