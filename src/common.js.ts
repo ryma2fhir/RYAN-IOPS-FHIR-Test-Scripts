@@ -271,9 +271,11 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
         }
+        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
 
         // LOINC Related warnings
         if (issue.diagnostics.includes('http://loinc.org')) return false;
+        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
 
