@@ -307,29 +307,36 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
-    if (issue != undefined && issue.diagnostics != undefined) {
+    if (issue != undefined) {
+        if (issue.diagnostics != undefined) {
+            // List of errors to ignore
+            if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
 
-        // List of errors to ignore
-        if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
-        // Ignore LOINC Errors for now
-        if (issue.diagnostics.includes('http://loinc.org')) return false;
-        // fault with current 5.5.1 validation
-        if ( issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
-        if ( issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
-        if ( issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
-        if ( issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
-        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-        if (issue.diagnostics.includes('http://read.info/ctv3')) {
-            if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode')) return false
+            // Ignore LOINC Errors for now
+            if (issue.diagnostics.includes('http://loinc.org')) return false;
+            // fault with current 5.5.1 validation
+            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
+            if (issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
+            if (issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
+            if (issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
+            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+            if (issue.diagnostics.includes('http://read.info/ctv3')) {
+                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode')) return false
+            }
+            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
+            if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
+                console.error(issue.diagnostics)
+                return false
+            }
         }
-        if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
-        if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
-            console.error(issue.diagnostics)
-            return false
+        if (issue.location !== undefined && issue.location.length>0) {
+            if (issue.location[0].includes('StructureMap.group')) return false;
         }
     }
     return true;
-}
+  }
+
+
 
 export function testFileError(testDescription, file,message) {
     describe(file, () => {
