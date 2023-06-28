@@ -33,13 +33,13 @@ for path in paths:
         if path == 'codesystems' or path == 'valuesets':
             fileName = '-'.join(fileName.split('-')[1:])
         if not fileName == elements['ID']:
-            warnings.append("\t\tThe 'id' element: "+elements['ID']+" is incorrect")
+            warnings.append("\t\tThe 'id' element: '"+elements['ID']+"' is incorrect")
         if not fileName == elements['url'].split('/')[-1]:
-            warnings.append("\t\tThe 'url' element: "+elements['url']+" is incorrect")
+            warnings.append("\t\tThe 'url' element: '"+elements['url']+"' is incorrect")
         if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
-            warnings.append("\t\tThe 'name' element: "+elements['name']+" is incorrect")
+            warnings.append("\t\tThe 'name' element: '"+elements['name']+"' is incorrect")
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
-            warnings.append("\t\tThe 'title' element: "+elements['title']+" is incorrect")
+            warnings.append("\t\tThe 'title' element: '"+elements['title']+"' is incorrect")
         if warnings:
             print("\t"+file)
             for x in warnings:
