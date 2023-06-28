@@ -1,5 +1,5 @@
 # NamingSystem Checker
-The validator runs whenever a new push is initated on any branch within the UK Core repo. This validation has been setup not to fail if it finds an incorrect value, so the action must be checked seperately when deemed necessary.
+The validator runs whenever a new push is initated on any branch within the UK Core repo. This validation has been setup not to fail if it finds an incorrect value, so the action must be checked seperately when deemed necessary. 
 
 The validator checks the following:
 
@@ -13,6 +13,7 @@ This action checks the following elements within [NamingSystem](https://hl7.org/
 - title
 
 These are checked against the filename to ensure that the words within each value align (minus special character such as hypens, spacing, etc.)
+Note: This does not check 'retired' assets. If the url is an R5 backport then this has been set to pass the url check.
 
 ### Examples have the suffix "Example"
 
