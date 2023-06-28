@@ -25,7 +25,6 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: NHSDigital/IOPS-FHIR-Test-Scripts
-          ref: main
           path: test_scripts
 
       - name: Set up python
@@ -35,5 +34,4 @@ jobs:
 
       
       - name: Execute Naming Convention Check
-        #run: ls
         run: python test_scripts/NamingSystemChecker.py
