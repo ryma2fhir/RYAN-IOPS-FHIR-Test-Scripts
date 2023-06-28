@@ -1,4 +1,4 @@
-# NamingSystem Validator
+# NamingSystem Checker
 The validator runs whenever a new push is initated on any branch within the UK Core repo. This validation has been setup not to fail if it finds an incorrect value, so the action must be checked seperately when deemed necessary.
 
 The validator checks the following:
@@ -24,4 +24,4 @@ In this repo
 - NamingSystemChecker.yml
 
 In the NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN repo
-- UKCoreNamingSystemValidator.yml
+- NamingSystemChecker.yml
