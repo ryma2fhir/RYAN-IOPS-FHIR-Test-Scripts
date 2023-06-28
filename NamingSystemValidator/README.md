@@ -1,5 +1,7 @@
 # NamingSystem Validator
-The validator checks the following
+The validator runs whenever a new push is initated on any branch within the UK Core repo. This validation has been setup not to fail if it finds an incorrect value, so the action must be checked seperately when deemed necessary.
+
+checks the following
 
 ### Files are in the correct folder
 
@@ -21,5 +23,5 @@ These are checked against the filename to ensure that the words within each valu
 These are found within .github/workflows
 In this repo
 - NamingSystemChecker.yml
-In NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN repo
+In the NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN repo
 - UKCoreNamingSystemValidator.yml
