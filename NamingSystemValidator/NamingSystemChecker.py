@@ -19,11 +19,11 @@ for path in paths:
             pass
         
         '''Check files are in correct folder '''
-        if path == 'structuredefinitions' and file.split('-')[0]!='Extension' and file.split('-')[0]!='UKCore':
+        if path == 'structuredefinitions' and (file.endswith("Example.xml") or (not file.startswith('Extension') and not file.startswith('UKCore'))):
             print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.")
-        if path == 'valuesets' and file.split('-')[0]!='ValueSet':
+        if path == 'valuesets' and not file.startswith('ValueSet'):
             print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.")  
-        if path == 'codesystems' and file.split('-')[0]!='CodeSystem':
+        if path == 'codesystems' and not file.startswith('CodeSystem'):
             print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.") 
 
         '''check for missing elements'''
@@ -35,7 +35,7 @@ for path in paths:
                 print("\tThe element '"+key+"' is missing")
                 break
             
-        '''check elements naming convention are correct'''
+                '''check elements naming convention are correct'''
         fileName = file.replace('.xml','')
         warnings = []
         if path == 'codesystems' or path == 'valuesets':
@@ -53,11 +53,12 @@ for path in paths:
             print("\t"+file)
             for x in warnings:
                 print(x)
-
+                
+'''check example filenames'''
 examplesPath = os.listdir('./examples')
 print('examples')
 for examples in examplesPath:
     if not examples.endswith("Example.xml"):
         print("\t",examples," - The filename is does not have the suffix 'Example'")
               
-print("\n\nCheck Complete!")  
+print("\n\nCheck Complete!")
