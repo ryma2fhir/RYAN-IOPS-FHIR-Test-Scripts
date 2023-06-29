@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import os
 
 paths = ['structuredefinitions','valuesets','codesystems']
+currentProfiles = [] #Used for checking against CapbilityStatement
 for path in paths:
     files = os.listdir('./'+path)
     print(path)
@@ -19,9 +20,16 @@ for path in paths:
 
         
         '''Check files are in correct folder '''
-        if path == 'structuredefinitions' and (file.endswith("Example.xml") or (not file.startswith('Extension') and not file.startswith('UKCore'))):
-            print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
-            continue
+        if path == 'structuredefinitions':
+            if file.endswith("Example.xml") or (not file.startswith('Extension') and not file.startswith('UKCore')):
+                print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+                continue
+            if file.startswith('UKCore'): #Used for Capabilitystatement Checking
+                profile = file.replace('.xml','')
+                profile = profile.replace('UKCore-','')
+                if '-' not in profile: #ignore derived profiles
+                    currentProfiles.append(profile)
+                    
         if path == 'valuesets' and not file.startswith('ValueSet'):
             print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
             continue
@@ -65,5 +73,20 @@ print('examples')
 for examples in examplesPath:
     if not examples.endswith("Example.xml"):
         print("\t",examples," - The filename is does not have the suffix 'Example'")
-              
+
+'''Capabilitystatement Checker - checks if all s are in the CapabilityStatement'''
+tree= ET.parse('./CapabilityStatement/CapabilityStatement-UKCore.xml')
+root = tree.getroot()
+
+print('CapabilityStatement')
+capabilityStatement = []
+for tag in root.findall('.//{*}type'):
+    capabilityStatement.append(tag.attrib["value"])
+
+for p in currentProfiles:
+    if p not in capabilityStatement:
+        print("\t",p,"is missing from the CapabilityStatement")
+
 print("\n\nCheck Complete!")
+    
+        
