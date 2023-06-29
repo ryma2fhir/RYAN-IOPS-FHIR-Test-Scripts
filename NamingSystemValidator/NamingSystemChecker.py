@@ -13,29 +13,34 @@ for path in paths:
         '''do not check retired assets'''
         try:
             if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-                break
+                continue
         except:
             print("active",root.findall('.//{*}'+str('status'))[0].get('value'))
-            pass
+
         
         '''Check files are in correct folder '''
         if path == 'structuredefinitions' and (file.endswith("Example.xml") or (not file.startswith('Extension') and not file.startswith('UKCore'))):
-            print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.")
+            print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+            continue
         if path == 'valuesets' and not file.startswith('ValueSet'):
-            print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.")  
+            print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+            continue
         if path == 'codesystems' and not file.startswith('CodeSystem'):
-            print("The file '"+file+"' has either an incorrect prefix or in the wrong folder '"+path+"'.") 
-
+            print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+            continue
+        stop = 0
         '''check for missing elements'''
         elements = {'ID':'id','url':'url','name':'name','title':'title'}
         for key,value in elements.items():
             try:
-                elements[key]=(root.findall('.//{*}'+str(value))[0].get('value'))
+                elements[key]=(root.findall('.//{*}'+str(value))[0].get('value')) 
             except:
-                print("\tThe element '"+key+"' is missing")
-                break
+                print("\t",file," - The element '"+key+"' is missing")
+                stop = 1
+        if stop == 1:
+            continue
             
-                '''check elements naming convention are correct'''
+        '''check elements naming convention are correct'''
         fileName = file.replace('.xml','')
         warnings = []
         if path == 'codesystems' or path == 'valuesets':
@@ -50,7 +55,7 @@ for path in paths:
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
             warnings.append("\t\tThe 'title' element: "+elements['title']+" is incorrect")
         if warnings:
-            print("\t"+file)
+            print("\t",file)
             for x in warnings:
                 print(x)
                 
