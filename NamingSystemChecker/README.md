@@ -14,6 +14,7 @@ This action checks the following elements within [NamingSystem](https://hl7.org/
 These are checked against the filename to ensure that the words within each value align (minus special character such as hypens, spacing, etc.)  
 Note: This does not check 'retired' assets. If the url is an R5 backport then this has been set to pass the url check.
 - ### Examples have the suffix "Example"
+- ### All profiles (not including derived Profiles) are within the CapabilityStatement
 
 
 ## Workflows Related to this Validator
