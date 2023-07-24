@@ -1,4 +1,4 @@
-https://simplifier.net/guide/ukcoreclinicalandtechnicalassurancedocumentationpack?version=current
+https://simplifier.net/guide/uk-core-common-questions?version=current
 
 ### IMPORTANT INFO ### 
 # Add website link on the first line. Single Link only, no multiple. 
