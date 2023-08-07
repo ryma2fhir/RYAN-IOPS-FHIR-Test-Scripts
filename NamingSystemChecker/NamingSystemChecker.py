@@ -77,7 +77,7 @@ print('examples')
 for example in examplesPath:
     if not example.endswith("Example.xml"):
         print("\t",example," - The filename is does not have the suffix 'Example'")
-     '''open file to find element values'''
+    '''open file to find element values'''
     tree = ET.parse("./examples/"+example)
     root = tree.getroot()
     if not root.findall('.//{*}id'))[0].get('value') == example.replace('.xml',''):
