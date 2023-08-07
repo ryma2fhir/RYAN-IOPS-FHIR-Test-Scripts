@@ -80,6 +80,8 @@ for example in examplesPath:
      '''open file to find element values'''
     tree = ET.parse("./examples/"+example)
     root = tree.getroot()
+    print(root.findall('.//{*}id'))[0].get('value'))
+    print(example.replace('.xml',''))
     if root.findall('.//{*}id'))[0].get('value') != example.replace('.xml',''):
         print("\t\tThe example:",example,"id is incorrect")
     
