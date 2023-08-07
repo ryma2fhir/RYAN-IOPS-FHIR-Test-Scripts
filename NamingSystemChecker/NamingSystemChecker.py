@@ -56,16 +56,16 @@ for path in paths:
         if path == 'codesystems' or path == 'valuesets':
             fileName = '-'.join(fileName.split('-')[1:])
         if not fileName == elements['ID']:
-            warnings.append("\t\tThe 'id' element: "+elements['ID']+" is incorrect")
+            warnings.append("\t\t"+elements['ID']+" - the 'id' is incorrect")
         if not elements['url'].startswith('http://hl7.org/fhir/5.0/'): #passes any R5 extensions
             if not fileName == elements['url'].split('/')[-1]:
-                warnings.append("\t\tThe 'url' element: "+elements['url']+" is incorrect")
+                warnings.append("\t\t"+elements['url']+" - The 'url' element is incorrect")
             if not elements['url'].startswith('https://fhir.hl7.org.uk/'+assets[path]):
-                warnings.append("\t\tThe 'url' element: "+elements['url']+" prefix is incorrect")
+                warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
         if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
-            warnings.append("\t\tThe 'name' element: "+elements['name']+" is incorrect")
+            warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
-            warnings.append("\t\tThe 'title' element: "+elements['title']+" is incorrect")
+            warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
         if warnings:
             print("\t",file)
             for x in warnings:
@@ -77,11 +77,11 @@ print('examples')
 for example in examplesPath:
     if not example.endswith("Example.xml"):
         print("\t",example," - The filename is does not have the suffix 'Example'")
+    '''open file to find element values'''
     tree = ET.parse("./examples/"+example)
     root = tree.getroot()
-    if not root.findall('.//{*}id'))[0].get('value') == example.replace('.xml',''):
-        print("\t\tThe example:",example,"id is incorrect")
-    
+    if not root.findall('.//{*}id')[0].get('value') == example.replace('.xml',''):
+        print("\t",example,"The 'id' element is incorrect")
 
 '''Capabilitystatement Checker - checks if all s are in the CapabilityStatement'''
 tree= ET.parse('./CapabilityStatement/CapabilityStatement-UKCore.xml')
@@ -97,3 +97,4 @@ for p in currentProfiles:
         print("\t",p,"is missing from the CapabilityStatement")
 
 print("\n\nCheck Complete!")
+    
