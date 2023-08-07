@@ -35,7 +35,7 @@ jobs:
 
       - name: Execute Naming Convention Check
         #run: ls ./test_scripts
-        run: python ./test_scripts/NamingSystemChecker.py
+        run: python test_scripts/NamingSystemChecker/NamingSystemChecker.py
       
       #- name: Execute Spell Check
         #run: find -type f -name "*.xml" |sort -exec sh -c 'for f; do echo $f;aspell list --camel-case --lang en_GB -p test_scripts/IGPageContentValidator/.aspell.en.pws <$f |sort|uniq -c;done' sh {} \;
