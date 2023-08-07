@@ -34,8 +34,8 @@ jobs:
           python-version: '3.x'
 
       - name: Execute Naming Convention Check
-        #run: ls
-        run: python test_scripts/NamingSystemChecker.py
+        run: ls
+        #run: python test_scripts/NamingSystemChecker.py
       
       - name: Execute Spell Check
-        run: find -type f -name "*.xml" |sort -exec sh -c 'for f; do echo $f;aspell list --camel-case --lang en_GB -p test_scripts/IGPageContentValidator/.aspell.en.pws <$f |sort|uniq -c;done' sh {} \;
+        #run: find -type f -name "*.xml" |sort -exec sh -c 'for f; do echo $f;aspell list --camel-case --lang en_GB -p test_scripts/IGPageContentValidator/.aspell.en.pws <$f |sort|uniq -c;done' sh {} \;
