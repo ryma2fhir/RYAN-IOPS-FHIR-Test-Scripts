@@ -33,6 +33,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install dependencies
+        run: |
+          sudo apt install aspell
+
       - name: Execute Naming Convention Check
         #run: ls ./test_scripts
         run: python test_scripts/NamingSystemChecker/NamingSystemChecker.py
