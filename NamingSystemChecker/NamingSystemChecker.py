@@ -74,9 +74,15 @@ for path in paths:
 '''check example filenames'''
 examplesPath = os.listdir('./examples')
 print('examples')
-for examples in examplesPath:
-    if not examples.endswith("Example.xml"):
-        print("\t",examples," - The filename is does not have the suffix 'Example'")
+for example in examplesPath:
+    if not example.endswith("Example.xml"):
+        print("\t",example," - The filename is does not have the suffix 'Example'")
+     '''open file to find element values'''
+    tree = ET.parse("./examples/"+example)
+    root = tree.getroot()
+    if root.findall('.//{*}id'))[0].get('value') != example.replace('.xml',''):
+        print("\t\tThe example:",example,"id is incorrect")
+    
 
 '''Capabilitystatement Checker - checks if all s are in the CapabilityStatement'''
 tree= ET.parse('./CapabilityStatement/CapabilityStatement-UKCore.xml')
