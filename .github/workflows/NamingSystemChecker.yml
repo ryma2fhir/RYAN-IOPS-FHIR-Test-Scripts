@@ -34,7 +34,7 @@ jobs:
           python-version: '3.x'
 
       - name: Execute Naming Convention Check
-        run: ls
+        run: ls ./test_scripts
         #run: python test_scripts/NamingSystemChecker.py
       
       #- name: Execute Spell Check
