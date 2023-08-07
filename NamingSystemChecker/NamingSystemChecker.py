@@ -75,6 +75,7 @@ for path in paths:
 examplesPath = os.listdir('./examples')
 print('examples')
 for example in examplesPath:
+    print(example)
     if not example.endswith("Example.xml"):
         print("\t",example," - The filename is does not have the suffix 'Example'")
      '''open file to find element values'''
