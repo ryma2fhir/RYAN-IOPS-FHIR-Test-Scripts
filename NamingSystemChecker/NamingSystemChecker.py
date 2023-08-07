@@ -75,15 +75,12 @@ for path in paths:
 examplesPath = os.listdir('./examples')
 print('examples')
 for example in examplesPath:
-    print(example)
     if not example.endswith("Example.xml"):
         print("\t",example," - The filename is does not have the suffix 'Example'")
      '''open file to find element values'''
     tree = ET.parse("./examples/"+example)
     root = tree.getroot()
-    print(root.findall('.//{*}id'))[0].get('value'))
-    print(example.replace('.xml',''))
-    if root.findall('.//{*}id'))[0].get('value') != example.replace('.xml',''):
+    if not root.findall('.//{*}id'))[0].get('value') == example.replace('.xml',''):
         print("\t\tThe example:",example,"id is incorrect")
     
 
