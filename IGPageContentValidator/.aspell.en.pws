@@ -3,6 +3,7 @@ admitter
 AllergyIntolEnd
 AMB
 AMPP
+apim
 asserter
 AstraZenecaVaccine
 Atenolol
@@ -58,9 +59,13 @@ fhir
 FHIR
 fhirukcorer
 Firely
+FiveWs
 FLD
 foetus
+fulfiller
 generalizes
+genomic
+germline
 GMC
 Goserelin
 gp
@@ -181,6 +186,7 @@ uri
 url
 UUID
 uuid
+UTF
 VaccinationProcedureCovid
 validator
 Valueset
@@ -189,6 +195,7 @@ VMP
 VMPP
 VR
 VTM
+wardened
 webpages
 xml
 xmlns
