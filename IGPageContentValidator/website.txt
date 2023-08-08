@@ -1,6 +1,6 @@
 https://simplifier.net/guide/gp-connect--update-record--itk3/Home?version=current
 
-### IMPORTANT INFO ### 
+### IMPORTANT INFO ###  
 # Add website link on the first line. Single Link only, no multiple. 
 # Needs to be on the https://simplifier.net/ domain.
 # IG must be "public"
