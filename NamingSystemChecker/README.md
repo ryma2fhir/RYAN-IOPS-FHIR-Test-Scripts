@@ -3,7 +3,8 @@ The validator runs whenever a new push is initated on any branch within the UK C
 
 The validator checks the following:
 
-- ### Files are in the correct folder
+## Assets
+- ### Assets are in the correct folder
 - ### NamingSystem elements are correct
 This action checks the following elements within [NamingSystem](https://hl7.org/fhir/R4/namingsystem.html) Resource.
 - id
@@ -13,8 +14,16 @@ This action checks the following elements within [NamingSystem](https://hl7.org/
 
 These are checked against the filename to ensure that the words within each value align (minus special character such as hypens, spacing, etc.)  
 Note: This does not check 'retired' assets. If the url is an R5 backport then this has been set to pass the url check.
-- ### Examples have the suffix "Example"
+
+## Examples
+- ### Examples have the suffix "-Example"
+- ### Example id matches file name. This ensures correct and standardised ids whilst ensuring the are unique
+
+## CapabilityStaement
 - ### All profiles (not including derived Profiles) are within the CapabilityStatement
+
+## Spell Check
+Each .xml file within the GitHub repo is now checked for spelling. this uses Aspell, along with the personal dictionary from the [IGPageContentValidator](https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/tree/main/IGPageContentValidator) folder. It will check camelCase and any word that has 3 characters or more.
 
 
 ## Workflows Related to this Validator
