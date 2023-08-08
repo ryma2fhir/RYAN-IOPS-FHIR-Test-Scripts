@@ -1,12 +1,12 @@
-name: IOPS-FHIR-Validation-NamingSystem
+name: IOPS-FHIR-Validation-NamingSystem-NHSE
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   workflow_call:
   #push:
-  
-  
+
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
@@ -17,30 +17,28 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-    
+
       - name: Checkout repo content
         uses: actions/checkout@v3
-        
+
       - name: Check out test_script
         uses: actions/checkout@master
         with:
-          repository: ryma2fhir/test_scripts
+          repository: NHSDigital/IOPS-FHIR-Test-Scripts
+          ref: main
           path: test_scripts
 
       - name: Set up python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          
+
       - name: Install dependencies
         run: |
           sudo apt install aspell
-      
-      - name: Execute Naming Convention Check
-        run: python test_scripts/NamingSystemCheckerNHSE.py
 
-      - name: test dir
-        run: ls ./test_scripts/IGPageContentValidator
+      - name: Execute Naming Convention Check
+        run: python test_scripts/NamingSystemChecker/NamingSystemCheckerNHSE.py
       
       - name: Execute Spell Check
         run: find -type f -name "*.xml" -exec sh -c 'for f; do echo $f;aspell list --camel-case --lang en_GB -W 2 -p ./test_scripts/IGPageContentValidator/.aspell.en.pws <$f |sort|uniq -c;done' sh {} \;
