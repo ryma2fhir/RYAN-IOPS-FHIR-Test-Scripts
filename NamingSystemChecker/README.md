@@ -34,3 +34,6 @@ In this repo
 
 In the NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN repo
 - NamingSystemChecker.yml
+
+- In the NHSDigital/NHSEngland-FHIR-ImplementationGuide
+- NamingSystemChecker.yml
