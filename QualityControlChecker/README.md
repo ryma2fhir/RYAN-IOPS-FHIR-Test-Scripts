@@ -6,7 +6,7 @@ The validator checks the following:
 ## Assets
 - ### Assets are in the correct folder
 - ### NamingSystem elements are correct
-This action checks the following elements within [NamingSystem](https://hl7.org/fhir/R4/namingsystem.html) Resource.
+This action checks the following elements within an Asset.
 - id
 - url
 - name
