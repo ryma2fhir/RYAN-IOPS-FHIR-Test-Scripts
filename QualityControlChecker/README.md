@@ -1,4 +1,4 @@
-# NamingSystem Checker
+# Quality Control Checker
 The validator runs whenever a new push is initated on any branch within the UK Core repo. This validation has been setup not to fail if it finds an incorrect value, so the action must be checked seperately when deemed necessary. 
 
 The validator checks the following:
@@ -30,10 +30,11 @@ Each .xml file within the GitHub repo is now checked for spelling. this uses Asp
 
 These are found within .github/workflows
 In this repo
-- NamingSystemChecker.yml
+- QualityControlCheckerNHSE.yml
+- QualityControlCheckerUKCore.yml
 
 In the NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN repo
-- NamingSystemChecker.yml
+- QualityControlChecker.yml
 
-- In the NHSDigital/NHSEngland-FHIR-ImplementationGuide
-- NamingSystemChecker.yml
+In the NHSDigital/NHSEngland-FHIR-ImplementationGuide repo
+- QualityControlChecker.yml
