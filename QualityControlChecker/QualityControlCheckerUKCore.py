@@ -8,7 +8,10 @@ for path in paths:
     print(path)
     for file in files:
         '''open file to find element values'''
-        tree = ET.parse("./"+path+"/"+file)
+        try:
+            tree = ET.parse("./"+path+"/"+file)
+        except:
+            print(file+": This file cannot be opened. Ensure the xml code is correct") 
         root = tree.getroot()
         
         '''do not check retired assets'''
