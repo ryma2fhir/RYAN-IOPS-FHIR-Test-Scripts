@@ -41,7 +41,6 @@ for path in paths:
         '''check for missing elements'''
         stop = 0
         elements = {'ID':'id','url':'url','name':'name','title':'title'}
-        print(elements)
         for key,value in elements.items():
             try:
                 elements[key]=(root.findall('.//{*}'+str(value))[0].get('value')) 
@@ -50,6 +49,7 @@ for path in paths:
                 stop = 1
         if stop == 1:
             continue
+        print(elements)
         assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}    
         '''check elements naming convention are correct'''
         fileName = file.replace('.xml','')
