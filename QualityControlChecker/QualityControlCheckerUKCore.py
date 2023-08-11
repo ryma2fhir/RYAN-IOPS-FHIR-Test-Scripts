@@ -49,7 +49,6 @@ for path in paths:
                 stop = 1
         if stop == 1:
             continue
-        print(elements)
         assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}    
         '''check elements naming convention are correct'''
         fileName = file.replace('.xml','')
