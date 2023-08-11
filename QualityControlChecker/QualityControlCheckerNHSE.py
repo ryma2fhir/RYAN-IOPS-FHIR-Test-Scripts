@@ -14,7 +14,6 @@ for path in paths:
         '''do not check retired assets'''
         try:
             if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-                continue
         except:
             print("active",root.findall('.//{*}'+str('status'))[0].get('value'))
 
