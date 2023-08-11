@@ -41,6 +41,7 @@ for path in paths:
         '''check for missing elements'''
         stop = 0
         elements = {'ID':'id','url':'url','name':'name','title':'title'}
+        print(elements)
         for key,value in elements.items():
             try:
                 elements[key]=(root.findall('.//{*}'+str(value))[0].get('value')) 
