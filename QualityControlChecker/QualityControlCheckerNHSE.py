@@ -8,7 +8,11 @@ for path in paths:
     print(path)
     for file in files:
         '''open file to find element values'''
-        tree = ET.parse("./"+path+"/"+file)
+        try:
+            tree = ET.parse("./"+path+"/"+file)
+        except:
+            print("\t",file,"- The file cannot be parsed. There is an error in the code")
+            continue
         root = tree.getroot()
         
         '''do not check retired assets'''
