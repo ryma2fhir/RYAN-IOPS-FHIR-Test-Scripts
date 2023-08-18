@@ -1,5 +1,8 @@
 import xml.etree.ElementTree as ET
 import os
+import sys
+
+error=False #used to fail action if any errors found
 
 paths = ['structuredefinitions','valuesets','codesystems']
 currentProfiles = [] #Used for checking against CapbilityStatement
@@ -12,6 +15,7 @@ for path in paths:
             tree = ET.parse("./"+path+"/"+file)
         except:
             print("\t",file,"- The file cannot be parsed. There is an error in the code")
+            error=True
             continue
         root = tree.getroot()
         
@@ -27,6 +31,7 @@ for path in paths:
         if path == 'structuredefinitions':
             if file.endswith("Example.xml") or (not file.startswith('Extension') and not file.startswith('UKCore')):
                 print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+                error=True
                 continue
             if file.startswith('UKCore'): #Used for Capabilitystatement Checking
                 profile = file.replace('.xml','')
@@ -36,9 +41,11 @@ for path in paths:
                     
         if path == 'valuesets' and not file.startswith('ValueSet'):
             print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+            error=True
             continue
         if path == 'codesystems' and not file.startswith('CodeSystem'):
             print("\t",file," - The file has either an incorrect prefix or in the wrong folder '"+path+"'")
+            error=True
             continue
             
 
@@ -50,6 +57,7 @@ for path in paths:
                 elements[key]=(root.findall('.//{*}'+str(value))[0].get('value')) 
             except:
                 print("\t",file," - The element '"+key+"' is missing")
+                error=True
                 stop = 1
         if stop == 1:
             continue
@@ -71,6 +79,7 @@ for path in paths:
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
             warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
         if warnings:
+            error=True
             print("\t",file)
             for x in warnings:
                 print(x)
@@ -80,11 +89,13 @@ examplesPath = os.listdir('./examples')
 print('examples')
 for example in examplesPath:
     if not example.endswith("-Example.xml"):
+        error=True
         print("\t",example," - The filename is does not have the suffix '-Example'")
     '''open file to find element values'''
     tree = ET.parse("./examples/"+example)
     root = tree.getroot()
     if not root.findall('.//{*}id')[0].get('value') == example.replace('.xml',''):
+        error=True
         print("\t",example,"The 'id' element is incorrect")
 
 '''Capabilitystatement Checker - checks if all s are in the CapabilityStatement'''
@@ -98,7 +109,12 @@ for tag in root.findall('.//{*}type'):
 
 for p in currentProfiles:
     if p not in capabilityStatement:
+        error=True
         print("\t",p,"is missing from the CapabilityStatement")
 
-print("\n\nCheck Complete!")
+if error == True:
+    print("\nPlease fix the errors found above")
+    sys.exit(2)
+else:
+    print("\n\nCheck Complete!")
     
