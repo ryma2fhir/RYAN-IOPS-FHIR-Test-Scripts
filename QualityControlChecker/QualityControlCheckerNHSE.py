@@ -10,8 +10,8 @@ for path in paths:
         '''open file to find element values'''
         try:
             tree = ET.parse("./"+path+"/"+file)
-        except:
-            print("\t",file,"- The file cannot be parsed. There is an error in the code")
+        except ET.ParseError as e:
+            print("\t",file,"- The XML code has an error that needs to be fixed before it can be chcked:",e)
             continue
         root = tree.getroot()
         
