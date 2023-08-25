@@ -90,11 +90,7 @@ for path in paths:
             warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
             warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
-        if warnings:
-            error=True
-            print("\t",file)
-            for x in warnings:
-                print(x)
+        
                 
         ''' Check purpose element is present in Profiles and Extensions '''
         if path == 'structuredefinitions':
@@ -102,14 +98,14 @@ for path in paths:
                 root.findall('.//{*}'+str('purpose'))[0].get('value')
             except:
                 error=True
-                print("\t\tpurpose - This element is missing'")
+                warnings.append("\t\tpurpose - This element is missing'")
         
                 
         ''' Check Contact Details '''
         try:
             if not root.findall('.//{*}'+str('name'))[1].get('value') == 'HL7 UK':
                 error=True
-                print("\t\tcontact.name - This SHALL be 'HL7 UK'")
+                warnings.append("\t\tcontact.name - This SHALL be 'HL7 UK'")
         except:
             error=True
             print("\t\tcontact.name - This element is missing")
@@ -119,12 +115,16 @@ for path in paths:
             try:
                 if not root.findall('.//{*}'+str(key))[0].get('value') == value:
                     error=True
-                    print("\t\tcontact.telecom."+key+" - This SHALL be "+value)
+                    warnings.append("\t\tcontact.telecom."+key+" - This SHALL be "+value)
             except:
                 error=True
-                print("\t\tcontact.telecom."+key+" - This element is missing")
+                warnings.append("\t\tcontact.telecom."+key+" - This element is missing")
                 
-
+        if warnings:
+            error=True
+            print("\t",file)
+            for x in warnings:
+                print(x)
 
 '''check example filenames'''
 examplesPath = os.listdir('./examples')
