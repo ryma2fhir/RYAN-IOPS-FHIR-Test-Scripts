@@ -1,3 +1,13 @@
+'''A Quality Control Checker for the FHIR-R4-UKCORE-STAGING-MAIN repo, which runs whenever tere is a push to any branch. 
+
+This checks the following:
+- XML code for errors
+- Files are in the correct path
+- Certain elements are present and have correct vales as per the UK Core requirments
+- Draft / Active Profiles are within the CapabilityStatement
+
+If any of these are deemed incorrect the workflow will fail. '''
+
 import xml.etree.ElementTree as ET
 import os
 import sys
@@ -23,6 +33,8 @@ for path in paths:
         try:
             if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
                 continue
+        except IndexError:
+            print("\t",file," - The element 'status' is missing")
         except:
             print("active",root.findall('.//{*}'+str('status'))[0].get('value'))
 
@@ -51,10 +63,10 @@ for path in paths:
 
         '''check for missing elements'''
         stop = 0
-        elements = {'ID':'id','url':'url','name':'name','title':'title'}
+        elements = {'id':'id','url':'url','name':'name','title':'title','version':'version','status':'status','date':'date','description':'description','copyright':'copyright'}
         for key,value in elements.items():
             try:
-                elements[key]=(root.findall('.//{*}'+str(value))[0].get('value')) 
+                elements[key]=(root.findall('.//{*}'+str(key))[0].get('value')) 
             except:
                 print("\t",file," - The element '"+key+"' is missing")
                 error=True
@@ -67,8 +79,8 @@ for path in paths:
         warnings = []
         if path == 'codesystems' or path == 'valuesets':
             fileName = '-'.join(fileName.split('-')[1:])
-        if not fileName == elements['ID']:
-            warnings.append("\t\t"+elements['ID']+" - the 'id' is incorrect")
+        if not fileName == elements['id']:
+            warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
         if not elements['url'].startswith('http://hl7.org/fhir/5.0/'): #passes any R5 extensions
             if not fileName == elements['url'].split('/')[-1]:
                 warnings.append("\t\t"+elements['url']+" - The 'url' element is incorrect")
@@ -78,12 +90,44 @@ for path in paths:
             warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
             warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
+        if not elements['copyright'] == 'Copyright © 2021+ HL7 UK Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. HL7® FHIR® standard Copyright © 2011+ HL7 The HL7® FHIR® standard is used under the FHIR license. You may obtain a copy of the FHIR license at  https://www.hl7.org/fhir/license.html.':
+            warnings.append("\t\tThe copyright is incorrect")
         if warnings:
             error=True
             print("\t",file)
             for x in warnings:
                 print(x)
                 
+        ''' Check purpose element is present in Profiles and Extensions '''
+        if path == 'structuredefinitions':
+            try:
+                root.findall('.//{*}'+str('purpose'))[0].get('value')
+            except:
+                error=True
+                print("\t\tpurpose - This element is missing'")
+        
+                
+        ''' Check Contact Details '''
+        try:
+            if not root.findall('.//{*}'+str('name'))[1].get('value') == 'HL7 UK':
+                error=True
+                print("\t\tcontact.name - This SHALL be 'HL7 UK'")
+        except:
+            error=True
+            print("\t\tcontact.name - This element is missing")
+    
+        contact = {'system':'email','value':'ukcore@hl7.org.uk','use':'work','rank':'1'}
+        for key,value in contact.items():
+            try:
+                if not root.findall('.//{*}'+str(key))[0].get('value') == value:
+                    error=True
+                    print("\t\tcontact.telecom."+key+" - This SHALL be "+value)
+            except:
+                error=True
+                print("\t\tcontact.telecom."+key+" - This element is missing")
+                
+
+
 '''check example filenames'''
 examplesPath = os.listdir('./examples')
 print('examples')
@@ -117,4 +161,3 @@ if error == True:
     sys.exit(2)
 else:
     print("\n\nCheck Complete!")
-    
