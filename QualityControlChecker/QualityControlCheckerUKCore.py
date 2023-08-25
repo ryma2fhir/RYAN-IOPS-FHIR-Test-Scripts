@@ -118,9 +118,9 @@ for path in paths:
                         if not root.findall('.//{*}'+str(key))[1].get('value') == value: #added as a workaround in case identifier.system and identifier.value present  
                             error=True
                             warnings.append("\t\tcontact.telecom."+key+" - This SHALL be "+value)
-                        except:
-                            error=True
-                            warnings.append("\t\tcontact.telecom."+key+" - This SHALL be "+value)
+                    except:
+                        error=True
+                        warnings.append("\t\tcontact.telecom."+key+" - This SHALL be "+value)
             except:
                 error=True
                 warnings.append("\t\tcontact.telecom."+key+" - This element is missing")
