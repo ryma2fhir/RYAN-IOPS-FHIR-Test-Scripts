@@ -1,4 +1,4 @@
-https://simplifier.net/guide/uknamingsystems?version=current
+https://simplifier.net/guide/uk-core-implementation-guide-stu3-sequence?version=current
 
 ### IMPORTANT INFO ### 
 # Add website link on the first line. Single Link only, no multiple. 
