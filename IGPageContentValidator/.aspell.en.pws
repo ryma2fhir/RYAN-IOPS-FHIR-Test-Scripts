@@ -1,4 +1,5 @@
 personal_ws-1.1 en 192
+ACVPU
 admitter
 AllergyIntolEnd
 AMB
@@ -10,6 +11,7 @@ Atenolol
 ATND
 authorizing
 Betamethasone
+BMI
 boolean
 cadaveric
 CALLBCK
@@ -105,6 +107,7 @@ JSON
 Kanban
 lexically
 lifecycle
+LOINC
 MBE
 meds
 messageheader
@@ -159,6 +162,7 @@ smartcard
 SNOMED
 specialties
 specialty
+sphygmomanometer
 SPRF
 stu
 superset
