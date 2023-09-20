@@ -1,4 +1,4 @@
-https://simplifier.net/guide/uk-core-implementation-guide-stu3-sequence?version=current
+https://simplifier.net/guide/uk-core-implementation-guide-stu3-sequence?version=1.7.0
 
 ### IMPORTANT INFO ### 
 # Add website link on the first line. Single Link only, no multiple. 
