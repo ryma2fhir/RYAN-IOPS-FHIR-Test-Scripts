@@ -1,4 +1,4 @@
-https://simplifier.net/guide/ukcoreclinicalandtechnicalassurancedocumentationpack?version=Sprint-7
+https://simplifier.net/guide/uk-core-implementation-guide-stu3-sequence?version=current
 
 ### IMPORTANT INFO ### 
 # Add website link on the first line. Single Link only, no multiple. 
