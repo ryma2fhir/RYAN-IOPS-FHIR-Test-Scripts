@@ -12,7 +12,12 @@ import xml.etree.ElementTree as ET
 import os
 import sys
 
-error=False #used to fail action if any errors found
+'''Prints the repo name'''
+parent = os.path.dirname(path)
+print("Parent directory", os.path.basename(parent))
+
+'''Creates an error state, if any of the checks fails it will cause the action to fail'''
+error=False 
 
 paths = ['structuredefinitions','valuesets','codesystems']
 currentProfiles = [] #Used for checking against CapbilityStatement
