@@ -13,6 +13,7 @@ import os
 import sys
 
 '''Prints the repo name'''
+path = os.getcwd()
 parent = os.path.dirname(path)
 print("Parent directory", os.path.basename(parent))
 
