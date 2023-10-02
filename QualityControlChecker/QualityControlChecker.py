@@ -15,7 +15,7 @@ import sys
 '''Prints the repo name'''
 path = os.getcwd()
 parent = os.path.dirname(path)
-parentDir = os.path.basename(parent))
+parentDir = os.path.basename(parent)
 
 '''Creates main variables for use with UKCore and NHSE assets'''
 ukcoreVar = {'project':'UKCore','urlPrefix': 'https://fhir.hl7.org.uk/','org':'HL7 UK', 'email':'ukcore@hl7.org.uk'}
