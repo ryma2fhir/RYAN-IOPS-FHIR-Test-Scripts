@@ -1,4 +1,4 @@
-name: IOPS-FHIR-Validation-QualityControlCheckerUKCore
+name: IOPS-FHIR-Validation-QualityControlChecker
 
 # Controls when the workflow will run
 on:
