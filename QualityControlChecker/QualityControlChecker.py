@@ -1,4 +1,4 @@
-'''A Quality Control Checker for the FHIR-R4-UKCORE-STAGING-MAIN repo, which runs whenever tere is a push to any branch. 
+'''A Quality Control Checker for the IOPS FHIR repos, which runs whenever there is a push to any branch. 
 
 This checks the following:
 - XML code for errors
