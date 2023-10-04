@@ -1,6 +1,6 @@
 # Simplifier Implementation Guide Page Content Validation
 
-The validator works by scraping the webpage within website.txt for any internal webpage links within the Simplifier Guide. These webpages are then validated individually. 
+The validator works by scraping the webpage for any internal webpage links within the Simplifier Guide. These webpages are then validated individually. 
 
 The website validation is in three parts:
 - HTML Error Checking - This checks each page for any html errors. This captures any errors caused by using Simplifier relative links, e.g `{{pagelink: }}`, amongst the usual coding errors.

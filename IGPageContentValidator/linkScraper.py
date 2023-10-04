@@ -5,9 +5,9 @@ This script returns a list of relative weblinks fond within the webpage given in
 
 from bs4 import BeautifulSoup # this module helps in web scrapping.
 import requests  # this module helps us to download a web page
+import os
 
-with open('./IGPageContentValidator/website.txt', 'r') as file:
-    data = file.readline().strip('\n')
+data = os.environ['INPUT_STORE']
 
 '''returns html page of link within website.txt'''    
 def RequestData(url):

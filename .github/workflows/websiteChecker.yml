@@ -1,0 +1,65 @@
+---
+name: Simplifier IG Website Checking
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      websiteurl:
+        default: "https://simplifier.net/guide/uk-core-implementation-guidance-directory?version=current"
+jobs:
+  job1:
+    name: html Error Checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo content
+        uses: actions/checkout@v3
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./IGPageContentValidator/requirements.txt
+      - name: Execute HTML Error Check
+        run: INPUT_STORE=${{ github.event.inputs.websiteurl }} python ./IGPageContentValidator/errorChecker.py
+  job2:
+    name: url link checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt install python3-bs4 python3-dnspython python3-requests
+          pip3 install linkchecker
+      - name: Check input link is valid
+        run: >
+          echo 'exit codes can be found at
+          https://everything.curl.dev/usingcurl/returns'
+
+          curl ${{ github.event.inputs.websiteurl }} -s -f -o /dev/null
+      - name: Execute Link Check
+        run: >
+          linkchecker -r 2 --check-extern --no-status -f
+          ./IGPageContentValidator/linkcheckerrc ${{ github.event.inputs.websiteurl }} || test $? = 1;
+  job3:
+    name: spell checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          sudo apt install aspell
+          python -m pip install --upgrade pip
+          pip install -r ./IGPageContentValidator/requirements.txt
+      - name: execute relToAbsLinks.py
+        run: INPUT_STORE=${{ github.event.inputs.websiteurl }} python ./IGPageContentValidator/relToAbsLinks.py
+            
+      - name: Execute Spell Check
+        run: cat OutputLinks.txt | while read p; do wget -nv -O - $p | aspell list -H  --camel-case --lang en_GB --add-html-skip=nocheck -p ./IGPageContentValidator/.aspell.en.pws |sort| uniq -c; echo -e '\n'; done;
