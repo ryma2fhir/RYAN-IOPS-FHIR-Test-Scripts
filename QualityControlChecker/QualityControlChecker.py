@@ -30,7 +30,7 @@ else:
 error=False 
 
 paths = ['structuredefinitions','valuesets','codesystems']
-currentProfiles = [] #Used for checking against CapbilityStatement
+currentProfiles = [] #Used for checking against CapabilityStatement
 for path in paths:
     try:
         files = os.listdir('./'+path)
