@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       githubrepo:
-        default: "NHSDigital/NHSDigital-FHIR-ImplementationGuide"
+        default: "NHSDigital/NHSEngland-FHIR-ImplementationGuide"
       githubranch:
         default: "master"
       packagename: 
