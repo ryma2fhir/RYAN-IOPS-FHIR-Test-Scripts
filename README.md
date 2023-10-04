@@ -69,7 +69,7 @@ Examples of use within a workflow can be found:
 ### Validation
 Package-Test-Runner - Checks NHSE assets for conformance to specific UKCore packages. Useful to find breaking changes when new UKCore packages are created. Works on manual workflow run. Change `packagename` & `packageversion` within the action.
 masterfhirvalidation - Validates FHIR assets to ensure conformance to FHIR and checks examples are valid and all codes within them are correct as per the ontoserver. Works on push from FHIR Repo.
-testingbranch
+testingbranch - used to test the latest validator against a test suite (currently in progress)
 validator-test
 
 ### Quality Control
