@@ -150,8 +150,11 @@ for path in paths:
                 print(x)
 
 '''check example filenames'''
-examplesPath = os.listdir('./examples')
-print('examples')
+try:
+    examplesPath = os.listdir('./examples')
+    print('examples')
+except:
+    examplesPath = []
 for example in examplesPath:
     if not example.endswith("-Example.xml"):
         error=True
