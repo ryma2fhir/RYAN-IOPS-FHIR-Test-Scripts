@@ -8,7 +8,7 @@ on:
         default: "https://simplifier.net/guide/uk-core-implementation-guidance-directory?version=current"
 jobs:
   job1:
-    name: html Error Checking
+    name: html error checker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo content
@@ -24,7 +24,7 @@ jobs:
       - name: Execute HTML Error Check
         run: INPUT_STORE=${{ github.event.inputs.websiteurl }} python ./IGPageContentValidator/errorChecker.py
   job2:
-    name: url link checking
+    name: url link checker
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo content
@@ -44,7 +44,7 @@ jobs:
           linkchecker -r 2 --check-extern --no-status -f
           ./IGPageContentValidator/linkcheckerrc ${{ github.event.inputs.websiteurl }} || test $? = 1;
   job3:
-    name: spell checking
+    name: spell checker
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo content

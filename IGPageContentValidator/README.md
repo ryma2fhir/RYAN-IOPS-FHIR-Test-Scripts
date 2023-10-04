@@ -9,13 +9,13 @@ The website validation is in three parts:
 
 ## Instructions
 
-1. Edit the file `website.txt` ensuring the website you want scraped is entered on the first line. Note: Only Simplifier.net guides will work with this checker.  
-2. Click the `Actions` button. the top 3 actions will be the individual checkers needed. Wait until there is a green tick next to each. 
-3. Within each Action click the `Build` button
-4. Within the Build click the following for the results:
-- HTML Error Check
-- Link Check
-- Spell Check
+1. Go to [Actions..websiteChecker](https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/actions/workflows/websiteChecker.yml)  
+2. Click `Run workflow`. 
+3. Enter the website url into the `websiteurl` box and click `Run workflow`.
+4. Click on the action and then click on the following for the results:
+- html error checker
+- link checker
+- spell checker
 
 ## HTML Error Checking
 Uses the errorChecker.py script. Checks for any html errors on a website using BeautifulSoup's `find_all('div',{'class':"error"})`. This returns the errors for each individual page.
