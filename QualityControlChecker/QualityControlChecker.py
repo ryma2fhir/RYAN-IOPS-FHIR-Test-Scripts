@@ -32,7 +32,10 @@ error=False
 paths = ['structuredefinitions','valuesets','codesystems']
 currentProfiles = [] #Used for checking against CapbilityStatement
 for path in paths:
-    files = os.listdir('./'+path)
+    try:
+        files = os.listdir('./'+path)
+    except:
+        continue
     print(path)
     for file in files:
         '''open file to find element values'''
