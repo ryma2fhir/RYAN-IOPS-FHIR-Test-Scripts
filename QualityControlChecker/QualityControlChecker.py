@@ -30,9 +30,12 @@ else:
 error=False 
 
 paths = ['structuredefinitions','valuesets','codesystems']
-currentProfiles = [] #Used for checking against CapbilityStatement
+currentProfiles = [] #Used for checking against CapabilityStatement
 for path in paths:
-    files = os.listdir('./'+path)
+    try:
+        files = os.listdir('./'+path)
+    except:
+        continue
     print(path)
     for file in files:
         '''open file to find element values'''
@@ -147,8 +150,11 @@ for path in paths:
                 print(x)
 
 '''check example filenames'''
-examplesPath = os.listdir('./examples')
-print('examples')
+try:
+    examplesPath = os.listdir('./examples')
+    print('examples')
+except:
+    examplesPath = []
 for example in examplesPath:
     if not example.endswith("-Example.xml"):
         error=True
