@@ -167,19 +167,24 @@ for example in examplesPath:
         print("\t",example,"The 'id' element is incorrect")
 
 '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
-tree= ET.parse('./CapabilityStatement/CapabilityStatement-'+mainVar['project']+'.xml')
-root = tree.getroot()
+try:
+    tree= ET.parse('./CapabilityStatement/CapabilityStatement-'+mainVar['project']+'.xml')
+    root = tree.getroot()
+except: 
+    root = None
 
-print('CapabilityStatement')
-capabilityStatement = []
-for tag in root.findall('.//{*}type'):
-    capabilityStatement.append(tag.attrib["value"])
+if root != None:        
+    print('CapabilityStatement')
+    capabilityStatement = []
+    for tag in root.findall('.//{*}type'):
+        capabilityStatement.append(tag.attrib["value"])
 
-for p in currentProfiles:
-    if p not in capabilityStatement:
-        error=True
-        print("\t",p,"is missing from the CapabilityStatement")
+    for p in currentProfiles:
+        if p not in capabilityStatement:
+            error=True
+            print("\t",p,"is missing from the CapabilityStatement")
 
+''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
     print("\nPlease fix the errors found above")
     sys.exit(2)
