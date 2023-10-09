@@ -29,7 +29,7 @@ jobs:
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
         with:
-          repository: ryam2fhir/RYAN-IOPS-FHIR-Test-Scripts
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts
           path: validation
 
       - name: Check out validation-service-fhir-r4
