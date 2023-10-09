@@ -47,9 +47,6 @@ jobs:
       - name: Upgrade python packaging tools
         run: python -m pip install --upgrade pip setuptools wheel
 
-      - name: Install poetry and requests
-        run: pip install poetry requests
-
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
