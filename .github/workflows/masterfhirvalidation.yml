@@ -29,13 +29,13 @@ jobs:
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-Validation
+          repository: ryam2fhir/RYAN-IOPS-FHIR-Test-Scripts
           path: validation
 
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Validation-Service
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
         
