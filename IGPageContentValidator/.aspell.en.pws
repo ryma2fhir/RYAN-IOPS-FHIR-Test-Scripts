@@ -10,9 +10,11 @@ AstraZenecaVaccine
 Atenolol
 ATND
 authorizing
+backport
 Betamethasone
 BMI
 boolean
+BUPA
 cadaveric
 CALLBCK
 cardinalities
@@ -32,6 +34,7 @@ compositional
 computable
 conformant
 ConsultantSandraGose
+coronavirus
 Covid
 curation
 dataset
@@ -42,6 +45,7 @@ deployable
 DescId
 designee
 DHCW
+dicom
 discharger
 DoctorPaulRastall
 DSTU
@@ -64,6 +68,8 @@ Firely
 FiveWs
 FLD
 foetus
+formulary
+fulfill
 fulfiller
 generalizes
 genomic
@@ -108,12 +114,18 @@ Kanban
 lexically
 lifecycle
 LOINC
+loinc
 MBE
 meds
 messageheader
 Metformin
 milliliter
+millimeter
+millimoles
+Minicom
+mmol
 MRN
+multidose
 NegHandlNoKnownAllergies
 NHS
 nhs
@@ -144,6 +156,9 @@ PRENC
 prescriber
 ProfilesandExtensions
 PRSB
+Rastall
+recombinant
+Refset
 refsets
 RESTful
 rfc
@@ -160,6 +175,7 @@ SJUH
 SLT
 smartcard
 SNOMED
+snomedCT
 specialties
 specialty
 sphygmomanometer
@@ -202,6 +218,7 @@ VR
 VTM
 wardened
 webpages
+xds
 xml
 xmlns
 YYYY
