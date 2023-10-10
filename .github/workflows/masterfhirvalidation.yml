@@ -48,18 +48,21 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Install node
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          sudo apt-get install -y nodejs
+      # - name: Install node
+        # run: |
+          # wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          # curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          # sudo apt-get install -y nodejs
           
           
       - name: Install npm
-        run: npm install
+        - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+        run: cd validation && npm install
         
       - name: Configure FHIR Validator
-        run: npm start
+        run: cd validation && npm start
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
@@ -74,4 +77,4 @@ jobs:
           sleep 120
         
       - name: Run Test
-        run: npm test
+        run: cd validation && npm test
