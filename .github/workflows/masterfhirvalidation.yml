@@ -59,7 +59,7 @@ jobs:
           
           
       - name: Install npm
-        run: cd validation && npm install
+        run: cd validation && npm ci
         
       - name: Configure FHIR Validator
         run: cd validation && npm start
