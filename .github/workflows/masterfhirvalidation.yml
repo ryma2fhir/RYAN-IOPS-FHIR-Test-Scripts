@@ -26,11 +26,11 @@ jobs:
         with:
           submodules: true
       
-      # - name: Check out IOPS-Validation
-        # uses: actions/checkout@master
-        # with:
-          # repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts
-          # path: validation
+      - name: Check out IOPS-Validation
+        uses: actions/checkout@master
+        with:
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts
+          path: validation
 
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
