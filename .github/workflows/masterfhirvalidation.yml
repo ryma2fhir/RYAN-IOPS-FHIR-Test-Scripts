@@ -63,8 +63,8 @@ jobs:
           sudo apt-get install nodejs -y
           
           
-      - name: Install npm
-        run: cd validation && npm install
+      #- name: Install npm
+      #  run: cd validation && npm install
         
       - name: Configure FHIR Validator
         run: cd validation && npm start
