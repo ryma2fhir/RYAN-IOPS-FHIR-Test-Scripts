@@ -26,6 +26,12 @@ jobs:
         with:
           submodules: true
       
+      - name: Check out IOPS-Validation
+        uses: actions/checkout@master
+        with:
+          repository: ryam2fhir/RYAN-IOPS-FHIR-Test-Scripts
+          path: validation
+
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
@@ -50,17 +56,12 @@ jobs:
           curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
           sudo apt-get install -y nodejs
           
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
           
       - name: Install npm
-        run: make install
+        run: make -C validation install
         
       - name: Configure FHIR Validator
-        run: make configure-validation
+        run: make -C validation configure-validation
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
@@ -75,4 +76,4 @@ jobs:
           sleep 120
         
       - name: Run Test
-        run: make test
+        run: make -C validation test
