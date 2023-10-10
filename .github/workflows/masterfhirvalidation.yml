@@ -38,7 +38,8 @@ jobs:
           repository: ryma2fhir/RYAN-IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
-        
+      - name: versions
+        run: node -v && npm -v
       #- name: Set up JDK 11
        # uses: actions/setup-java@v3
         #with:
@@ -47,9 +48,6 @@ jobs:
 
       # - name: Install node
         # run: |
-          # # wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          # # curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          # # sudo apt-get install -y nodejs
           # sudo apt-get update
           # sudo apt-get install -y ca-certificates curl gnupg
           # sudo mkdir -p /etc/apt/keyrings
