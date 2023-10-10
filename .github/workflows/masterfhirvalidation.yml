@@ -56,10 +56,10 @@ jobs:
           
           
       - name: Install npm
-        run: cd validation && npm install
+        run: npm install
         
       - name: Configure FHIR Validator
-        run: cd validation && npm start
+        run: npm start
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
@@ -74,4 +74,4 @@ jobs:
           sleep 120
         
       - name: Run Test
-        run: cd validation && npm test
+        run: npm test
