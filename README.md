@@ -1,6 +1,5 @@
 # IOPS-Validation
 
-
 This is a typescript module used to test HL7 FHIR resources using [validation-service-fhir-r4](https://github.com/NHSDigital/validation-service-fhir-r4)
 The configuration and setup of this service is not covered here.
 
@@ -63,4 +62,20 @@ Examples of use within a workflow can be found:
 
 - https://github.com/NHSDigital/NHSDigital-FHIR-ImplementationGuide/blob/master/.github/workflows/FHIRValidation.yml
 - https://github.com/NHSDigital/NHSDigital-FHIR-Medicines-ImplementationGuide/blob/master/.github/workflows/integration.yml
+
+# Developer Information
+## Workflows
+
+### Validation
+Package-Test-Runner - Checks NHSE assets for conformance to specific UKCore packages. Useful to find breaking changes when new UKCore packages are created. Works on manual workflow run. Change `packagename` & `packageversion` within the action.
+masterfhirvalidation - Validates FHIR assets to ensure conformance to FHIR and checks examples are valid and all codes within them are correct as per the ontoserver. Works on push from FHIR Repo.
+testingbranch - used to test the latest validator against a test suite (currently in progress)
+validator-test
+
+### Quality Control
+errorChecker - Checks for html errors in Simplifier IGs. Works on push to this repo
+linkChecker - Checks for url errors in Simplifier IGs. Works on push to this repo
+spellChecker - Checks for spelling errors in Simplifier IGs. Works on push to this repo
+QualityControlChecker - Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos
+
 
