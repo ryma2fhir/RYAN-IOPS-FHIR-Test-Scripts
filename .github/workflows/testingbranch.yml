@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
           
       - name: Install npm
-        run: make install
+        run: npm ci
         
       - name: Update FHIR Validator install
         run: make -C validation-service-fhir-r4 install
