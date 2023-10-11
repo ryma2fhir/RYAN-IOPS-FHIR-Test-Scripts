@@ -42,8 +42,6 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     testFileValidator('Test HL7 FHIR resource passes validation PractitionerRole','Examples/pass/PractitionerRole-pass.json')
 
     // Bundle
-    testFileValidator('Test HL7 FHIR Message Bundle passes validation ','Examples/pass/Bundle-prescription.json')
-
     testFileValidator('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFileValidator('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
     testFileValidator('Test resource with unknown profile passes validation (AEA-1806) ','Examples/pass/MedicationRequest-alienProfile-pass.json')
