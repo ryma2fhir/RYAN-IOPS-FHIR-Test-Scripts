@@ -74,5 +74,5 @@ The action checks the quality of FHIR assets as per the [UK Core](https://simpli
 ## Examples
 The testingbranch.yml creates an action to test the updated validator. These use the folder Examples which are split into examples that should either pass or fail. These examples are tested within the /src/vaidator.test.ts file.
 
-
-
+## /src/common.js.ts
+This holds the code for converting xml into json, testing assets, and creating or ignoring custom errors.
