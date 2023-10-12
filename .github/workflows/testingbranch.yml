@@ -44,7 +44,7 @@ jobs:
         run: npm ci
         
       - name: Update FHIR Validator build
-        run: mvn clean package
+        run: cd validation-service-fhir-r4; mvn clean package
 
       - name: Run FHIR Validator
         run: 
