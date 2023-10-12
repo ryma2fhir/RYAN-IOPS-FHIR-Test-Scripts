@@ -1,6 +1,7 @@
 # IOPS-Validation
 
-This is a typescript module used to test HL7 FHIR resources using [validation-service-fhir-r4](https://github.com/NHSDigital/validation-service-fhir-r4)
+This is a typescript module used to test HL7 FHIR resources using [IOPS-FHIR-Validation-Service ](https://github.com/NHSDigital/IOPS-FHIR-Validation-Service)
+
 The configuration and setup of this service is not covered here.
 
 Current status of **validation-service-fhir-r4** 
@@ -63,6 +64,13 @@ Examples of use within a workflow can be found:
 - https://github.com/NHSDigital/NHSDigital-FHIR-ImplementationGuide/blob/master/.github/workflows/FHIRValidation.yml
 - https://github.com/NHSDigital/NHSDigital-FHIR-Medicines-ImplementationGuide/blob/master/.github/workflows/integration.yml
 
+
+# Simplifier IG Content Checker
+This action checks a Simplifier implementation guide for spelling, http errors and invalid links. More information can be found within the [IGPageContentValidator](https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/tree/main/IGPageContentValidator) folder.
+
+# Quality Control Checker
+The action checks the quality of FHIR assets as per the [UK Core](https://simplifier.net/guide/hl7fhirukcoredesignanddevelopmentapproach?version=current) / [NHSE](https://simplifier.net/guide/nhs-england-design-and-development-approach?version=current) Design and Development approach. More infomration can be found within the [QualityControlChecker]https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/tree/main/QualityControlChecker) folder.
+
 # Developer Information
 ## Workflows
 
@@ -79,3 +87,9 @@ spellChecker - Checks for spelling errors in Simplifier IGs. Works on push to th
 QualityControlChecker - Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos
 
 
+# Ryan's Notes (to be confirmed)
+## Examples
+The testingbranch.yml creates an action to test the updated validator. These use the folder Examples which are split into examples that should either pass or fail. These examples are tested within the /src/vaidator.test.ts file.
+
+## /src/common.js.ts
+This holds the code for converting xml into json, testing assets, and creating or ignoring custom errors.
