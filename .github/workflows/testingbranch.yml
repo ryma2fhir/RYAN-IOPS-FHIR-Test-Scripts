@@ -21,11 +21,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Install Node version 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
@@ -38,6 +33,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+
+      - name: Install Node version 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Install npm
         run: npm ci
