@@ -1,8 +1,6 @@
 # IOPS-Validation
 
-This is a typescript module used to test HL7 FHIR resources using [IOPS-FHIR-Validation-Service ](https://github.com/NHSDigital/IOPS-FHIR-Validation-Service)
-
-The configuration and setup of this service is not covered here.
+This is a typescript module used to test HL7 FHIR resources using [IOPS-FHIR-Validation-Service](https://github.com/NHSDigital/IOPS-FHIR-Validation-Service)
 
 Current status of **validation-service-fhir-r4** 
 
@@ -11,9 +9,11 @@ Current status of **validation-service-fhir-r4**
 
 ## Prerequisite 
 
-Install [node-js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+The following software are required but are preinstalled on the GitHub ubuntu runner:
+- [Maven](https://maven.apache.org/)
+- [node-js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-Running instance of the `validation-service-fhir-r4`
+- Running instance of the `IOPS-FHIR-Validation-Service`
 
 ## Tests
 
