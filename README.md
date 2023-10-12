@@ -112,13 +112,13 @@ These are the workflows for the validator actions in a human readble format.
 **Configure FHIR Validator**  
 &emsp;`npm start` in IOPS-FHIR-Test-Scripts folder (configures FHIR validator using ontoserver credentials). The `start` is defined in package.json as "ts-node src/configureValidator.ts"  
 **Build FHIR Validator**  
-&emsp;Runs `mvn clean install` inside IOPS-FHIR-Test-Scripts
+&emsp;Runs `mvn clean install` inside IOPS-FHIR-Test-Scripts  
 &emsp;&emsp;Clean: remove target folder  
 &emsp;&emsp;Package: Follows the lifecycle phase `validate >> compile >> test (optional) >> package`  
-&emsp;&emsp;(for reference `install`: validate >> compile >> test (optional) >> package >> verify >> install)  
+&emsp;&emsp;(for reference `install`: `validate >> compile >> test (optional) >> package >> verify >> install`)  
 **Run FHIR Validator**  
 &emsp;`nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --<params>` 
-&emsp;nohup: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
-&emsp;java -jar: run the jar file passing the parameters listed after each --  
+&emsp;`nohup`: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
+&emsp;`java -jar`: run the jar file passing the parameters listed after each --  
 **Run Test**  
-&emsp;jest --runInBand src/validate.test.ts
+&emsp;Run `npm test` inside IOPS-FHIR-Test-Scripts folder. The `test` is defined in package.json as `jest --runInBand src/validate.test.ts`
