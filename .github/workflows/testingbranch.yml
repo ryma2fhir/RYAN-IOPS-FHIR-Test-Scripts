@@ -38,7 +38,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
+        run: npm ci
         
       - name: Update FHIR Validator build
         run: cd validation-service-fhir-r4; mvn clean package
