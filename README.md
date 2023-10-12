@@ -84,14 +84,10 @@ testingbranch
 validator-test
 
 ### Quality Control
-errorChecker  
-&emsp;Checks for html errors in Simplifier IGs. Works on push to this repo  
-linkChecker  
-&emsp;Checks for url errors in Simplifier IGs. Works on push to this repo  
-spellChecker  
-&emsp;Checks for spelling errors in Simplifier IGs. Works on push to this repo  
-QualityControlChecker  
-&emsp;Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos  
+**errorChecker** - Checks for html errors in Simplifier IGs. Works on push to this repo  
+**linkChecker** - Checks for url errors in Simplifier IGs. Works on push to this repo  
+**spellChecker** - Checks for spelling errors in Simplifier IGs. Works on push to this repo  
+**QualityControlChecker** - Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos  
 
 
 # Ryan's Notes (to be confirmed)
@@ -105,24 +101,24 @@ This holds the code for converting xml into json, testing assets, and creating o
 These are the workflows for the validator actions in a human readble format.
 
 ## IOPS-FHIR-Validation-Terminology
-Runs on:  
+**Runs on:**  
 &emsp;Push from FHIR repo e.g. FHIR-R4-UKCORE-STAGING-MAIN with ontoserver credentials  
-Check out IOPS-Validation  
+**Check out IOPS-Validation**  
 &emsp;Adds IOPS-FHIR-Test-Scripts as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
-Check out validation-service-fhir-r4  
+**Check out validation-service-fhir-r4**  
 &emsp;Adds IOPS-FHIR-Validation-Service as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
-Install npm  
+**Install npm**  
 &emsp;Install npm in IOPS-FHIR-Test-Scripts folder
-Configure FHIR Validator  
+**Configure FHIR Validator**  
 &emsp;`npm start` in IOPS-FHIR-Test-Scripts folder (configures FHIR validator using ontoserver credentials). The `start` is defined in package.json as "ts-node src/configureValidator.ts"  
-Build FHIR Validator  
+**Build FHIR Validator**  
 &emsp;Runs `mvn clean install` inside IOPS-FHIR-Test-Scripts
 &emsp;&emsp;Clean: remove target folder  
 &emsp;&emsp;Package: Follows the lifecycle phase `validate >> compile >> test (optional) >> package`  
 &emsp;&emsp;(for reference `install`: validate >> compile >> test (optional) >> package >> verify >> install)  
-Run FHIR Validator  
+**Run FHIR Validator**  
 &emsp;`nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --<params>` 
 &emsp;nohup: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
 &emsp;java -jar: run the jar file passing the parameters listed after each --  
-Run Test  
+**Run Test**  
 &emsp;jest --runInBand src/validate.test.ts
