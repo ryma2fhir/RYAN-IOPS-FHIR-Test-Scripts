@@ -119,6 +119,6 @@ These are the workflows for the validator actions in a human readble format.
 **Run FHIR Validator**  
 &emsp;`nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --<params>` 
 &emsp;`nohup`: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
-&emsp;`java -jar`: run the jar file passing the parameters listed after each --  
+&emsp;`java -jar`: run the jar file passing the parameters listed after each `--` 
 **Run Test**  
 &emsp;Run `npm test` inside IOPS-FHIR-Test-Scripts folder. The `test` is defined in package.json as `jest --runInBand src/validate.test.ts`
