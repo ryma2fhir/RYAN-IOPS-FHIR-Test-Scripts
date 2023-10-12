@@ -75,16 +75,23 @@ The action checks the quality of FHIR assets as per the [UK Core](https://simpli
 ## Workflows
 
 ### Validation
-Package-Test-Runner - Checks NHSE assets for conformance to specific UKCore packages. Useful to find breaking changes when new UKCore packages are created. Works on manual workflow run. Change `packagename` & `packageversion` within the action.  
-masterfhirvalidation - Validates FHIR assets to ensure conformance to FHIR and checks examples are valid and all codes within them are correct as per the ontoserver. Works on push from FHIR Repo.  
-testingbranch - used to test the latest validator against a test suite (currently in progress)  
+Package-Test-Runner  
+&emsp;Checks NHSE assets for conformance to specific UKCore packages. Useful to find breaking changes when new UKCore packages are created. Works on manual workflow run. Change `packagename` & `packageversion` within the action.  
+masterfhirvalidation  
+&emsp;Validates FHIR assets to ensure conformance to FHIR and checks examples are valid and all codes within them are correct as per the ontoserver. Works on push from FHIR Repo.  
+testingbranch  
+&emsp;used to test the latest validator against a test suite (currently in progress)  
 validator-test
 
 ### Quality Control
-errorChecker - Checks for html errors in Simplifier IGs. Works on push to this repo  
-linkChecker - Checks for url errors in Simplifier IGs. Works on push to this repo  
-spellChecker - Checks for spelling errors in Simplifier IGs. Works on push to this repo  
-QualityControlChecker - Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos  
+errorChecker  
+&emsp;Checks for html errors in Simplifier IGs. Works on push to this repo  
+linkChecker  
+&emsp;Checks for url errors in Simplifier IGs. Works on push to this repo  
+spellChecker  
+&emsp;Checks for spelling errors in Simplifier IGs. Works on push to this repo  
+QualityControlChecker  
+&emsp;Checks for spelling and conformance of FHIR assets. Works on push to external FHIR repos  
 
 
 # Ryan's Notes (to be confirmed)
@@ -99,23 +106,23 @@ These are the workflows for the validator actions in a human readble format.
 
 ## IOPS-FHIR-Validation-Terminology
 Runs on:  
-  Push from FHIR repo e.g. FHIR-R4-UKCORE-STAGING-MAIN with ontoserver credentials  
+&emsp;Push from FHIR repo e.g. FHIR-R4-UKCORE-STAGING-MAIN with ontoserver credentials  
 Check out IOPS-Validation  
-  Adds IOPS-FHIR-Test-Scripts as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
+&emsp;Adds IOPS-FHIR-Test-Scripts as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
 Check out validation-service-fhir-r4  
-  Adds IOPS-FHIR-Validation-Service as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
+&emsp;Adds IOPS-FHIR-Validation-Service as folder inside FHIR-R4-UKCORE-STAGING-MAIN folder in the local ubuntu machine.  
 Install npm  
-  Install npm in IOPS-FHIR-Test-Scripts folder
+&emsp;Install npm in IOPS-FHIR-Test-Scripts folder
 Configure FHIR Validator  
-  `npm start` in IOPS-FHIR-Test-Scripts folder (configures FHIR validator using ontoserver credentials). The `start` is defined in package.json as "ts-node src/configureValidator.ts"  
+&emsp;`npm start` in IOPS-FHIR-Test-Scripts folder (configures FHIR validator using ontoserver credentials). The `start` is defined in package.json as "ts-node src/configureValidator.ts"  
 Build FHIR Validator  
-  Runs `mvn clean install` inside IOPS-FHIR-Test-Scripts
-    Clean: remove target folder  
-    Package: Follows the lifecycle phase `validate >> compile >> test (optional) >> package`  
-    (for reference `install`: validate >> compile >> test (optional) >> package >> verify >> install)  
+&emsp;Runs `mvn clean install` inside IOPS-FHIR-Test-Scripts
+&emsp;&emsp;Clean: remove target folder  
+&emsp;&emsp;Package: Follows the lifecycle phase `validate >> compile >> test (optional) >> package`  
+&emsp;&emsp;(for reference `install`: validate >> compile >> test (optional) >> package >> verify >> install)  
 Run FHIR Validator  
-  `nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --<params>` 
-  nohup: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
-  java -jar: run the jar file passing the parameters listed after each --  
+&emsp;`nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --<params>` 
+&emsp;nohup: no hang up is a command in Linux systems that keep processes running even after exiting the shell or terminal   
+&emsp;java -jar: run the jar file passing the parameters listed after each --  
 Run Test  
-  jest --runInBand src/validate.test.ts
+&emsp;jest --runInBand src/validate.test.ts
