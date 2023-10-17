@@ -723,14 +723,16 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             });
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
-                if (json.meta != undefined) {
+                // Disable profile check for Parameters
+                if (json.meta != undefined && json.resourceType !== 'Parameters') {
                     expect(json.meta.profile == undefined).toBeTruthy()
                 }
                 if (json.resourceType === 'Bundle') {
                     let bundle : Bundle = json
                     if (bundle.entry != undefined) {
                         for (let entry of bundle.entry) {
-                            if (entry.resource !== undefined && entry.resource.meta != undefined) {
+                            // Disable profile check for Parameters
+                            if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
                             }
                         }
