@@ -38,6 +38,13 @@ jobs:
           repository: NHSDigital/IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
+      
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
                     
       - name: Install npm
         run: cd validation && npm ci
