@@ -13,7 +13,7 @@ Current status of **validation-service-fhir-r4**
 
 Install [node-js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-Running instance of the `validation-service-fhir-r4`
+Running instance of the [IOPS-FHIR-Validation-Service](https://github.com/NHSDigital/IOPS-FHIR-Validation-Service)
 
 ## Tests
 
@@ -21,7 +21,7 @@ Running instance of the `validation-service-fhir-r4`
 
 Create a directory for your tests. 
 Create a folder for you tests called `Examples`.
-Clone this repo `git clone https://github.com/NHSDigital/IOPS-Validation.git`
+Clone this repo `git clone git@github.com:NHSDigital/IOPS-FHIR-Test-Scripts.git`
 Run the tests via `npm test`
 
 ### Test files in another folder
@@ -38,7 +38,7 @@ The tests can also be run against a series of folders laid out in a set way. Thi
 
 This parameter with search for the following sub folders in the supplied path.
 
-- CapabilityStatement
+- CapabilityStatement - **Note: To test against specific profiles, e.g. UK Core, this needs to be present. See UK Core for the [Asset](https://github.com/NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN/blob/develop/CapabilityStatement/CapabilityStatement-UKCore.xml)** 
 - CodeSystem
 - ConceptMap
 - Examples
@@ -55,9 +55,7 @@ This parameter with search for the following sub folders in the supplied path.
 
 The validation-service-fhir-r4 can also be configured using this project. At present this is designed to be used in the testing of NHS Digital HL7 FHIR Implementation Guides using github workflows. This is done via 
 
-`make -C validation configure-validation`
-
-Which calls `npm start`
+`cd validation && npm start`
 
 Examples of use within a workflow can be found:
 
