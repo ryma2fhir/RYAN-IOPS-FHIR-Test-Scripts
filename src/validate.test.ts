@@ -18,8 +18,6 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let isUKCore = false
-
     let failOnWarning = false;
 
     if (args!= undefined) {
@@ -38,9 +36,7 @@ const args = require('minimist')(process.argv.slice(2))
         if (resource != undefined) {
             let pkg = JSON.parse(resource)
             if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
-                isUKCore = true;
                 gitHubSummary += 'Detected UKCore ' + NEW_LINE;
-
             }
             if (pkg.dependencies != undefined) {
                 for (let key in pkg.dependencies) {
@@ -116,7 +112,7 @@ function testFolderContent(dir : string, source: string) {
 
             } else {
                 if (!isIgnoreFile(dir,file)) {
-                    testFile( dir, file, failOnWarning, isUKCore)
+                    testFile( dir, file, failOnWarning)
                 }
             }
         })
