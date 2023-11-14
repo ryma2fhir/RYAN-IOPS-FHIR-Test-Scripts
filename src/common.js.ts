@@ -810,14 +810,14 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             }
             if (validate) {
-				test('FHIR Validation', async () => {
-					const response = await client.post('/$validate', resource).catch(function (error) {
-						return error.response
-					})
-					expect(response.status === 200 || response.status === 400).toBeTruthy()
-					resourceChecks(response, failOnWarning)
-					expect(response.status).toEqual(200)
-				});
+                test('FHIR Validation', async () => {
+                    const response = await client.post('/$validate', resource).catch(function (error) {
+                        return error.response
+                    })
+                    expect(response.status === 200 || response.status === 400).toBeTruthy()
+                    resourceChecks(response, failOnWarning)
+                    expect(response.status).toEqual(200)
+                });
             }
         }
     )
