@@ -18,8 +18,8 @@ parent = os.path.dirname(path)
 parentDir = os.path.basename(parent)
 
 '''Creates main variables for use with UKCore and NHSE assets'''
-ukcoreVar = {'project':'UKCore','urlPrefix': 'https://fhir.hl7.org.uk/','codesystemPrefix':[],'org':'HL7 UK', 'email':'ukcore@hl7.org.uk'}
-nhseVar = {'project':'England','urlPrefix': 'https://fhir.nhs.uk/England/', 'codesystemPrefix':['https://ord.nhs.uk/'],'org':'NHS England', 'email':'interoperabilityteam@nhs.net'}
+ukcoreVar = {'project':'UKCore','urlPrefix': 'https://fhir.hl7.org.uk/','ignoreURLPrefix':['http://hl7.org/fhir/5.0/'],'org':'HL7 UK', 'email':'ukcore@hl7.org.uk'}
+nhseVar = {'project':'England','urlPrefix': 'https://fhir.nhs.uk/England/', 'ignoreURLPrefix':['http://hl7.org/fhir/5.0/','https://ord.nhs.uk/'],'org':'NHS England', 'email':'interoperabilityteam@nhs.net'}
 mainVar = {}
 if 'ukcore' in parentDir.lower():
     mainVar = ukcoreVar
@@ -99,20 +99,17 @@ for path in paths:
             fileName = '-'.join(fileName.split('-')[1:])
         if not fileName == elements['id']:
             warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
-        if not elements['url'].startswith('http://hl7.org/fhir/5.0/'): #passes any R5 extensions          
+        '''Check all url's unless they starts with one in the ignore list'''
+        uriCheck=True
+        for elem in mainVar['ignoreURLPrefix']:
+            if elements['url'].startswith(elem):
+                uriCheck=False
+                break
+        if uriCheck == True:        
             if not fileName == elements['url'].split('/')[-1]:
                 warnings.append("\t\t"+elements['url']+" - The 'url' element is incorrect")
             if not elements['url'].startswith(mainVar['urlPrefix']+assets[path]):
-                if path == 'codesystems':
-                    uriCheck = False
-                    for elem in mainVar['codesystemPrefix']:
-                        if elements['url'].startswith(elem+assets[path]):
-                            uriCheck = True
-                            break
-                    if uriCheck == False:
-                        warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is not one of :"+str(mainVar['urlPrefix'])+", "+", ".join(mainVar['codesystemPrefix']))
-                else:
-                    warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
+                warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
         if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
             warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
         if not fileName.replace('-','') == elements['title'].replace(' ',''):
