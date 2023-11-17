@@ -110,7 +110,7 @@ for path in paths:
                             uriCheck = True
                             break
                     if uriCheck == False:
-                        warnings.append("\t\t"+elements['url']+" - The 'url' element is not one of :"+str(mainVar['urlPrefix'])+", "+", ".join(mainVar['codesystemPrefix']))
+                        warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is not one of :"+str(mainVar['urlPrefix'])+", "+", ".join(mainVar['codesystemPrefix']))
                 else:
                     warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
         if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
