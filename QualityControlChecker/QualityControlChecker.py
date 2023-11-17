@@ -19,7 +19,7 @@ parentDir = os.path.basename(parent)
 
 '''Creates main variables for use with UKCore and NHSE assets'''
 ukcoreVar = {'project':'UKCore','urlPrefix': 'https://fhir.hl7.org.uk/','codesystemPrefix':[],'org':'HL7 UK', 'email':'ukcore@hl7.org.uk'}
-nhseVar = {'project':'England','urlPrefix': 'https://fhir.nhs.uk/England/', 'codesystemPrefix':['https://ord.nhs.uk/England/'],'org':'NHS England', 'email':'interoperabilityteam@nhs.net'}
+nhseVar = {'project':'England','urlPrefix': 'https://fhir.nhs.uk/England/', 'codesystemPrefix':['https://ord.nhs.uk/'],'org':'NHS England', 'email':'interoperabilityteam@nhs.net'}
 mainVar = {}
 if 'ukcore' in parentDir.lower():
     mainVar = ukcoreVar
