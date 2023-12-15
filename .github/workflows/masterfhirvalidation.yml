@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: ryma2fhir/ryan-hapi-fhir-jpaserver-starter #RYAN-IOPS-FHIR-Validation-Service 
-          ref: main
+          ref: master
           path: validation-service-fhir-r4
       
       - name: Cache Maven packages
