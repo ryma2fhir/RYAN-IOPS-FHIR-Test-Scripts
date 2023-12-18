@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'OpenJDK'
       
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
