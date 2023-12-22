@@ -300,6 +300,10 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('must be of the format')) {
             return true;
         }
+        
+        if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
+            return false
+        }
     }
 
     // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
@@ -326,6 +330,9 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
             if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
                 console.error(issue.diagnostics)
+                return false
+            }
+            if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
                 return false
             }
         }
