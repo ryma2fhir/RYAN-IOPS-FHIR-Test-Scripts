@@ -38,6 +38,11 @@ jobs:
       - name: Install npm
         run: npm ci
         
+      - name: Configure FHIR Validator
+        run: cd validation && npm start
+        env:
+          FAILONWARNING: ${{ secrets.FAILONWARNING }}
+          
       - name: Update FHIR Validator build
         run: cd validation-service-fhir-r4; mvn clean package
 
