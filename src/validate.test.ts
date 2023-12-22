@@ -18,7 +18,10 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let failOnWarning = false;
+    let failOnWarning = true;
+    if (process.env.FAILONWARNING != undefined) {
+        failOnWarning = process.env.FAILONWARNING;
+    }
 
     if (args!= undefined) {
         if (args['source']!= undefined) {
@@ -41,7 +44,6 @@ const args = require('minimist')(process.argv.slice(2))
             if (pkg.dependencies != undefined) {
                 for (let key in pkg.dependencies) {
                     if (key.startsWith('fhir.r4.ukcore')) {
-                        failOnWarning = true;
                         gitHubSummary += 'ukcore dependency found, enabled STRICT validation' + NEW_LINE
                     }
                 }
@@ -49,7 +51,6 @@ const args = require('minimist')(process.argv.slice(2))
         }
     } catch (e) {
         gitHubSummary += 'No package.json found, applying UKCore validation rule ' + NEW_LINE;
-        failOnWarning = true;
     }
 
     describe('Test Environment', ()=> {
