@@ -22,6 +22,7 @@ const args = require('minimist')(process.argv.slice(2))
     if (process.env.FAILONWARNING != undefined) {
         failOnWarning = process.env.FAILONWARNING;
     }
+    gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE
 
     if (args!= undefined) {
         if (args['source']!= undefined) {
@@ -44,13 +45,13 @@ const args = require('minimist')(process.argv.slice(2))
             if (pkg.dependencies != undefined) {
                 for (let key in pkg.dependencies) {
                     if (key.startsWith('fhir.r4.ukcore')) {
-                        gitHubSummary += 'ukcore dependency found, enabled STRICT validation' + NEW_LINE
+                        gitHubSummary += 'ukcore dependency found' + NEW_LINE
                     }
                 }
             }
         }
     } catch (e) {
-        gitHubSummary += 'No package.json found, applying UKCore validation rule ' + NEW_LINE;
+        gitHubSummary += 'No package.json found' + NEW_LINE;
     }
 
     describe('Test Environment', ()=> {
