@@ -15,6 +15,12 @@ jest.setTimeout(40*1000)
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
+    let failOnWarning = true;
+    if (process.env.FAILONWARNING != undefined) {
+        failOnWarning = process.env.FAILONWARNING;
+    }
+    gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
+
 describe('Test Environment', ()=> {
     let client: AxiosInstance;
     beforeAll(async () => {
