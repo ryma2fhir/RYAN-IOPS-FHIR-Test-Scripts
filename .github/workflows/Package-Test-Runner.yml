@@ -50,7 +50,7 @@ jobs:
           path: validation-service-fhir-r4
         
       - name: Install npm
-        run: cd validation && npm ci   
+        run: npm ci   
       
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
