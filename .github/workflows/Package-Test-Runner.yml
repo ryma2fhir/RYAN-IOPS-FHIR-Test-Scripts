@@ -54,7 +54,7 @@ jobs:
       
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
-        run: cd validation && npm start
+        run: npm start
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
