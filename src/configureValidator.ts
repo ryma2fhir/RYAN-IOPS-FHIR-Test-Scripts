@@ -249,14 +249,17 @@ if (process.env.ONTO_URL != undefined) {
                 if (dir.includes('MessageDefinition') || dir.includes('ObservationDefinition')) {
                     destination = 'temp/package/examples/' + root + '.json';
                 }
-
-                const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
-                const json = getJson(file, resource);
-                fs.writeFile(destination, jsonminify(json), function (err) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                });
+                try {
+                    const resource: any = fs.readFileSync(dir + "/" + file, 'utf8');
+                    const json = getJson(file, resource);
+                    fs.writeFile(destination, jsonminify(json), function (err) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                    });
+                } catch (e) {
+                    console.error(e.message + ' Directory '+ dir + "/" + file)
+                }
             })
         } else {
             console.info('INFO Folder not found  ' + dir);
