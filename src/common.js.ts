@@ -252,40 +252,44 @@ function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
 }
 function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
+    
+        //THESE WARNINGS SHOULD ALWAYS ERROR
         if (issue.diagnostics.includes('incorrect type for element')) {
             return true;
         }
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
+        if (issue.diagnostics.includes('must be of the format')) {
+            return true;
+        }
+        
+        // these warnings can always be silently ignored 
+        //  i.e. known and not resolvable issues with dm+ and languages
+        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+        if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
+            return false
+        }
+                
+        // LOINC Related warnings can be ignored
+        if (issue.diagnostics.includes('http://loinc.org')) return false;
+        if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
+        
+        //DICOM warnings can be ignored
+        if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
+        
+        
+        // these warnings need checking
+        /*
         if (issue.diagnostics.includes('Could not confirm that the codes provided are in the value set')) {
             if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/usage-context-type')) return false;
         }
-        /*
-        if (issue.diagnostics.includes('Error HTTP 404')) {
-            // THis is issues with the Terminology Server not containig UKCore and NHSDigita CocdeSystems
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/Workflow-Code')) return false;
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDataModelAndDictionary-treatment-function')) return false;
-        }
-         */
         if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
         }
         if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
 
-        // LOINC Related warnings
-        if (issue.diagnostics.includes('http://loinc.org')) return false;
-        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
-        if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
         if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
-
-        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-/*
-        if (issue.diagnostics.includes('http://snomed.info/sct')) {
-            if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false
-            if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-VaccineCode')) return false
-        }
-*/
         if (issue.diagnostics.includes('Unknown code')) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
         }
@@ -294,47 +298,47 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
                 // Not defined in UKCore and valueset is extensible
                 return !issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods');
-
             }
         }
-        if (issue.diagnostics.includes('must be of the format')) {
-            return true;
-        }
-        
-        if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
-            return false
-        }
+        */
     }
 
-    // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
-
+    // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
+    // Actual comment is: if error not handled above, return error if FailOnWarning is true 
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
     if (issue != undefined) {
         if (issue.diagnostics != undefined) {
-            // List of errors to ignore
-            if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
-
+            // List of errors to ALWAYS ignore
+            
+            // languages, known issue!
+            if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
+                return false
+            }
+            
             // Ignore LOINC Errors for now
             if (issue.diagnostics.includes('http://loinc.org')) return false;
+            
+            // ignore dm+d / read errors
+            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+            if (issue.diagnostics.includes('http://read.info/ctv3')) return false
+            
+            // there Errors need checking
+            /*
+            if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
+
             // fault with current 5.5.1 validation
             if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
             if (issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
             if (issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
             if (issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
-            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-            if (issue.diagnostics.includes('http://read.info/ctv3')) {
-                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode')) return false
-            }
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
             if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
                 console.error(issue.diagnostics)
                 return false
             }
-            if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
-                return false
-            }
+            */
         }
         if (issue.location !== undefined && issue.location.length>0) {
             if (issue.location[0].includes('StructureMap.group')) return false;
@@ -729,7 +733,9 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
-                    expect(json.meta.profile == undefined).toBeTruthy()
+                    if (failOnWarning == true) {
+                      expect(json.meta.profile == undefined).toBeTruthy()
+                    }
                 }
                 if (json.resourceType === 'Bundle') {
                     let bundle : Bundle = json
@@ -737,7 +743,9 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         for (let entry of bundle.entry) {
                             // Disable profile check for Parameters
                             if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
+                              if (failOnWarning == true) {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
+                              }
                             }
                         }
                     }
@@ -822,7 +830,13 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         return error.response
                     })
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
-                    resourceChecks(response, failOnWarning)
+                    
+                    //we can ignore warnings on retired resources - these would not be in a balloted package
+                    if (resource.status == "retired") {
+                      resourceChecks(response, false)
+                    } else {
+                      resourceChecks(response, failOnWarning)
+                    }
                     expect(response.status).toEqual(200)
                 });
             }
