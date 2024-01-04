@@ -12,9 +12,7 @@ on:
       ONTO_CLIENT_SECRET:
         required: true
       FAILONWARNING:
-        required: false
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
