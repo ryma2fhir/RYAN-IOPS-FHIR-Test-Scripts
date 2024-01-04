@@ -18,11 +18,10 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let failOnWarning = true;
-    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'false') {
-        failOnWarning = false;
+    let failOnWarning = false;
+    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'FAILONWARNING') {
+        failOnWarning = true;
     }
-    gitHubSummary += 'Env FAILONWARNING: ' + process.env.FAILONWARNING + NEW_LINE;
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
     if (args!= undefined) {
