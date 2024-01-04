@@ -22,6 +22,7 @@ const args = require('minimist')(process.argv.slice(2))
     if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'false') {
         failOnWarning = false;
     }
+gitHubSummary += 'Env FAILONWARNING: ' + process.env.FAILONWARNING + NEW_LINE;
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
     if (args!= undefined) {
