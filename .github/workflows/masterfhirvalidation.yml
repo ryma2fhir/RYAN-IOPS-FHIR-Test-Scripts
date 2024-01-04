@@ -42,9 +42,6 @@ jobs:
           repository: ryma2fhir/RYAN-IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
-
-      - name: check FAILONWARNING
-        run: echo ${{ secrets.FAILONWARNING }}
         
       - name: Cache Maven packages
         uses: actions/cache@v3
