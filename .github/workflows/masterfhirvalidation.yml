@@ -43,8 +43,9 @@ jobs:
           ref: main
           path: validation-service-fhir-r4
 
-      -name: check FAILONWARNING
+      - name: check FAILONWARNING
         run: echo ${{ secrets.FAILONWARNING }}
+        
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
