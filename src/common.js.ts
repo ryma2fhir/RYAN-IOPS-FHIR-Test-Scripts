@@ -278,6 +278,11 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         //DICOM warnings can be ignored
         if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
         
+        //Fragment codesystems can't be checked
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) {
+            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
+        }
+        
         
         // these warnings need checking
         /*
@@ -290,9 +295,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
 
         if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
-        if (issue.diagnostics.includes('Unknown code')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-        }
+        
         if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
             if (issue.diagnostics.includes('http://snomed.info/sct')) {
