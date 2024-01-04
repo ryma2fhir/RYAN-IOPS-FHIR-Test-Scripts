@@ -11,6 +11,10 @@ on:
         required: true
       ONTO_CLIENT_SECRET:
         required: true
+      FAILONWARNING:
+        required: false
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,13 +33,13 @@ jobs:
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Test-Scripts # orignally known as NHSDigital/IOPS-Validation
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts # orignally known as NHSDigital/IOPS-Validation
           path: validation
 
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Validation-Service
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
       
@@ -55,6 +59,7 @@ jobs:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
           ONTO_CLIENT_SECRET: ${{ secrets.ONTO_CLIENT_SECRET }}
+          FAILONWARNING: ${{ secrets.FAILONWARNING }}
       
       - name: Build FHIR Validator
         run: cd validation-service-fhir-r4 && mvn clean package
