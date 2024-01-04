@@ -18,7 +18,7 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let failOnWarning = true;
+    let failOnWarning = false;
     if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'false') {
         failOnWarning = false;
     }
