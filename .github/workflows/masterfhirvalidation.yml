@@ -57,7 +57,6 @@ jobs:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
           ONTO_CLIENT_SECRET: ${{ secrets.ONTO_CLIENT_SECRET }}
-          FAILONWARNING: ${{ secrets.FAILONWARNING }}
       
       - name: Build FHIR Validator
         run: cd validation-service-fhir-r4 && mvn clean package
@@ -69,3 +68,5 @@ jobs:
         
       - name: Run Test
         run: cd validation && npm test
+        env:
+          FAILONWARNING: ${{ secrets.FAILONWARNING }}
