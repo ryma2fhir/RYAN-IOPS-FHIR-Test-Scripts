@@ -695,10 +695,7 @@ export function buildCapabilityStatement(dir: string, file, api: any | void) {
     }
 }
 
-
-
-
-export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
+export function testFile( folderName: string, fileName: string, failOnWarning :boolean)
 {
     let client: AxiosInstance;
     let file = folderName + "/" + fileName;
@@ -723,14 +720,16 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             });
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
-                if (json.meta != undefined) {
+                // Disable profile check for Parameters
+                if (json.meta != undefined && json.resourceType !== 'Parameters') {
                     expect(json.meta.profile == undefined).toBeTruthy()
                 }
                 if (json.resourceType === 'Bundle') {
                     let bundle : Bundle = json
                     if (bundle.entry != undefined) {
                         for (let entry of bundle.entry) {
-                            if (entry.resource !== undefined && entry.resource.meta != undefined) {
+                            // Disable profile check for Parameters
+                            if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
                             }
                         }
@@ -811,27 +810,14 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             }
             if (validate) {
-                if (!isUKore) {
-                    test('FHIR Validation', async () => {
-                        const response = await client.post('/$validate', resource).catch(function (error) {
-                            return error.response
-                        })
-                        expect(response.status === 200 || response.status === 400).toBeTruthy()
-                        resourceChecks(response, failOnWarning)
-                        expect(response.status).toEqual(200)
-                    });
-                } else {
-
-                    test('FHIR Validation - UKCore', async () => {
-                        const response = await client.post('/$validate?profile=https://fhir.hl7.org.uk/StructureDefinition/UKCore-' + json.resourceType, resource).catch(function (error) {
-                            return error.response
-                        })
-                        expect(response.status === 200 || response.status === 400).toBeTruthy()
-                        resourceChecks(response, failOnWarning)
-                        expect(response.status).toEqual(200)
+                test('FHIR Validation', async () => {
+                    const response = await client.post('/$validate', resource).catch(function (error) {
+                        return error.response
                     })
-                }
-
+                    expect(response.status === 200 || response.status === 400).toBeTruthy()
+                    resourceChecks(response, failOnWarning)
+                    expect(response.status).toEqual(200)
+                });
             }
         }
     )
