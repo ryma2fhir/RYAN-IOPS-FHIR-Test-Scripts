@@ -70,3 +70,4 @@ jobs:
         run: cd validation && npm test
         env:
           FAILONWARNING: ${{ secrets.FAILONWARNING }}
+          SKIPPEDWARNINGS: 1
