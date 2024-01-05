@@ -297,6 +297,9 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
  
     // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
     // Actual comment is: if error not handled above, return error if FailOnWarning is true 
+    if (!failOnWarning) {
+        process.env.SKIPPEDWARNINGS ++
+    }
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
