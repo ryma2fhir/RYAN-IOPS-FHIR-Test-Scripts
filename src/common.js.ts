@@ -835,9 +835,9 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
                     
                     //we can ignore warnings on retired resources - these would not be in a balloted package
-                     console.info('status of ' + resource.name + ' - ' + resource.status);
+                     console.info('status of ' + json.name + ' - ' + json.status);
    
-                    if (resource.status == 'retired') {
+                    if (json.status == 'retired') {
                       resourceChecks(response, false)
                     } else {
                       resourceChecks(response, failOnWarning)
