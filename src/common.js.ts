@@ -260,9 +260,6 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
-        if (issue.diagnostics.includes('must be of the format')) {
-            return true;
-        }
         
         // these warnings can always be silently ignored 
         //  i.e. known and not resolvable issues with dm+ and languages
@@ -282,28 +279,6 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) {
             if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
         }
-        
-        
-        // these warnings need checking
-        /*
-        if (issue.diagnostics.includes('Could not confirm that the codes provided are in the value set')) {
-            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/usage-context-type')) return false;
-        }
-        if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
-        }
-        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
-
-        if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
-        
-        if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-            if (issue.diagnostics.includes('http://snomed.info/sct')) {
-                // Not defined in UKCore and valueset is extensible
-                return !issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods');
-            }
-        }
-        */
     }
 
     // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
