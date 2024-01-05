@@ -25,7 +25,7 @@
         {
           "coding": [
             {
-              "system": "https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode",
+              "system": "https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleName",
               "code": "S0030:G0100:R0620"
             }
           ]
