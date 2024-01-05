@@ -329,17 +329,17 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             
             // there Errors need checking
             /*
-            if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
+            //if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
 
             // fault with current 5.5.1 validation
-            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
-            if (issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
-            if (issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
-            if (issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
-            if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
+            //if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
+            //if (issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
+            //if (issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
+            //if (issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
+            //if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
+            /*if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
                 console.error(issue.diagnostics)
-                return false
+                return false */
             }
             */
         }
