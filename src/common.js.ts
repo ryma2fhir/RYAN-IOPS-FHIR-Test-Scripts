@@ -260,9 +260,6 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
-        if (issue.diagnostics.includes('must be of the format')) {
-            return true;
-        }
         
         // these warnings can always be silently ignored 
         //  i.e. known and not resolvable issues with dm+ and languages
