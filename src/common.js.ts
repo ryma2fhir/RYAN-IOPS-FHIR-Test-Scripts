@@ -323,12 +323,12 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             // Ignore LOINC Errors for now
             if (issue.diagnostics.includes('http://loinc.org')) return false;
             
-            // ignore dm+d / read errors
-            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+            // ignore readctv3 errors
             if (issue.diagnostics.includes('http://read.info/ctv3')) return false
             
             // there Errors need checking
             /*
+            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
             if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
 
             // fault with current 5.5.1 validation
