@@ -273,6 +273,9 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         
         //DICOM warnings can be ignored
         if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
+        
+        //Fragment codesystems can't be checked
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
     // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
