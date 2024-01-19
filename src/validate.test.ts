@@ -35,12 +35,12 @@ const args = require('minimist')(process.argv.slice(2))
         // Return the attribute value
         return strictValidation;
     } catch (error) {
-        if (error.code === 'ENOENT') {
+if (error.code === 'ENOENT') {
             // File not found
-            console.error('Error: 'options.json' not found, defaulting 'strict-validation' to true');
+            console.error('Error: File not found, defaulting to true');
         } else if (error instanceof SyntaxError) {
             // JSON parsing error (attribute not found)
-            console.error('Error: Attribute 'strict-validation' not found in the 'options.json' file, defaulting to true');
+            console.error('Error: Attribute not found in the JSON file, defaulting to true');
         } else {
             // Other errors
             console.error('Error:', error);
