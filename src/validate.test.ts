@@ -21,7 +21,7 @@ const args = require('minimist')(process.argv.slice(2))
     function readStrictValidationSync(): boolean {
     try {
         // Read the content of the JSON file
-        const data = fs.readFileSync('options.json', 'utf8');
+        const data = fs.readFileSync('../options.json', 'utf8');
 
         const options: Record<string, string> = JSON.parse(data);
 
