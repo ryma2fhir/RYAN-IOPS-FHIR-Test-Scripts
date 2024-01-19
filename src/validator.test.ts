@@ -18,7 +18,7 @@ let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
     function readStrictValidation() {
     try {
         // Read the content of the JSON file
-        const data = await fs.readFile('options.json', 'utf8');
+        const data = fs.readFileSync('options.json', 'utf8');
 
         // Parse the JSON content
         const options = JSON.parse(data);
