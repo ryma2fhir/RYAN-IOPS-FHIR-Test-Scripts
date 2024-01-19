@@ -158,10 +158,13 @@ for path in paths:
 
 '''check example filenames'''
 
-
-with open("option.json", "r") as f:
-    options = json.load(f)
-exampleFolders = options["test-folders"]
+try:
+    with open("option.json", "r") as f:
+        options = json.load(f)
+    exampleFolders = options["test-folders"]
+except:
+    exampleFolders = ["examples"]
+    
 for exampleFolder in exampleFolders:
     try:
         examplesPath = os.listdir('./'+exampleFolder)
