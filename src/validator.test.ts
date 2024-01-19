@@ -15,16 +15,23 @@ jest.setTimeout(40*1000)
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
-    function readStrictValidation() {
+    function readStrictValidationSync(): boolean {
     try {
         // Read the content of the JSON file
-        const data = fs.readFileSync('options.json', 'utf8');
+        const data = fs.readFileSync('../options.json', 'utf8');
 
-        // Parse the JSON content
-        const options = JSON.parse(data);
+        const options: Record<string, string> = JSON.parse(data);
 
         // Access the attribute value or default to true if not found
-        const strictValidation = options['strict-validation'] === undefined ? true : JSON.parse(options['strict-validation']);
+        const strictValidation: boolean = options['strict-validation'] === undefined
+            ? true
+            : options['strict-validation'].toLowerCase() === 'true';
+
+        // Validate that strictValidation is either true or false
+        if (strictValidation !== true && strictValidation !== false) {
+            console.error('Error: Invalid value for strict-validation. Defaulting to true.');
+            return true;
+        }
 
         // Print the value
         console.log('Strict Validation:', strictValidation);
@@ -45,10 +52,11 @@ let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
         // Return true as the default value
         return true;
-        }
     }
-	
-	const failOnWarning = readStrictValidation();
+}
+
+// Use the variable failOnWarning as a synchronous function
+const failOnWarning = readStrictValidationSync();
 	
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
