@@ -410,6 +410,7 @@ export function isIgnoreFile(directory : string, fileName : string) : boolean {
     let file = directory +'/'+ fileName
     if (fileName == 'fhirpkg.lock.json') return true;
     if (fileName == 'package.json') return true;
+    if (fileName == 'options.json') return true;
     if (fileExtension == 'JSON' || fileExtension == 'XML') {
         let json = undefined
         if (directory.indexOf('FHIR') > 0) return false;
