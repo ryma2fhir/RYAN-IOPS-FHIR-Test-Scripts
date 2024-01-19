@@ -58,10 +58,10 @@ const args = require('minimist')(process.argv.slice(2))
 }
 
 // Assign the result to the variable failOnWarningPromise
-const failOnWarningPromise: Promise<boolean> = readStrictValidation();
+const failOnWarning: Promise<boolean> = readStrictValidation();
 
 // Use the variable failOnWarningPromise as needed
-failOnWarningPromise.then(result => {
+failOnWarning.then(result => {
     console.log('Fail on Warning:', result);
 });
 
