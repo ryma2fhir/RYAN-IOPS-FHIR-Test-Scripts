@@ -63,6 +63,7 @@ const args = require('minimist')(process.argv.slice(2))
     });
 }
 
+const failOnWarning = readStrictValidation();
 // Use the function with a callback
 readStrictValidation(result => {
     console.log('Fail on Warning:', result);
