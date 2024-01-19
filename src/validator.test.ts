@@ -15,10 +15,40 @@ jest.setTimeout(40*1000)
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
-    let failOnWarning = true;
-    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'false') {
-        failOnWarning = false;
+    async function readStrictValidation() {
+    try {
+        // Read the content of the JSON file
+        const data = await fs.readFile('options.json', 'utf8');
+
+        // Parse the JSON content
+        const options = JSON.parse(data);
+
+        // Access the attribute value or default to true if not found
+        const strictValidation = options['strict-validation'] === undefined ? true : JSON.parse(options['strict-validation']);
+
+        // Print the value
+        console.log('Strict Validation:', strictValidation);
+
+        // Return the attribute value
+        return strictValidation;
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            // File not found
+            console.error('Error: File not found, defaulting to true');
+        } else if (error instanceof SyntaxError) {
+            // JSON parsing error (attribute not found)
+            console.error('Error: Attribute not found in the JSON file, defaulting to true');
+        } else {
+            // Other errors
+            console.error('Error:', error);
+        }
+
+        // Return true as the default value
+        return true;
+        }
     }
+	const failOnWarning = readStrictValidation();
+	
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
 describe('Test Environment', ()=> {
