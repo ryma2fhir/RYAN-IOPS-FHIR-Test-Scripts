@@ -1,7 +1,7 @@
 import {
     getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
 } from "./common.js";
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import {describe, expect, jest} from "@jest/globals";
 import axios, {AxiosInstance} from "axios";
 import * as console from "console";
@@ -18,9 +18,22 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    function readStrictValidation(): Promise<boolean> {
-    return fs.readFile('options.json', 'utf8')
-        .then(data => {
+    function readStrictValidation(callback: (result: boolean) => void): void {
+    fs.readFile('options.json', 'utf8', (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // File not found
+                console.error('Error: File not found, defaulting to true');
+            } else {
+                console.error('Error:', err);
+            }
+
+            // Default to true
+            callback(true);
+            return;
+        }
+
+        try {
             const options: Record<string, string> = JSON.parse(data);
 
             // Access the attribute value or default to true if not found
@@ -31,37 +44,27 @@ const args = require('minimist')(process.argv.slice(2))
             // Validate that strictValidation is either true or false
             if (strictValidation !== true && strictValidation !== false) {
                 console.error('Error: Invalid value for strict-validation. Defaulting to true.');
-                return true;
+                callback(true);
+                return;
             }
 
             // Print the value
             console.log('Strict Validation:', strictValidation);
 
             // Return the attribute value
-            return strictValidation;
-        })
-        .catch(error => {
-            if (error.code === 'ENOENT') {
-                // File not found
-                console.error('Error: File not found, defaulting to true');
-            } else if (error instanceof SyntaxError) {
-                // JSON parsing error (attribute not found)
-                console.error('Error: Attribute not found in the JSON file, defaulting to true');
-            } else {
-                // Other errors
-                console.error('Error:', error);
-            }
+            callback(strictValidation);
+        } catch (parseError) {
+            // JSON parsing error
+            console.error('Error:', parseError);
 
-            // Return true as the default value
-            return true;
-        });
+            // Default to true
+            callback(true);
+        }
+    });
 }
 
-// Assign the result to the variable failOnWarningPromise
-const failOnWarning: Promise<boolean> = readStrictValidation();
-
-// Use the variable failOnWarningPromise as needed
-failOnWarning.then(result => {
+// Use the function with a callback
+readStrictValidation(result => {
     console.log('Fail on Warning:', result);
 });
 
