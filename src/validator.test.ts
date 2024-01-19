@@ -15,7 +15,7 @@ jest.setTimeout(40*1000)
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
-    async function readStrictValidation() {
+    function readStrictValidation() {
     try {
         // Read the content of the JSON file
         const data = await fs.readFile('options.json', 'utf8');
@@ -47,6 +47,7 @@ let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
         return true;
         }
     }
+	
 	const failOnWarning = readStrictValidation();
 	
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
