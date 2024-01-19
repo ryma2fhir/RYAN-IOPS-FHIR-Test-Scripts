@@ -18,10 +18,10 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    async function readStrictValidation() {
+    function readStrictValidation() {
     try {
         // Read the content of the JSON file
-        const data = await fs.readFile('options.json', 'utf8');
+        const data = fs.readFileSync('options.json', 'utf8');
 
         // Parse the JSON content
         const options = JSON.parse(data);
@@ -50,6 +50,7 @@ const args = require('minimist')(process.argv.slice(2))
         return true;
         }
     }
+	
 	const failOnWarning = readStrictValidation();
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
