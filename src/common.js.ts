@@ -405,45 +405,24 @@ export function isIgnoreFolder(folderName : string) : boolean {
     return false;
 }
 
-interface Options {
-  ignoreFiles: string[];
-}
-
-export function isIgnoreFile(directory: string, fileName: string): boolean {
-  var fileExtension = fileName.split('.').pop().toUpperCase();
-  let file = directory + '/' + fileName;
-
-  // Read options from options.json
-  let options: Options = { ignoreFiles: [] };
-  try {
-    const optionsFile = fs.readFileSync('../options.json', 'utf8');
-    options = JSON.parse(optionsFile);
-  } catch (e) {
-    console.error('Error reading options.json:', (e as Error).message);
-  }
-
-  if (options.ignoreFiles.includes(fileName)) return true;
-
-  if (fileExtension == 'JSON' || fileExtension == 'XML') {
-    let json = undefined;
-
-    if (directory.indexOf('FHIR') > 0) return false;
-
-    try {
-      json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')));
-      if (json.resourceType != undefined) return false;
-      else {
-        console.info('File ignored : ' + file);
-      }
-    } catch (e) {
-      console.info(
-        'Ignoring file ' + file + ' Error message ' + (e as Error).message
-      );
-    }
-  }
-
-  return true;
-}
+export function isIgnoreFile(directory : string, fileName : string) : boolean {
+    var fileExtension = fileName.split('.').pop().toUpperCase();
+    let file = directory +'/'+ fileName
+    if (fileName == 'fhirpkg.lock.json') return true;
+    if (fileName == 'package.json') return true;
+    if (fileExtension == 'JSON' || fileExtension == 'XML') {
+        let json = undefined
+        if (directory.indexOf('FHIR') > 0) return false;
+        try {
+            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
+            if (json.resourceType != undefined) return false;
+            else {
+                console.info('File ignored : ' + file)
+            }
+        } catch (e) {
+            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+        }
+    } return true;
 
 export function isDefinition(fileNameOriginal: string): boolean {
     const validPrefixes = [
