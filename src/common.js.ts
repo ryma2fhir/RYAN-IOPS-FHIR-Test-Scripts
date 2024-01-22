@@ -416,7 +416,7 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
   // Read options from options.json
   let options: Options = { ignoreFiles: [] };
   try {
-    const optionsFile = fs.readFileSync('options.json', 'utf8');
+    const optionsFile = fs.readFileSync('../options.json', 'utf8');
     options = JSON.parse(optionsFile);
   } catch (e) {
     console.error('Error reading options.json:', (e as Error).message);
