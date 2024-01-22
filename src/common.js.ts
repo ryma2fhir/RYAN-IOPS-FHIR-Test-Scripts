@@ -406,8 +406,8 @@ export function isIgnoreFolder(folderName : string) : boolean {
 }
 
 export function isIgnoreFile(directory: string, fileName: string): boolean {
-    const fileExtension = fileName.split('.').pop().toUpperCase();
-    const file = directory + '/' + fileName;
+    var fileExtension = fileName.split('.').pop().toUpperCase();
+    let file = directory + '/' + fileName;
 
     // Read options.json file
     try {
@@ -433,11 +433,10 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
         }
 
         try {
-            const json = JSON.parse(fs.readFileSync(file, 'utf8'));
-            if (json.resourceType !== undefined) {
-                return false;
-            } else {
-                console.info('File ignored: ' + file);
+            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
+            if (json.resourceType != undefined) return false;
+            else {
+                console.info('File ignored : ' + file)
             }
         } catch (e) {
             console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message);
