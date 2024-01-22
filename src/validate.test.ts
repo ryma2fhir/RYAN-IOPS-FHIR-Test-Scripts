@@ -18,24 +18,29 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-function readOptionsFile(filePath: string): boolean {
+function readOptionsFile(filePath: string): boolean | undefined {
     try {
         const data = fs.readFileSync(filePath, 'utf8');
         const options = JSON.parse(data);
 
         if (options && typeof options['strict-validation'] === 'boolean') {
             return options['strict-validation'];
+        } else if (!options) {
+            console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
         } else {
-            return false;
+            console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
         }
     } catch (error) {
-        // If there's an exception (e.g., file not found or invalid JSON), default to false
-        return false;
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
 }
 
 const optionsFilePath = 'options.json';
 const failOnWarning = readOptionsFile(optionsFilePath);
+
+if (failOnWarning !== undefined) {
+    console.log(`failOnWarning: ${failOnWarning}`);
+}
 
 console.log(`failOnWarning: ${failOnWarning}`);
 
