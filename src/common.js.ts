@@ -411,7 +411,7 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
 
     // Read options.json file
     try {
-        const optionsData = fs.readFileSync('options.json', 'utf8');
+        const optionsData = fs.readFileSync('../options.json', 'utf8');
         const options = JSON.parse(optionsData);
 
         if (options['ignore-folders'] && Array.isArray(options['ignore-folders'])) {
