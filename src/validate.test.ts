@@ -35,7 +35,7 @@ function readOptionsFile(filePath: string): boolean | undefined {
     }
 }
 
-const optionsFilePath = 'options.json';
+const optionsFilePath = '../options.json';
 const failOnWarning = readOptionsFile(optionsFilePath);
 
 if (failOnWarning !== undefined) {
