@@ -379,7 +379,8 @@ export function testFileWarning(testDescription, file,message) {
 
 export function isIgnoreFolder(folderName: string): boolean {
     const optionsPath = '../options.json';
-
+    
+    if (folderName.startsWith('.')) return true;
     try {
         const optionsContent = fs.readFileSync(optionsPath, 'utf-8');
         const options = JSON.parse(optionsContent);
