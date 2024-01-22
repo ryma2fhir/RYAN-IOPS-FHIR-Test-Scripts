@@ -377,26 +377,26 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName : string) : boolean {
+export function isIgnoreFolder(folderName: string): boolean {
+    const optionsPath = '../options.json';
 
-    if (folderName.startsWith('.')) return true;
-    if (folderName == 'node_modules') return true;
-    if (folderName == 'Diagrams') return true;
-    if (folderName == 'Diagams') return true;
-    if (folderName == 'diagrams') return true;
-    if (folderName == 'FML') return true;
-    if (folderName == 'dist') return true;
-    if (folderName == 'documents') return true;
-    if (folderName == 'nhsdtheme') return true;
-    if (folderName == 'ukcore') return true;
-    if (folderName == 'UKCore') return true;
-    if (folderName == 'apim') return true;
-    if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
+    try {
+        const optionsContent = fs.readFileSync(optionsPath, 'utf-8');
+        const options = JSON.parse(optionsContent);
+
+        if (options['ignore-folders']) {
+            if (options['ignore-folders'].includes(folderName)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            console.log('Warning: "ignore-folders" attribute not found in options.json');
+        }
+    } catch (error) {
+        console.error('Error reading options.json:', error.message);
+    }
+
     return false;
 }
 
