@@ -18,45 +18,29 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    function readStrictValidationSync(): boolean {
+    import * as fs from 'fs';
+
+function readOptionsFile(filePath: string): boolean {
     try {
-        // Read the content of the JSON file
-        const data = fs.readFileSync('../options.json', 'utf8');
+        const data = fs.readFileSync(filePath, 'utf8');
+        const options = JSON.parse(data);
 
-        const options: Record<string, string> = JSON.parse(data);
-
-        // Access the attribute value or default to true if not found
-        const strictValidation: boolean = options['strict-validation'] === undefined
-            ? true
-            : options['strict-validation'].toLowerCase() === 'true';
-
-        // Validate that strictValidation is either true or false
-        if (strictValidation !== true && strictValidation !== false) {
-            console.error('Error: Invalid value for strict-validation. Defaulting to true.');
-            return true;
-        }
-
-        // Print the value
-        console.log('Strict Validation:', strictValidation);
-
-        // Return the attribute value
-        return strictValidation;
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            // File not found
-            console.error('Error: File not found, defaulting to true');
-        } else if (error instanceof SyntaxError) {
-            // JSON parsing error (attribute not found)
-            console.error('Error: Attribute not found in the JSON file, defaulting to true');
+        if (options && typeof options['strict-validation'] === 'boolean') {
+            return options['strict-validation'];
         } else {
-            // Other errors
-            console.error('Error:', error);
+            return false;
         }
-
-        // Return true as the default value
-        return true;
+    } catch (error) {
+        // If there's an exception (e.g., file not found or invalid JSON), default to false
+        return false;
     }
 }
+
+const optionsFilePath = 'options.json';
+const failOnWarning = readOptionsFile(optionsFilePath);
+
+console.log(`failOnWarning: ${failOnWarning}`);
+
 
 // Use the variable failOnWarning as a synchronous function
 const failOnWarning = readStrictValidationSync();
