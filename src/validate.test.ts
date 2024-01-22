@@ -18,8 +18,6 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    import * as fs from 'fs';
-
 function readOptionsFile(filePath: string): boolean {
     try {
         const data = fs.readFileSync(filePath, 'utf8');
@@ -40,10 +38,6 @@ const optionsFilePath = 'options.json';
 const failOnWarning = readOptionsFile(optionsFilePath);
 
 console.log(`failOnWarning: ${failOnWarning}`);
-
-
-// Use the variable failOnWarning as a synchronous function
-const failOnWarning = readStrictValidationSync();
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
