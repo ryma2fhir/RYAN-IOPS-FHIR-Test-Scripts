@@ -405,25 +405,46 @@ export function isIgnoreFolder(folderName : string) : boolean {
     return false;
 }
 
-export function isIgnoreFile(directory : string, fileName : string) : boolean {
-    var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
-    if (fileName == 'options.json') return true;
-    if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined
-        if (directory.indexOf('FHIR') > 0) return false;
+export function isIgnoreFile(directory: string, fileName: string): boolean {
+    const fileExtension = fileName.split('.').pop().toUpperCase();
+    const file = directory + '/' + fileName;
+
+    // Read options.json file
+    try {
+        const optionsData = fs.readFileSync('options.json', 'utf8');
+        const options = JSON.parse(optionsData);
+
+        if (options['ignore-folders'] && Array.isArray(options['ignore-folders'])) {
+            const ignoreFolders = options['ignore-folders'];
+
+            // Check if fileName matches any ignore pattern
+            if (ignoreFolders.includes(fileName) || ignoreFolders.includes(fileExtension)) {
+                return true;
+            }
+        }
+    } catch (e) {
+        console.error('Error reading options.json file:', (e as Error).message);
+    }
+
+    // Rest of the logic for checking JSON and XML files
+    if (fileExtension === 'JSON' || fileExtension === 'XML') {
+        if (directory.indexOf('FHIR') > 0) {
+            return false;
+        }
+
         try {
-            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
-            if (json.resourceType != undefined) return false;
-            else {
-                console.info('File ignored : ' + file)
+            const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (json.resourceType !== undefined) {
+                return false;
+            } else {
+                console.info('File ignored: ' + file);
             }
         } catch (e) {
-            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message);
         }
-    } return true;
+    }
+
+    return true;
 }
 
 export function isDefinition(fileNameOriginal: string): boolean {
