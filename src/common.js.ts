@@ -436,24 +436,24 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
     return true;
 }
 
-export function isDefinition(fileNameOriginal : string) : boolean {
-   // console.info(fileNameOriginal);
-    let fileName = fileNameOriginal.toUpperCase();
+export function isDefinition(fileNameOriginal: string): boolean {
+    const validPrefixes = [
+        'CapabilityStatement',
+        'ConceptMap',
+        'CodeSystem',
+        'MessageDefinition',
+        'NamingSystem',
+        'ObservationDefinition',
+        'OperationDefinition',
+        'Questionnaire',
+        'SearchParameter',
+        'StructureDefinition',
+        'ValueSet',
+        'StructureMap'
+    ];
 
-    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
-    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
-    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
-    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
-
-    return false;
+    const fileName = fileNameOriginal.toUpperCase();
+    return validPrefixes.some(prefix => fileName.startsWith(prefix.toUpperCase()));
 }
 
 export function testFileValidator(testDescription,file) {
