@@ -262,7 +262,6 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         }
         
         // these warnings can always be silently ignored 
-        //  i.e. known and not resolvable issues with dm+ and languages
         //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
             return false
@@ -276,9 +275,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
         
         //Fragment codesystems can't be checked
-        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-        }
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
     // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
@@ -298,10 +295,8 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             // Ignore LOINC Errors for now
             if (issue.diagnostics.includes('http://loinc.org')) return false;
             
-            // ignore dm+d / read errors
-            //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+            // ignore readctv3 errors
             if (issue.diagnostics.includes('http://read.info/ctv3')) return false
-            
         }
         if (issue.location !== undefined && issue.location.length>0) {
             if (issue.location[0].includes('StructureMap.group')) return false;
@@ -423,25 +418,26 @@ export function isIgnoreFile(directory : string, fileName : string) : boolean {
             console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
         }
     } return true;
+}
 
-export function isDefinition(fileNameOriginal: string): boolean {
-    const validPrefixes = [
-        'CapabilityStatement',
-        'ConceptMap',
-        'CodeSystem',
-        'MessageDefinition',
-        'NamingSystem',
-        'ObservationDefinition',
-        'OperationDefinition',
-        'Questionnaire',
-        'SearchParameter',
-        'StructureDefinition',
-        'ValueSet',
-        'StructureMap'
-    ];
+export function isDefinition(fileNameOriginal : string) : boolean {
+   // console.info(fileNameOriginal);
+    let fileName = fileNameOriginal.toUpperCase();
 
-    const fileName = fileNameOriginal.toUpperCase();
-    return validPrefixes.some(prefix => fileName.startsWith(prefix.toUpperCase()));
+    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
+    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
+    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
+    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
+    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
+    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
+    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
+    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
+    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
+
+    return false;
 }
 
 export function testFileValidator(testDescription,file) {
@@ -794,8 +790,6 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
                     
                     //we can ignore warnings on retired resources - these would not be in a balloted package
-                     console.info('status of ' + json.name + ' - ' + json.status);
-   
                     if (json.status == 'retired') {
                       resourceChecks(response, false)
                     } else {
@@ -807,3 +801,6 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
         }
     )
 }
+
+
+
