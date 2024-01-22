@@ -33,6 +33,8 @@ function readOptionsFile(filePath: string): boolean | undefined {
     } catch (error) {
         console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
+
+    return false; // Set to false in case of any error
 }
 
 const optionsFilePath = '../options.json';
