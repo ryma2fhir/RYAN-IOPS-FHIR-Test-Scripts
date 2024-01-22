@@ -405,16 +405,16 @@ export function isIgnoreFile(directory : string, fileName : string) : boolean {
     let file = directory +'/'+ fileName
 
     // Read options from options.json
-    let ignoreFiles: string[] = [];
+    let ignore-files: string[] = [];
     try {
       const optionsFile = fs.readFileSync('../options.json', 'utf8');
       const options = JSON.parse(optionsFile);
-      ignoreFiles = options.ignoreFiles || [];
+      ignore-files = options.ignore-files || [];
     } catch (e) {
       console.error('Error reading options.json:', (e as Error).message);
     }
 
-    if (ignoreFiles.includes(fileName)) return true;
+    if (ignore-files.includes(fileName)) return true;
     
     if (fileExtension == 'JSON' || fileExtension == 'XML') {
         let json = undefined
