@@ -403,8 +403,19 @@ export function isIgnoreFolder(folderName : string) : boolean {
 export function isIgnoreFile(directory : string, fileName : string) : boolean {
     var fileExtension = fileName.split('.').pop().toUpperCase();
     let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
+
+    // Read options from options.json
+    let ignoreFiles: string[] = [];
+    try {
+      const optionsFile = fs.readFileSync('../options.json', 'utf8');
+      const options = JSON.parse(optionsFile);
+      ignoreFiles = options.ignoreFiles || [];
+    } catch (e) {
+      console.error('Error reading options.json:', (e as Error).message);
+    }
+
+    if (ignoreFiles.includes(fileName)) return true;
+    
     if (fileExtension == 'JSON' || fileExtension == 'XML') {
         let json = undefined
         if (directory.indexOf('FHIR') > 0) return false;
