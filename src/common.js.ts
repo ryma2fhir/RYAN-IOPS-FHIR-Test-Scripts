@@ -709,7 +709,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
                     if (failOnWarning == true) {
-                      expect(json.meta.profile == undefined).toBeTruthy()
+            expect(json.meta.profile === undefined).toBeTruthy('meta exists in the profile');
                     }
                 }
                 if (json.resourceType === 'Bundle') {
