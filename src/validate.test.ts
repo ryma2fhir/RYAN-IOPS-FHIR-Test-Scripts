@@ -18,9 +18,11 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let isUKCore = false
-
     let failOnWarning = false;
+    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING == 'FAILONWARNING') {
+        failOnWarning = true;
+    }
+    gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
     if (args!= undefined) {
         if (args['source']!= undefined) {
@@ -38,22 +40,18 @@ const args = require('minimist')(process.argv.slice(2))
         if (resource != undefined) {
             let pkg = JSON.parse(resource)
             if (pkg.name.startsWith('fhir.r4.ukcore') || pkg.name.startsWith('UKCore')) {
-                isUKCore = true;
                 gitHubSummary += 'Detected UKCore ' + NEW_LINE;
-
             }
             if (pkg.dependencies != undefined) {
                 for (let key in pkg.dependencies) {
                     if (key.startsWith('fhir.r4.ukcore')) {
-                        failOnWarning = true;
-                        gitHubSummary += 'ukcore dependency found, enabled STRICT validation' + NEW_LINE
+                        gitHubSummary += 'ukcore dependency found' + NEW_LINE
                     }
                 }
             }
         }
     } catch (e) {
-        gitHubSummary += 'No package.json found, applying UKCore validation rule ' + NEW_LINE;
-        failOnWarning = true;
+        gitHubSummary += 'No package.json found' + NEW_LINE;
     }
 
     describe('Test Environment', ()=> {
@@ -116,7 +114,7 @@ function testFolderContent(dir : string, source: string) {
 
             } else {
                 if (!isIgnoreFile(dir,file)) {
-                    testFile( dir, file, failOnWarning, isUKCore)
+                    testFile( dir, file, failOnWarning)
                 }
             }
         })
