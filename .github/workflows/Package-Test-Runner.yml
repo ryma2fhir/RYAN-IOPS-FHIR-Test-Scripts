@@ -45,53 +45,16 @@ jobs:
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/validation-service-fhir-r4
-          ref: main2
+          repository: NHSDigital/IOPS-FHIR-Validation-Service
+          ref: main
           path: validation-service-fhir-r4
         
-      - name: Install Python 3.8
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-
-      - name: Upgrade python packaging tools
-        run: python -m pip install --upgrade pip setuptools wheel
-
-      - name: Install poetry and requests
-        run: pip install poetry requests
-
-      - name: Install dependencies
-        run: poetry install
-
-      - name: Set SPEC_VERSION env var
-        run: echo ::set-env name=SPEC_VERSION::$(poetry run python scripts/calculate_version.py)
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      - name: Install node
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
-          
       - name: Install npm
-        run: make install    
+        run: npm ci   
       
       # TODO Need to pass in ig name and version
       - name: Configure FHIR Validator
-        run: make configure-validation
+        run: npm start
         env:
           CI: true
           ONTO_CLIENT_ID: ${{ secrets.ONTO_CLIENT_ID }}
@@ -108,7 +71,7 @@ jobs:
           sleep 60
         
       - name: Run Test
-        run: make test-package
+        run: npm test -- --source=gitrepository
         env:
           CI: true
           TEST_REPO: ${{github.event.inputs.githubrepo}}
