@@ -18,6 +18,7 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
+
 function readOptionsFile(filePath: string): boolean | undefined {
     try {
         const data = fs.readFileSync(filePath, 'utf8');

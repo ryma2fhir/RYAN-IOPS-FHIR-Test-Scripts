@@ -753,6 +753,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 describe('FHIR CapabilityStatement', () => {
                     let capabilityStatement: CapabilityStatement = json
                     if (capabilityStatement != undefined
+                        && (capabilityStatement.kind !== undefined && capabilityStatement.kind !== "instance")
                         && capabilityStatement.rest != undefined
                         && capabilityStatement.rest.length > 0
                         && capabilityStatement.rest[0].resource != undefined) {
