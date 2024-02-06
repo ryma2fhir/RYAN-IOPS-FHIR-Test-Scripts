@@ -404,8 +404,12 @@ export function isIgnoreFolder(folderName : string) : boolean {
 }
 
 export function isIgnoreFile(directory: string, fileName: string): boolean {
-    var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory + '/' + fileName;
+    const fileExtension = fileName.split('.').pop()?.toUpperCase();
+    const file = `${directory}/${fileName}`;
+
+    // Hardcoded file names to be ignored
+    const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
+    if (hardcodedIgnoreFiles.includes(fileName)) return true;
 
     // Read options from options.json
     let ignoreFiles: string[] = [];
@@ -415,27 +419,31 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
         ignoreFiles = options['ignore-files'] || [];
 
         if (!options.hasOwnProperty('ignore-files')) {
-            console.log('Warning: The "ignore-files" attribute is missing in options.json');
+            console.warn('Warning: The "ignore-files" attribute is missing in options.json');
         }
     } catch (e) {
         console.error('Error reading options.json:', (e as Error).message);
     }
 
+    // Check if the file should be ignored based on the ignoreFiles list
     if (ignoreFiles.includes(fileName)) return true;
 
-    if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined;
-        if (directory.indexOf('FHIR') > 0) return false;
+    // Additional conditions for ignoring based on file extension and content
+    if (fileExtension === 'JSON' || fileExtension === 'XML') {
+        // Additional logic for handling specific file extensions or content
+        if (directory.includes('FHIR')) return false; // Example condition
         try {
-            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
-            if (json.resourceType != undefined) return false;
+            const json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')));
+            if (json.resourceType !== undefined) return false;
             else {
-                console.info('File ignored : ' + file)
+                console.info(`File ignored: ${file}`);
             }
         } catch (e) {
-            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
     }
+
+    // If none of the conditions for ignoring the file are met, return false
     return true;
 }
 
