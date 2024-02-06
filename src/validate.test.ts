@@ -18,7 +18,7 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-
+    
     function readStrictValidation() {
     try {
         // Read the content of the JSON file
