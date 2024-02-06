@@ -25,7 +25,7 @@ const args = require('minimist')(process.argv.slice(2))
 
         if (options && typeof options['strict-validation'] === 'boolean') {
             return options['strict-validation'];
-        } else if (!options) {
+        } else if (!options['strict-validation']) {
             console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
         } else {
             console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
