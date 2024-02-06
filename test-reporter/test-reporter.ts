@@ -26,6 +26,9 @@ export default class TestReporter implements CustomReporter {
             gitHubSummary += ' Name '+ gitrepoName+' '+NEW_LINE+NEW_LINE;
         }
         gitHubSummary += ' :x: Failed '+ results.numFailedTests+' '+NEW_LINE;
+        if (process.env.SKIPPEDWARNINGS > 0) {
+            gitHubSummary += ' :x: Warnings '+ process.env.SKIPPEDWARNINGS +' '+NEW_LINE;
+        }
         gitHubSummary += ' :white_check_mark: Passed '+ results.numPassedTests+' '+NEW_LINE;
         gitHubSummary += NEW_LINE+NEW_LINE;
         for(let parent of results.testResults) {

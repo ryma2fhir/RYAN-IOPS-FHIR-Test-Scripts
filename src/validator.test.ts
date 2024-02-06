@@ -15,10 +15,49 @@ jest.setTimeout(40*1000)
 
 let gitHubSummary = '### :fire_engine: Logs '+NEW_LINE;
 
-    let failOnWarning = true;
-    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING.toLowerCase() == 'false') {
-        failOnWarning = false;
+    function readStrictValidationSync(): boolean {
+    try {
+        // Read the content of the JSON file
+        const data = fs.readFileSync('../options.json', 'utf8');
+
+        const options: Record<string, string> = JSON.parse(data);
+
+        // Access the attribute value or default to true if not found
+        const strictValidation: boolean = options['strict-validation'] === undefined
+            ? true
+            : options['strict-validation'].toLowerCase() === 'true';
+
+        // Validate that strictValidation is either true or false
+        if (strictValidation !== true && strictValidation !== false) {
+            console.error('Error: Invalid value for strict-validation. Defaulting to true.');
+            return true;
+        }
+
+        // Print the value
+        console.log('Strict Validation:', strictValidation);
+
+        // Return the attribute value
+        return strictValidation;
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            // File not found
+            console.error('Error: File not found, defaulting to true');
+        } else if (error instanceof SyntaxError) {
+            // JSON parsing error (attribute not found)
+            console.error('Error: Attribute not found in the JSON file, defaulting to true');
+        } else {
+            // Other errors
+            console.error('Error:', error);
+        }
+
+        // Return true as the default value
+        return true;
     }
+}
+
+// Use the variable failOnWarning as a synchronous function
+const failOnWarning = readStrictValidationSync();
+
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
 describe('Test Environment', ()=> {

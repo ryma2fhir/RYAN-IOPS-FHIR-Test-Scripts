@@ -1,7 +1,7 @@
 import {
     getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
 } from "./common.js";
-import * as fs from "fs";
+import * as fs from 'fs';
 import {describe, expect, jest} from "@jest/globals";
 import axios, {AxiosInstance} from "axios";
 import * as console from "console";
@@ -18,10 +18,35 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let failOnWarning = false;
-    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING == 'FAILONWARNING') {
-        failOnWarning = true;
+
+function readOptionsFile(filePath: string): boolean | undefined {
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        const options = JSON.parse(data);
+
+        if (options && typeof options['strict-validation'] === 'boolean') {
+            return options['strict-validation'];
+        } else if (!options) {
+            console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
+        } else {
+            console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+        }
+    } catch (error) {
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
+
+    return false; // Set to false in case of any error
+}
+
+const optionsFilePath = '../options.json';
+const failOnWarning = readOptionsFile(optionsFilePath);
+
+if (failOnWarning !== undefined) {
+    console.log(`failOnWarning: ${failOnWarning}`);
+}
+
+console.log(`failOnWarning: ${failOnWarning}`);
+
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
     if (args!= undefined) {

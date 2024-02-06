@@ -297,9 +297,6 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             
             // ignore readctv3 errors
             if (issue.diagnostics.includes('http://read.info/ctv3')) return false
-            
-            // ignore ods codesystems
-            if (issue.diagnostics.includes('https://digital.nhs.uk/services/organisation-data-service/CodeSystem/ODS')) return false
         }
         if (issue.location !== undefined && issue.location.length>0) {
             if (issue.location[0].includes('StructureMap.group')) return false;
@@ -380,36 +377,52 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName : string) : boolean {
-
+export function isIgnoreFolder(folderName: string): boolean {
+    const optionsPath = '../options.json';
+    
     if (folderName.startsWith('.')) return true;
-    if (folderName == 'node_modules') return true;
-    if (folderName == 'Diagrams') return true;
-    if (folderName == 'Diagams') return true;
-    if (folderName == 'diagrams') return true;
-    if (folderName == 'FML') return true;
-    if (folderName == 'dist') return true;
-    if (folderName == 'documents') return true;
-    if (folderName == 'nhsdtheme') return true;
-    if (folderName == 'ukcore') return true;
-    if (folderName == 'UKCore') return true;
-    if (folderName == 'apim') return true;
-    if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
+    try {
+        const optionsContent = fs.readFileSync(optionsPath, 'utf-8');
+        const options = JSON.parse(optionsContent);
+
+        if (options['ignore-folders']) {
+            if (options['ignore-folders'].includes(folderName)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            console.log('Warning: "ignore-folders" attribute not found in options.json');
+        }
+    } catch (error) {
+        console.error('Error reading options.json:', error.message);
+    }
+
     return false;
 }
 
-export function isIgnoreFile(directory : string, fileName : string) : boolean {
+export function isIgnoreFile(directory: string, fileName: string): boolean {
     var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
+    let file = directory + '/' + fileName;
+
+    // Read options from options.json
+    let ignoreFiles: string[] = [];
+    try {
+        const optionsFile = fs.readFileSync('../options.json', 'utf8');
+        const options = JSON.parse(optionsFile);
+        ignoreFiles = options['ignore-files'] || [];
+
+        if (!options.hasOwnProperty('ignore-files')) {
+            console.log('Warning: The "ignore-files" attribute is missing in options.json');
+        }
+    } catch (e) {
+        console.error('Error reading options.json:', (e as Error).message);
+    }
+
+    if (ignoreFiles.includes(fileName)) return true;
+
     if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined
+        let json = undefined;
         if (directory.indexOf('FHIR') > 0) return false;
         try {
             json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
@@ -420,27 +433,28 @@ export function isIgnoreFile(directory : string, fileName : string) : boolean {
         } catch (e) {
             console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
         }
-    } return true;
+    }
+    return true;
 }
 
-export function isDefinition(fileNameOriginal : string) : boolean {
-   // console.info(fileNameOriginal);
-    let fileName = fileNameOriginal.toUpperCase();
+export function isDefinition(fileNameOriginal: string): boolean {
+    const validPrefixes = [
+        'CapabilityStatement',
+        'ConceptMap',
+        'CodeSystem',
+        'MessageDefinition',
+        'NamingSystem',
+        'ObservationDefinition',
+        'OperationDefinition',
+        'Questionnaire',
+        'SearchParameter',
+        'StructureDefinition',
+        'ValueSet',
+        'StructureMap'
+    ];
 
-    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
-    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
-    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
-    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
-
-    return false;
+    const fileName = fileNameOriginal.toUpperCase();
+    return validPrefixes.some(prefix => fileName.startsWith(prefix.toUpperCase()));
 }
 
 export function testFileValidator(testDescription,file) {
@@ -695,7 +709,10 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
                     if (failOnWarning == true) {
-                      expect(json.meta.profile == undefined).toBeTruthy()
+                      expect(json.meta.profile == undefined).toBeTruthy();
+                        // If expect fails, add a message "meta exists in the profile"
+                        if (entry.resource.meta.profile !== undefined) {
+                            console.error("meta should not exist in the example");
                     }
                 }
                 if (json.resourceType === 'Bundle') {
