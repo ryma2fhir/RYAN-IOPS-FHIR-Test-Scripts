@@ -39,11 +39,6 @@ const args = require('minimist')(process.argv.slice(2))
 
 const optionsFilePath = '../options.json';
 const failOnWarning = setStrictValidation(optionsFilePath);
-
-if (failOnWarning !== undefined) {
-    console.log(`failOnWarning: ${failOnWarning}`);
-}
-
 console.log(`failOnWarning: ${failOnWarning}`);
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
