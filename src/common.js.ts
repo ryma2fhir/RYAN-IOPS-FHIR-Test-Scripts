@@ -403,13 +403,28 @@ export function isIgnoreFolder(folderName : string) : boolean {
     return false;
 }
 
-export function isIgnoreFile(directory : string, fileName : string) : boolean {
+export function isIgnoreFile(directory: string, fileName: string): boolean {
     var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
+    let file = directory + '/' + fileName;
+
+    // Read options from options.json
+    let ignoreFiles: string[] = [];
+    try {
+        const optionsFile = fs.readFileSync('../options.json', 'utf8');
+        const options = JSON.parse(optionsFile);
+        ignoreFiles = options['ignore-files'] || [];
+
+        if (!options.hasOwnProperty('ignore-files')) {
+            console.log('Warning: The "ignore-files" attribute is missing in options.json');
+        }
+    } catch (e) {
+        console.error('Error reading options.json:', (e as Error).message);
+    }
+
+    if (ignoreFiles.includes(fileName)) return true;
+
     if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined
+        let json = undefined;
         if (directory.indexOf('FHIR') > 0) return false;
         try {
             json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
@@ -420,7 +435,8 @@ export function isIgnoreFile(directory : string, fileName : string) : boolean {
         } catch (e) {
             console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
         }
-    } return true;
+    }
+    return true;
 }
 
 export function isDefinition(fileNameOriginal: string): boolean {
