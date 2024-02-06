@@ -403,27 +403,29 @@ export function isIgnoreFolder(folderName : string) : boolean {
     return false;
 }
 
+// Read ignore-files from options.json
+let ignoreFiles: string[] = [];
+try {
+    const optionsFile = fs.readFileSync('../options.json', 'utf8');
+    const options = JSON.parse(optionsFile);
+    ignoreFiles = options['ignore-files'] || [];
+
+    if (!options.hasOwnProperty('ignore-files')) {
+        console.warn('Warning: The "ignore-files" attribute is missing in options.json');
+    }
+} catch (e) {
+    console.error('Error reading options.json:', (e as Error).message);
+}
+
 export function isIgnoreFile(directory: string, fileName: string): boolean {
     const fileExtension = fileName.split('.').pop()?.toUpperCase();
     const file = `${directory}/${fileName}`;
 
     // Hardcoded file names to be ignored
     const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
+
+    // Check if the file is in the hardcoded list of files to ignore
     if (hardcodedIgnoreFiles.includes(fileName)) return true;
-
-    // Read options from options.json
-    let ignoreFiles: string[] = [];
-    try {
-        const optionsFile = fs.readFileSync('../options.json', 'utf8');
-        const options = JSON.parse(optionsFile);
-        ignoreFiles = options['ignore-files'] || [];
-
-        if (!options.hasOwnProperty('ignore-files')) {
-            console.warn('Warning: The "ignore-files" attribute is missing in options.json');
-        }
-    } catch (e) {
-        console.error('Error reading options.json:', (e as Error).message);
-    }
 
     // Check if the file should be ignored based on the ignoreFiles list
     if (ignoreFiles.includes(fileName)) return true;
