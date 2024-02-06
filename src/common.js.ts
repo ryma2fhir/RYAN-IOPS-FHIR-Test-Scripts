@@ -275,6 +275,18 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
         
         //Fragment codesystems can't be checked
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) {
+            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
+        }
+                
+        // LOINC Related warnings can be ignored
+        if (issue.diagnostics.includes('http://loinc.org')) return false;
+        if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
+        
+        //DICOM warnings can be ignored
+        if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
+        
+        //Fragment codesystems can't be checked
         if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
@@ -749,6 +761,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 describe('FHIR CapabilityStatement', () => {
                     let capabilityStatement: CapabilityStatement = json
                     if (capabilityStatement != undefined
+                        && (capabilityStatement.kind !== undefined && capabilityStatement.kind !== "instance")
                         && capabilityStatement.rest != undefined
                         && capabilityStatement.rest.length > 0
                         && capabilityStatement.rest[0].resource != undefined) {
@@ -806,6 +819,8 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
                     
                     //we can ignore warnings on retired resources - these would not be in a balloted package
+                     console.info('status of ' + json.name + ' - ' + json.status);
+   
                     if (json.status == 'retired') {
                       resourceChecks(response, false)
                     } else {

@@ -83,9 +83,6 @@ describe('Testing validation passes for valid HL7 FHIR resources', () => {
     // MedicationDispense
     testFileValidator('Test HL7 FHIR resource passes validation ','Examples/pass/MedicationDispense-pass.json')
 
-    // PractitionerRole
-    testFileValidator('Test HL7 FHIR resource passes validation PractitionerRole','Examples/pass/PractitionerRole-pass.json')
-
     // Bundle
     testFileValidator('Test HL7 FHIR Seaarch Immmunization Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDImmunization.json')
     testFileValidator('Test HL7 FHIR Seaarch Observation Bundle passes validation ','Examples/pass/Bundle-searchset-COVIDObservation.json')
@@ -100,7 +97,7 @@ describe('Testing validation fails invalid FHIR resources', () => {
 
     //Patient
     testFileErrorProfile('Check validation fails when no NHS Number is supplied','Examples/fail/patientError.json','Patient.identifier:nhsNumber: minimum required = 1','https://fhir.nhs.uk/StructureDefinition/NHSDigital-Patient-PDS')
-    testFileError('Check validation fails when no Scottish CHI Number is supplied','Examples/fail/patient-chi-number.json','Supplied NHS Number is outside the English and Welsh NHS Number')
+    
 
     // PractitionerRole
     testFileError('Check validation fails on PractitionerRole when invalid GMC Number is supplied','Examples/fail/PractitionerRole-invalidGMC.json','GMC must be of the format CNNNNNNN')

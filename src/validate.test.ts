@@ -143,13 +143,3 @@ function testFolderContent(dir : string, source: string) {
             }
         })
     }
-
-
-
-
-
-
-
-
-
-
