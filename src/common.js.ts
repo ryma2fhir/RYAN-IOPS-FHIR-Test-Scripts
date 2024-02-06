@@ -262,9 +262,6 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         }
         
         // these warnings can always be silently ignored 
-
-        //  i.e. known and not resolvable issues with dm+ and languages
-
         //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
             return false
@@ -278,9 +275,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
         
         //Fragment codesystems can't be checked
-        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-        }
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
     // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
@@ -305,7 +300,6 @@ function raiseError(issue: OperationOutcomeIssue) : boolean {
             
             // ignore ods codesystems
             if (issue.diagnostics.includes('https://digital.nhs.uk/services/organisation-data-service/CodeSystem/ODS')) return false
->>>>>>> 8804804c19d706b4ce7b660e3e04457071d3c4d9
         }
         if (issue.location !== undefined && issue.location.length>0) {
             if (issue.location[0].includes('StructureMap.group')) return false;
@@ -800,5 +794,17 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                     expect(response.status === 200 || response.status === 400).toBeTruthy()
                     
                     //we can ignore warnings on retired resources - these would not be in a balloted package
-                     console.info('status of ' + json.name + ' - ' + json.status);
-   
+                    if (json.status == 'retired') {
+                      resourceChecks(response, false)
+                    } else {
+                      resourceChecks(response, failOnWarning)
+                    }
+                    expect(response.status).toEqual(200)
+                });
+            }
+        }
+    )
+}
+
+
+
