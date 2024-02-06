@@ -11,6 +11,7 @@ If any of these are deemed incorrect the workflow will fail. '''
 import xml.etree.ElementTree as ET
 import os
 import sys
+import json
 
 '''Prints the repo name'''
 path = os.getcwd()
@@ -156,39 +157,48 @@ for path in paths:
                 print(x)
 
 '''check example filenames'''
+
 try:
-    examplesPath = os.listdir('./examples')
-    print('examples')
+    with open("option.json", "r") as f:
+        options = json.load(f)
+    exampleFolders = options["test-folders"]
 except:
-    examplesPath = []
-for example in examplesPath:
-    if not example.endswith("-Example.xml"):
-        error=True
-        print("\t",example," - The filename is does not have the suffix '-Example'")
-    '''open file to find element values'''
-    tree = ET.parse("./examples/"+example)
-    root = tree.getroot()
-    if not root.findall('.//{*}id')[0].get('value') == example.replace('.xml',''):
-        error=True
-        print("\t",example,"The 'id' element is incorrect")
-
-'''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
-try:
-    tree= ET.parse('./CapabilityStatement/CapabilityStatement-'+mainVar['project']+'.xml')
-    root = tree.getroot()
-except: 
-    root = None
-
-if root != None:        
-    print('CapabilityStatement')
-    capabilityStatement = []
-    for tag in root.findall('.//{*}type'):
-        capabilityStatement.append(tag.attrib["value"])
-
-    for p in currentProfiles:
-        if p not in capabilityStatement:
+    exampleFolders = ["examples"]
+    
+for exampleFolder in exampleFolders:
+    try:
+        examplesPath = os.listdir('./'+exampleFolder)
+        print('examples')
+    except:
+        examplesPath = []
+    for example in examplesPath:
+        if not example.endswith("-Example.xml"):
             error=True
-            print("\t",p,"is missing from the CapabilityStatement")
+            print("\t",example," - The filename is does not have the suffix '-Example'")
+        '''open file to find element values'''
+        tree = ET.parse("./examples/"+example)
+        root = tree.getroot()
+        if not root.findall('.//{*}id')[0].get('value') == example.replace('.xml',''):
+            error=True
+            print("\t",example,"The 'id' element is incorrect")
+
+    '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
+    try:
+        tree= ET.parse('./CapabilityStatement/CapabilityStatement-'+mainVar['project']+'.xml')
+        root = tree.getroot()
+    except: 
+        root = None
+
+    if root != None:        
+        print('CapabilityStatement')
+        capabilityStatement = []
+        for tag in root.findall('.//{*}type'):
+            capabilityStatement.append(tag.attrib["value"])
+
+        for p in currentProfiles:
+            if p not in capabilityStatement:
+                error=True
+                print("\t",p,"is missing from the CapabilityStatement")
 
 ''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
