@@ -14,6 +14,7 @@ on:
       FAILONWARNING:
         required: false
 
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -31,16 +32,16 @@ jobs:
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Test-Scripts # orignally known as NHSDigital/IOPS-Validation
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts # orignally known as NHSDigital/IOPS-Validation
           path: validation
 
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Validation-Service
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Validation-Service
           ref: main
           path: validation-service-fhir-r4
-      
+        
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
@@ -70,3 +71,5 @@ jobs:
         run: cd validation && npm test
         env:
           FAILONWARNING: ${{ secrets.FAILONWARNING }}
+          SKIPPEDWARNINGS: 1
+
