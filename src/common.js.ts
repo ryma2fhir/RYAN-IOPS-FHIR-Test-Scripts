@@ -414,7 +414,7 @@ try {
         console.warn('Warning: The "ignore-files" attribute is missing in options.json');
     }
 } catch (e) {
-    console.error('Error reading options.json:', (e as Error).message);
+    ignoreFiles = [];  // Ignore the error silently if options.json is not found
 }
 
 export function isIgnoreFile(directory: string, fileName: string): boolean {
