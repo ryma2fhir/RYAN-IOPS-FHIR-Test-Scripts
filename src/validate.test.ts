@@ -18,40 +18,33 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    function readStrictValidation() {
+    function setStrictValidation(filePath: string): boolean | undefined {
     try {
-        // Read the content of the JSON file
-        const data = fs.readFileSync('options.json', 'utf8');
-
-        // Parse the JSON content
+        const data = fs.readFileSync(filePath, 'utf8');
         const options = JSON.parse(data);
 
-        // Access the attribute value or default to true if not found
-        const strictValidation = options['strict-validation'] === undefined ? true : JSON.parse(options['strict-validation']);
-
-        // Print the value
-        console.log('Strict Validation:', strictValidation);
-
-        // Return the attribute value
-        return strictValidation;
-    } catch (error) {
-        if (error.code === 'ENOENT') {
-            // File not found
-            console.error('Error: File not found, defaulting to true');
-        } else if (error instanceof SyntaxError) {
-            // JSON parsing error (attribute not found)
-            console.error('Error: Attribute not found in the JSON file, defaulting to true');
+        if (options && typeof options['strict-validation'] === 'boolean') {
+            return options['strict-validation'];
+        } else if (!options) {
+            console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
         } else {
-            // Other errors
-            console.error('Error:', error);
+            console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
         }
-
-        // Return true as the default value
-        return true;
-        }
+    } catch (error) {
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
-	
-	const failOnWarning = readStrictValidation();
+
+    return false; // Set to false in case of any error
+}
+
+const optionsFilePath = '../options.json';
+const failOnWarning = setStrictValidation(optionsFilePath);
+
+if (failOnWarning !== undefined) {
+    console.log(`failOnWarning: ${failOnWarning}`);
+}
+
+console.log(`failOnWarning: ${failOnWarning}`);
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
