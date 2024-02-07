@@ -380,42 +380,31 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName : string) : boolean {
-
-    if (folderName.startsWith('.')) return true;
-    if (folderName == 'node_modules') return true;
-    if (folderName == 'Diagrams') return true;
-    if (folderName == 'Diagams') return true;
-    if (folderName == 'diagrams') return true;
-    if (folderName == 'FML') return true;
-    if (folderName == 'dist') return true;
-    if (folderName == 'documents') return true;
-    if (folderName == 'nhsdtheme') return true;
-    if (folderName == 'ukcore') return true;
-    if (folderName == 'UKCore') return true;
-    if (folderName == 'apim') return true;
-    if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
-    return false;
-}
-
 // Read ignore-files from options.json
 let ignoreFiles: string[] = [];
 try {
     const optionsFile = fs.readFileSync('../options.json', 'utf8');
     const options = JSON.parse(optionsFile);
     ignoreFiles = options['ignore-files'] || [];
+	ignoreFolders = options['ignore-folders'] || [];
 
     if (!options.hasOwnProperty('ignore-files')) {
         console.warn('Warning: The "ignore-files" attribute is missing in options.json');
     }
-} catch (e) {
-    ignoreFiles = [];  // Ignore the error silently if options.json is not found
+	if (!options.hasOwnProperty('ignore-folders')) {
+        console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+    }
+} catch (e) { // Ignore the error silently if options.json is not found
+    ignoreFiles = []; 
+    ignoreFolders = [];	
 }
+
+export function isIgnoreFolder(folderName: string): boolean {
+   if (ignoreFiles.includes(fileName)) {
+                return true;
+            } else {
+                return false;
+            }
 
 export function isIgnoreFile(directory: string, fileName: string): boolean {
     const fileExtension = fileName.split('.').pop()?.toUpperCase();
@@ -445,7 +434,6 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
         }
     }
 
-    // If none of the conditions for ignoring the file are met, return false
     return true;
 }
 
