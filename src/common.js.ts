@@ -396,7 +396,7 @@ try {
 
 export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName.startsWith('.')) return true;
-	if (ignoreFiles.includes(folderName)) return true;
+	if (ignoreFolders.includes(folderName)) return true;
     return false;
 }
 
