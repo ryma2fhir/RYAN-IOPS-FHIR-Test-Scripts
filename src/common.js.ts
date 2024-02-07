@@ -380,8 +380,26 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName: string): boolean {
+// Read ignore-folders from options.json
+let ignoreFolders: string[] = [];
+try {
+    const optionsFile = fs.readFileSync('../options.json', 'utf8');
+    const options = JSON.parse(optionsFile);
+    ignoreFolders = options['ignore-folders'] || [];
+
+    if (!options.hasOwnProperty('ignore-folders')) {
+        console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+    }
+} catch (e) {
+    ignoreFolders = [];  // Ignore the error silently if options.json is not found
+}
+
+export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName.startsWith('.')) return true;
+	// This project needs to avoid these folders
+    if (folderName == 'validation') return true;
+    if (folderName == 'validation-service-fhir-r4') return true;
+	
 	if (folderName == 'node_modules') return true;
     if (folderName == 'Diagrams') return true;
     if (folderName == 'Diagams') return true;
@@ -394,30 +412,8 @@ export function isIgnoreFolder(folderName: string): boolean {
     if (folderName == 'UKCore') return true;
     if (folderName == 'apim') return true;
     if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
-	const optionsPath = '../options.json';
-     
-    try {
-        const optionsContent = fs.readFileSync(optionsPath, 'utf-8');
-        const options = JSON.parse(optionsContent);
-
-        if (options['ignore-folders']) {
-            if (options['ignore-folders'].includes(folderName)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            console.log('Warning: "ignore-folders" attribute not found in options.json');
-        }
-    } catch (error) {
-        console.error('Error reading options.json:', error.message);
-    }
-
+	
+	if (ignoreFolders.includes(folderName)) return true;
     return false;
 }
 
