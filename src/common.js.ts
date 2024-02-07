@@ -380,28 +380,27 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-let ignoreFolders: string[] = [];
-const optionsFilePath = '../options.json';
-
-try {
-    if (fs.existsSync(optionsFilePath)) {
-        const optionsFile = fs.readFileSync(optionsFilePath, 'utf8');
-        const options = JSON.parse(optionsFile);
-        ignoreFolders = options['ignore-folders'] || [];
-
-        if (!options.hasOwnProperty('ignore-folders')) {
-            console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
-        }
-    } else {
-        console.warn('Warning: options.json does not exist.');
-    }
-} catch (e) {
-    console.error('Error reading options:', e);
-}
-
-export function isIgnoreFolder(folderName : string) : boolean {
+export function isIgnoreFolder(folderName: string): boolean {
     if (folderName.startsWith('.')) return true;
-    if (ignoreFolders.includes(folderName)) return true;
+	const optionsPath = '../options.json';
+     
+    try {
+        const optionsContent = fs.readFileSync(optionsPath, 'utf-8');
+        const options = JSON.parse(optionsContent);
+
+        if (options['ignore-folders']) {
+            if (options['ignore-folders'].includes(folderName)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            console.log('Warning: "ignore-folders" attribute not found in options.json');
+        }
+    } catch (error) {
+        console.error('Error reading options.json:', error.message);
+    }
+
     return false;
 }
 
