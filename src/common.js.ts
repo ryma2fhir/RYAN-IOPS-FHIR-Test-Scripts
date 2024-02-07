@@ -385,7 +385,7 @@ let ignoreFolders: string[] = [];
 try {
     const optionsFile = fs.readFileSync('../options.json', 'utf8');
     const options = JSON.parse(optionsFile);
-    ignoreFiles = options['ignore-folders'] || [];
+    ignoreFolders = options['ignore-folders'] || [];
 
     if (!options.hasOwnProperty('ignore-folders')) {
         console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
