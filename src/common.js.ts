@@ -380,54 +380,74 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-let ignoreFiles: string[] = [];
-let ignoreFolders: string[] = [];
+export function isIgnoreFolder(folderName : string) : boolean {
 
+    if (folderName.startsWith('.')) return true;
+    if (folderName == 'node_modules') return true;
+    if (folderName == 'Diagrams') return true;
+    if (folderName == 'Diagams') return true;
+    if (folderName == 'diagrams') return true;
+    if (folderName == 'FML') return true;
+    if (folderName == 'dist') return true;
+    if (folderName == 'documents') return true;
+    if (folderName == 'nhsdtheme') return true;
+    if (folderName == 'ukcore') return true;
+    if (folderName == 'UKCore') return true;
+    if (folderName == 'apim') return true;
+    if (folderName == 'Supporting Information') return true;
+    // This project needs to avoid these folders
+    if (folderName == 'validation') return true;
+    if (folderName == 'validation-service-fhir-r4') return true;
+    // For BARS
+    if (folderName == 'guides') return true;
+    return false;
+}
+
+// Read ignore-files from options.json
+let ignoreFiles: string[] = [];
 try {
     const optionsFile = fs.readFileSync('../options.json', 'utf8');
     const options = JSON.parse(optionsFile);
     ignoreFiles = options['ignore-files'] || [];
-    ignoreFolders = options['ignore-folders'] || [];
 
     if (!options.hasOwnProperty('ignore-files')) {
         console.warn('Warning: The "ignore-files" attribute is missing in options.json');
     }
-    if (!options.hasOwnProperty('ignore-folders')) {
-        console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
-    }
 } catch (e) {
-    console.error('Error reading options:', e);
-}
-
-export function isIgnoreFolder(folderName: string): boolean {
-    return ignoreFolders.includes(folderName);
+    ignoreFiles = [];  // Ignore the error silently if options.json is not found
 }
 
 export function isIgnoreFile(directory: string, fileName: string): boolean {
-    try {
-        const fileExtension = fileName.split('.').pop()?.toUpperCase();
-        const file = `${directory}/${fileName}`;
+    const fileExtension = fileName.split('.').pop()?.toUpperCase();
+    const file = `${directory}/${fileName}`;
 
-        const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
+    // Hardcoded file names to be ignored
+    const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
 
-        if (hardcodedIgnoreFiles.includes(fileName)) return true;
-        if (ignoreFiles.includes(file)) return true;
+    // Check if the file is in the hardcoded list of files to ignore
+    if (hardcodedIgnoreFiles.includes(fileName)) return true;
 
-        if (fileExtension === 'JSON' || fileExtension === 'XML') {
-            if (directory.includes('FHIR')) return false;
-            const fileContent = fs.readFileSync(file, 'utf8');
-            const json = JSON.parse(fileContent);
+    // Check if the file should be ignored based on the ignoreFiles list
+    if (ignoreFiles.includes(fileName)) return true;
+
+    // Additional conditions for ignoring based on file extension and content
+    if (fileExtension === 'JSON' || fileExtension === 'XML') {
+        // Additional logic for handling specific file extensions or content
+        if (directory.includes('FHIR')) return false; // Example condition
+        try {
+            const json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')));
             if (json.resourceType !== undefined) return false;
             else {
                 console.info(`File ignored: ${file}`);
             }
+        } catch (e) {
+            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
-    } catch (e) {
-        console.error(`Ignoring file ${fileName}. Error message: ${(e as Error).message}`);
     }
+
+    // If none of the conditions for ignoring the file are met, return false
     return true;
 }
-
 
 export function isDefinition(fileNameOriginal: string): boolean {
     const validPrefixes = [
