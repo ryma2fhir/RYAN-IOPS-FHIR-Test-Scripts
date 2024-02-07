@@ -395,25 +395,8 @@ try {
 }
 
 export function isIgnoreFolder(folderName : string) : boolean {
-
     if (folderName.startsWith('.')) return true;
-    if (folderName == 'node_modules') return true;
-    if (folderName == 'Diagrams') return true;
-    if (folderName == 'Diagams') return true;
-    if (folderName == 'diagrams') return true;
-    if (folderName == 'FML') return true;
-    if (folderName == 'dist') return true;
-    if (folderName == 'documents') return true;
-    if (folderName == 'nhsdtheme') return true;
-    if (folderName == 'ukcore') return true;
-    if (folderName == 'UKCore') return true;
-    if (folderName == 'apim') return true;
-    if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
+	if (ignoreFiles.includes(folderName)) return true;
     return false;
 }
 
