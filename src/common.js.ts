@@ -380,7 +380,7 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-// Read ignore-folders from options.json
+// Read attributes from options.json
 let ignoreFolders: string[] = [];
 let ignoreFiles: string[] = [];
 try {
@@ -399,16 +399,35 @@ try {
     console.warn('Warning: The "options.json" file cannot be found');
 }
 
+// Ignores folders from options.json within the FHIR repo and hardcoded foldernames within this function
 export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName.startsWith('.')) return true;
 	// This project needs to avoid these folders
     if (folderName == 'validation') return true;
     if (folderName == 'validation-service-fhir-r4') return true;
 	
+    // For BARS
+    if (folderName == 'guides') return true;
+	
+	// legacy items, need to check if being used in other repos    
+    if (folderName == 'node_modules') return true;
+    if (folderName == 'Diagrams') return true;
+    if (folderName == 'Diagams') return true;
+    if (folderName == 'diagrams') return true;
+    if (folderName == 'FML') return true;
+    if (folderName == 'dist') return true;
+    if (folderName == 'documents') return true;
+    if (folderName == 'nhsdtheme') return true;
+    if (folderName == 'ukcore') return true;
+    if (folderName == 'UKCore') return true;
+    if (folderName == 'apim') return true;
+    if (folderName == 'Supporting Information') return true;
+
 	if (ignoreFolders.includes(folderName)) return true;
     return false;
 }
 
+// Ignores files from options.json within the FHIR repo and hardcoded filenames within this function
 export function isIgnoreFile(directory: string, fileName: string): boolean {
     const fileExtension = fileName.split('.').pop()?.toUpperCase();
     const file = `${directory}/${fileName}`;
