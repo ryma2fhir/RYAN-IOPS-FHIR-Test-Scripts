@@ -380,6 +380,20 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
+// Read ignore-folders from options.json
+let ignoreFolders: string[] = [];
+try {
+    const optionsFile = fs.readFileSync('../options.json', 'utf8');
+    const options = JSON.parse(optionsFile);
+    ignoreFiles = options['ignore-folders'] || [];
+
+    if (!options.hasOwnProperty('ignore-folders')) {
+        console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+    }
+} catch (e) {
+    ignoreFolders = [];  // Ignore the error silently if options.json is not found
+}
+
 export function isIgnoreFolder(folderName : string) : boolean {
 
     if (folderName.startsWith('.')) return true;
