@@ -62,6 +62,22 @@ Examples of use within a workflow can be found:
 - https://github.com/NHSDigital/NHSDigital-FHIR-ImplementationGuide/blob/master/.github/workflows/FHIRValidation.yml
 - https://github.com/NHSDigital/NHSDigital-FHIR-Medicines-ImplementationGuide/blob/master/.github/workflows/integration.yml
 
+## Options
+It is possible to set the following options within your FHIR repository:
+strict validation - *Boolean*: set to true for all warnings to be promoted to errors, false to allow validation to pass with warnings present.
+igonore folders - *list*: a list of all folders to ignore that do not contain FHIR resources. All folders starting with . will be automatically ignored.
+igonore files - *list*: a list of all json or xml files to be ignored. 'fhirpkg.lock.json', 'package.json', 'options.json' will be automatically ignored.
+
+The file created will need to be named `options.json` and contain the following:
+```json
+{
+    "strict-validation": false,
+    "ignore-folders": [],
+    "ignore-files": []
+}
+```
+
+
 
 # Simplifier IG Content Checker
 This action checks a Simplifier implementation guide for spelling, http errors and invalid links. More information can be found within the [IGPageContentValidator](https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/tree/main/IGPageContentValidator) folder.
