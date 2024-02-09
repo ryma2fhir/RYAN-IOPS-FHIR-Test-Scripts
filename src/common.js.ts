@@ -403,12 +403,16 @@ function setOptions(filePath: string): Options {
                 strictValidation = options['strict-validation'];
             } else if ('strict-validation' in options) {
                 console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "strict-validation" not found in options.json');
             }
 
             if (typeof options['hide-metaprofile-check'] === 'boolean') {
                 hideProfileCheck = options['hide-metaprofile-check'];
             } else if ('hide-metaprofile-check' in options) {
                 console.log(`Error: Attribute "hide-metaprofile-check" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "hide-metaprofile-check" not found in options.json');
             }
 
             ignoreFolders = options['ignore-folders'] || [];
