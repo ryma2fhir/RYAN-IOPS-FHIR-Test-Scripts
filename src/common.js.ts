@@ -390,7 +390,7 @@ interface Options {
 
 function setOptions(filePath: string): Options {
     let strictValidation: boolean = false;
-    let hideProfileCheck: boolean = false;
+    let hideProfileCheck: boolean = true;
     let ignoreFolders: string[] = [];
     let ignoreFiles: string[] = [];
 
@@ -770,7 +770,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
-                    if (failOnWarning == true) {
+                    if (failOnWarning == true && hideProfileCheck == true) {
                       expect(json.meta.profile == undefined).toBeTruthy()
                     }
                 }
@@ -780,7 +780,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         for (let entry of bundle.entry) {
                             // Disable profile check for Parameters
                             if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
-                              if (failOnWarning == true) {
+                              if (failOnWarning == true && hideProfileCheck == true) {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
                               }
                             }
