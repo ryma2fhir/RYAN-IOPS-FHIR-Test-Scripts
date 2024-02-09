@@ -381,23 +381,56 @@ export function testFileWarning(testDescription, file,message) {
 }
 
 // Read attributes from options.json
-let ignoreFolders: string[] = [];
-let ignoreFiles: string[] = [];
-try {
-    const optionsFile = fs.readFileSync('../options.json', 'utf8');
-    const options = JSON.parse(optionsFile);
-    ignoreFolders = options['ignore-folders'] || [];
-	ignoreFiles = options['ignore-files'] || [];
+import * as fs from 'fs';
 
-    if (!options.hasOwnProperty('ignore-folders')) {
-        console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+function setOptions(filePath: string): boolean {
+    let strictValidation: boolean = false;
+    let hideProfileCheck: boolean = false;
+    let ignoreFolders: string[] = [];
+    let ignoreFiles: string[] = [];
+
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        const options = JSON.parse(data);
+
+        if (options) {
+            if (typeof options['strict-validation'] === 'boolean') {
+                strictValidation = options['strict-validation'];
+            } else if ('strict-validation' in options) {
+                console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            }
+
+            if (typeof options['hide-metaprofile-check'] === 'boolean') {
+                hideProfileCheck = options['hide-metaprofile-check'];
+            } else if ('hide-metaprofile-check' in options) {
+                console.log(`Error: Attribute "hide-metaprofile-check" is not a boolean in ${filePath}.`);
+            }
+
+            ignoreFolders = options['ignore-folders'] || [];
+            ignoreFiles = options['ignore-files'] || [];
+
+            if (!options.hasOwnProperty('ignore-folders')) {
+                console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+            }
+            if (!options.hasOwnProperty('ignore-files')) {
+                console.warn('Warning: The "ignore-files" attribute is missing in options.json');
+            }
+        } else {
+            console.log(`Error: Options file ${filePath} is empty or not valid JSON.`);
+        }
+    } catch (error) {
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
-	if (!options.hasOwnProperty('ignore-files')) {
-        console.warn('Warning: The "ignore-files" attribute is missing in options.json');
-	}
-} catch (e) {
-    console.warn('Warning: The "options.json" file cannot be found');
+
+    return { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles };
 }
+
+const { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+console.log('Strict Validation:', strictValidation);
+console.log('Hide Profile Check:', hideProfileCheck);
+console.log('Ignore Folders:', ignoreFolders);
+console.log('Ignore Files:', ignoreFiles);
+
 
 // Ignores folders from options.json within the FHIR repo and hardcoded foldernames within this function
 export function isIgnoreFolder(folderName : string) : boolean {
