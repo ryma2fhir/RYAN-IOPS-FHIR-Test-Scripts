@@ -18,28 +18,43 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    function setStrictValidation(filePath: string): boolean | undefined {
+function setOptions(filePath: string): { strictValidation: boolean, hideProfileCheck: boolean } {
     try {
         const data = fs.readFileSync(filePath, 'utf8');
         const options = JSON.parse(data);
 
-        if (options && typeof options['strict-validation'] === 'boolean') {
-            return options['strict-validation'];
-        } else if (!('strict-validation' in options)) {
-            console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
+        let strictValidation: boolean = false;
+        let hideProfileCheck: boolean = false;
+
+        if (options) {
+            if (typeof options['strict-validation'] === 'boolean') {
+                strictValidation = options['strict-validation'];
+            } else if ('strict-validation' in options) {
+                console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            }
+
+            if (typeof options['hide-metaprofile-check'] === 'boolean') {
+                hideProfileCheck = options['hide-metaprofile-check'];
+            } else if ('hide-metaprofile-check' in options) {
+                console.log(`Error: Attribute "hide-metaprofile-check" is not a boolean in ${filePath}.`);
+            }
         } else {
-            console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            console.log(`Error: Options file ${filePath} is empty or not valid JSON.`);
         }
+
+        return { strictValidation, hideProfileCheck };
     } catch (error) {
         console.log(`Error: File ${filePath} not found or invalid JSON.`);
+        return { strictValidation: false, hideProfileCheck: false }; // Set defaults to false in case of any error
     }
-
-    return false; // Set to false in case of any error
 }
 
 const optionsFilePath = '../options.json';
-const failOnWarning = setStrictValidation(optionsFilePath);
-console.log(`failOnWarning: ${failOnWarning}`);
+const { strictValidation, hideProfileCheck } = setOptions(optionsFilePath);
+console.log('Strict Validation:', strictValidation);
+console.log('Hide Profile Check:', hideProfileCheck);
+
+
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
