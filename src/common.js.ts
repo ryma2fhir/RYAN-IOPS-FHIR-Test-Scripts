@@ -383,14 +383,14 @@ export function testFileWarning(testDescription, file,message) {
 // Read attributes from options.json
 interface Options {
     strictValidation: boolean;
-    hideProfileCheck: boolean;
+    ErrorIfMetaProfilePresent: boolean;
     ignoreFolders: string[];
     ignoreFiles: string[];
 }
 
 function setOptions(filePath: string): Options {
     let strictValidation: boolean = false;
-    let hideProfileCheck: boolean = true;
+    let ErrorIfMetaProfilePresent: boolean = true;
     let ignoreFolders: string[] = [];
     let ignoreFiles: string[] = [];
 
@@ -407,12 +407,12 @@ function setOptions(filePath: string): Options {
             console.warn('Warning: Attribute "strict-validation" not found in options.json');
             }
 
-            if (typeof options['hide-metaprofile-check'] === 'boolean') {
-                hideProfileCheck = options['hide-metaprofile-check'];
-            } else if ('hide-metaprofile-check' in options) {
-                console.log(`Error: Attribute "hide-metaprofile-check" is not a boolean in ${filePath}.`);
+            if (typeof options['error-if-metaProfile-present'] === 'boolean') {
+                ErrorIfMetaProfilePresent = options['error-if-metaProfile-present'];
+            } else if ('error-if-metaProfile-present' in options) {
+                console.log(`Error: Attribute "error-if-metaProfile-present" is not a boolean in ${filePath}.`);
             } else {
-            console.warn('Warning: Attribute "hide-metaprofile-check" not found in options.json');
+            console.warn('Warning: Attribute "error-if-metaProfile-present" not found in options.json');
             }
 
             ignoreFolders = options['ignore-folders'] || [];
@@ -431,13 +431,13 @@ function setOptions(filePath: string): Options {
         console.log(`Error: File ${filePath} not found or invalid JSON.`);
     }
 
-    return { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles };
+    return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
 }
 
 const optionsFilePath = '../options.json';
-const { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+const { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
 console.log('Strict Validation:', strictValidation);
-console.log('Hide Profile Check:', hideProfileCheck);
+console.log('Hide Profile Check:', ErrorIfMetaProfilePresent);
 console.log('Ignore Folders:', ignoreFolders);
 console.log('Ignore Files:', ignoreFiles);
 
@@ -774,7 +774,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
-                    if (failOnWarning == true && hideProfileCheck == true) {
+                    if (ErrorIfMetaProfilePresent == true) {
                       expect(json.meta.profile == undefined).toBeTruthy()
                     }
                 }
@@ -784,7 +784,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         for (let entry of bundle.entry) {
                             // Disable profile check for Parameters
                             if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
-                              if (failOnWarning == true && hideProfileCheck == true) {
+                              if (ErrorIfMetaProfilePresent == true) {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
                               }
                             }
