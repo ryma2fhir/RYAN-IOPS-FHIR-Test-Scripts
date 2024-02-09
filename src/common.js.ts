@@ -381,9 +381,14 @@ export function testFileWarning(testDescription, file,message) {
 }
 
 // Read attributes from options.json
-import * as fs from 'fs';
+interface Options {
+    strictValidation: boolean;
+    hideProfileCheck: boolean;
+    ignoreFolders: string[];
+    ignoreFiles: string[];
+}
 
-function setOptions(filePath: string): boolean {
+function setOptions(filePath: string): Options {
     let strictValidation: boolean = false;
     let hideProfileCheck: boolean = false;
     let ignoreFolders: string[] = [];
