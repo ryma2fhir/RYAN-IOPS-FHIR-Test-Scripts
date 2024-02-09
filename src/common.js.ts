@@ -425,6 +425,7 @@ function setOptions(filePath: string): boolean {
     return { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles };
 }
 
+const optionsFilePath = '../options.json';
 const { strictValidation, hideProfileCheck, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
 console.log('Strict Validation:', strictValidation);
 console.log('Hide Profile Check:', hideProfileCheck);
