@@ -442,11 +442,10 @@ export function getStrictValidation() {
 }
 
 const optionsFilePath = '../options.json';
-const { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
-// console.log('Strict Validation:', strictValidation);
-// console.log('Hide Profile Check:', ErrorIfMetaProfilePresent);
-// console.log('Ignore Folders:', ignoreFolders);
-// console.log('Ignore Files:', ignoreFiles);
+const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+console.log('Hide Profile Check:', ErrorIfMetaProfilePresent);
+console.log('Ignore Folders:', ignoreFolders);
+console.log('Ignore Files:', ignoreFiles);
 
 
 // Ignores folders from options.json within the FHIR repo and hardcoded foldernames within this function
