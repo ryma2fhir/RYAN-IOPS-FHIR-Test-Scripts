@@ -500,7 +500,7 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
                 console.info(`File ignored: ${file}`);
             }
         } catch (e) {
-            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
+            console.warn(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
     }
 
