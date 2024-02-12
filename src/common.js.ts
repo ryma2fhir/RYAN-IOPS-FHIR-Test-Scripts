@@ -388,7 +388,7 @@ interface Options {
     ignoreFiles: string[];
 }
 
-function setOptions(filePath: string): Options {
+export function setOptions(filePath: string): Options {
     let strictValidation: boolean = false;
     let ErrorIfMetaProfilePresent: boolean = true;
     let ignoreFolders: string[] = [];
@@ -432,6 +432,13 @@ function setOptions(filePath: string): Options {
     }
 
     return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
+}
+
+// Function to retrieve only strictValidation
+export function getStrictValidation() {
+    const optionsFilePath = '../options.json';
+    const { strictValidation } = setOptions(optionsFilePath);
+    return strictValidation;
 }
 
 const optionsFilePath = '../options.json';
