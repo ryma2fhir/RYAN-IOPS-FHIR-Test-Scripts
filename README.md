@@ -64,10 +64,10 @@ Examples of use within a workflow can be found:
 
 ## Options
 It is possible to set the following options within your FHIR repository:  
-**strict-validation** - *Boolean*: set to true for all warnings to be promoted to errors, false to allow validation to pass with warnings present.  
-**igonore-folders** - *list*: a list of all folders to ignore that do not contain FHIR resources. All folders starting with `.` will be automatically ignored.  
-**igonore-files** - *list*: a list of all json or xml files to be ignored. `fhirpkg.lock.json`, `package.json`, `options.json` will be automatically ignored.  
-**error-if-metaProfile-present** - *Boolean*: [IG best practice](https://build.fhir.org/ig/FHIR/ig-guidance/best-practice.html#examples) states *"Avoid declaring meta.profile in your examples unless there’s an expectation..."*. Setting this attribute to true will cause the validator to error if meta.profile is found within an example.
+**strict-validation** - *Boolean (default:false)*: set to true for all warnings to be promoted to errors, false to allow validation to pass with warnings present.  
+**igonore-folders** - *list (default:[])*: a list of all folders to ignore that do not contain FHIR resources. All folders starting with `.` will be automatically ignored.  
+**igonore-files** - *list (default:[])*: a list of all json or xml files to be ignored. `fhirpkg.lock.json`, `package.json`, `options.json` will be automatically ignored.  
+**error-if-metaProfile-present** - *Boolean (default:true)*: [IG best practice](https://build.fhir.org/ig/FHIR/ig-guidance/best-practice.html#examples) states *"Avoid declaring meta.profile in your examples unless there’s an expectation..."*. Setting this attribute to true will cause the validator to error if meta.profile is found within an example.
 The file created will need to be named `options.json` and contain the following:
 ```json
 {
