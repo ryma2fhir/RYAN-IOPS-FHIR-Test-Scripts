@@ -434,6 +434,18 @@ export function setOptions(filePath: string): Options {
     return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
 }
 
+const memoizedSetOptions = (() => {
+    const cache = new Map<string, ReturnType<typeof setOptions>>();
+
+    return (optionsFilePath: string) => {
+        if (!cache.has(optionsFilePath)) {
+            cache.set(optionsFilePath, setOptions(optionsFilePath));
+        }
+        return cache.get(optionsFilePath)!;
+    };
+})();
+
+
 // Function to retrieve only strictValidation
 export function getStrictValidation() {
     const optionsFilePath = '../options.json';
@@ -442,7 +454,7 @@ export function getStrictValidation() {
 }
 
 const optionsFilePath = '../options.json';
-const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = memoizedSetOptions(optionsFilePath);
 console.log('Hide Profile Check:', ErrorIfMetaProfilePresent);
 console.log('Ignore Folders:', ignoreFolders);
 console.log('Ignore Files:', ignoreFiles);
