@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
+    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile, getStrictValidation
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -18,27 +18,7 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    function setStrictValidation(filePath: string): boolean | undefined {
-    try {
-        const data = fs.readFileSync(filePath, 'utf8');
-        const options = JSON.parse(data);
-
-        if (options && typeof options['strict-validation'] === 'boolean') {
-            return options['strict-validation'];
-        } else if (!('strict-validation' in options)) {
-            console.log(`Error: Attribute "strict-validation" not found in ${filePath}.`);
-        } else {
-            console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
-        }
-    } catch (error) {
-        console.log(`Error: File ${filePath} not found or invalid JSON.`);
-    }
-
-    return false; // Set to false in case of any error
-}
-
-const optionsFilePath = '../options.json';
-const failOnWarning = setStrictValidation(optionsFilePath);
+const failOnWarning = getStrictValidation();
 console.log(`failOnWarning: ${failOnWarning}`);
 
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
