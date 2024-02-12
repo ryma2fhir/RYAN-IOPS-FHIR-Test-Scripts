@@ -18,6 +18,11 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
+<<<<<<< HEAD
+=======
+import { getStrictValidation } from './yourOriginalFile';
+
+>>>>>>> 0281488d26ec8c0bf18bc7de827fdec87a71b991
 const failOnWarning = getStrictValidation();
 console.log(`failOnWarning: ${failOnWarning}`);
 
