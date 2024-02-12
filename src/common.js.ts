@@ -261,7 +261,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
             return true;
         }
         
-        // these warnings can always be silently ignored 
+        // THESE WARNINGS SHOULD ALWAYS BE SILENTLY IGNORED
         //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
             return false
@@ -278,8 +278,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
-    // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
-    // Actual comment is: if error not handled above, return error if FailOnWarning is true 
+    // if error not handled above, return error if FailOnWarning is true 
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
@@ -434,19 +433,7 @@ export function setOptions(filePath: string): Options {
     return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
 }
 
-const memoizedSetOptions = (() => {
-    const cache = new Map<string, ReturnType<typeof setOptions>>();
-
-    return (optionsFilePath: string) => {
-        if (!cache.has(optionsFilePath)) {
-            cache.set(optionsFilePath, setOptions(optionsFilePath));
-        }
-        return cache.get(optionsFilePath)!;
-    };
-})();
-
-
-// Function to retrieve only strictValidation
+// used for failOnWarning
 export function getStrictValidation() {
     const optionsFilePath = '../options.json';
     const { strictValidation } = setOptions(optionsFilePath);
@@ -454,8 +441,8 @@ export function getStrictValidation() {
 }
 
 const optionsFilePath = '../options.json';
-const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = memoizedSetOptions(optionsFilePath);
-console.log('Hide Profile Check:', ErrorIfMetaProfilePresent);
+const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+console.log('Error if Meta.Profile element is present:', ErrorIfMetaProfilePresent);
 console.log('Ignore Folders:', ignoreFolders);
 console.log('Ignore Files:', ignoreFiles);
 
