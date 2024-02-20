@@ -261,7 +261,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
             return true;
         }
         
-        // these warnings can always be silently ignored 
+        // THESE WARNINGS SHOULD ALWAYS BE SILENTLY IGNORED
         //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
         if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
             return false
@@ -278,8 +278,7 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
-    // COMMENT WAS: TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
-    // Actual comment is: if error not handled above, return error if FailOnWarning is true 
+    // if error not handled above, return error if FailOnWarning is true 
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
@@ -380,9 +379,85 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName : string) : boolean {
+// Read attributes from options.json
+interface Options {
+    strictValidation: boolean;
+    ErrorIfMetaProfilePresent: boolean;
+    ignoreFolders: string[];
+    ignoreFiles: string[];
+}
 
+export function setOptions(filePath: string): Options {
+    let strictValidation: boolean = false;
+    let ErrorIfMetaProfilePresent: boolean = true;
+    let ignoreFolders: string[] = [];
+    let ignoreFiles: string[] = [];
+
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        const options = JSON.parse(data);
+
+        if (options) {
+            if (typeof options['strict-validation'] === 'boolean') {
+                strictValidation = options['strict-validation'];
+            } else if ('strict-validation' in options) {
+                console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "strict-validation" not found in options.json');
+            }
+
+            if (typeof options['error-if-metaProfile-present'] === 'boolean') {
+                ErrorIfMetaProfilePresent = options['error-if-metaProfile-present'];
+            } else if ('error-if-metaProfile-present' in options) {
+                console.log(`Error: Attribute "error-if-metaProfile-present" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "error-if-metaProfile-present" not found in options.json');
+            }
+
+            ignoreFolders = options['ignore-folders'] || [];
+            ignoreFiles = options['ignore-files'] || [];
+
+            if (!options.hasOwnProperty('ignore-folders')) {
+                console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+            }
+            if (!options.hasOwnProperty('ignore-files')) {
+                console.warn('Warning: The "ignore-files" attribute is missing in options.json');
+            }
+        } else {
+            console.log(`Error: Options file ${filePath} is empty or not valid JSON.`);
+        }
+    } catch (error) {
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
+    }
+
+    return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
+}
+
+// used for failOnWarning
+export function getStrictValidation() {
+    const optionsFilePath = '../options.json';
+    const { strictValidation } = setOptions(optionsFilePath);
+    return strictValidation;
+}
+
+const optionsFilePath = '../options.json';
+const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+console.log('Error if Meta.Profile element is present:', ErrorIfMetaProfilePresent);
+console.log('Ignore Folders:', ignoreFolders);
+console.log('Ignore Files:', ignoreFiles);
+
+
+// Ignores folders from options.json within the FHIR repo and hardcoded foldernames within this function
+export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName.startsWith('.')) return true;
+	// This project needs to avoid these folders
+    if (folderName == 'validation') return true;
+    if (folderName == 'validation-service-fhir-r4') return true;
+	
+    // For BARS
+    if (folderName == 'guides') return true;
+	
+	// legacy items, need to check if being used in other repos    
     if (folderName == 'node_modules') return true;
     if (folderName == 'Diagrams') return true;
     if (folderName == 'Diagams') return true;
@@ -395,52 +470,62 @@ export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName == 'UKCore') return true;
     if (folderName == 'apim') return true;
     if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
+
+	if (ignoreFolders.includes(folderName)) return true;
     return false;
 }
 
-export function isIgnoreFile(directory : string, fileName : string) : boolean {
-    var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
-    if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined
-        if (directory.indexOf('FHIR') > 0) return false;
+// Ignores files from options.json within the FHIR repo and hardcoded filenames within this function
+export function isIgnoreFile(directory: string, fileName: string): boolean {
+    const fileExtension = fileName.split('.').pop()?.toUpperCase();
+    const file = `${directory}/${fileName}`;
+
+    // Hardcoded file names to be ignored
+    const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
+
+    // Check if the file is in the hardcoded list of files to ignore
+    if (hardcodedIgnoreFiles.includes(fileName)) return true;
+
+    // Check if the file should be ignored based on the ignoreFiles list
+    if (ignoreFiles.includes(fileName)) return true;
+
+    // Additional conditions for ignoring based on file extension and content
+    if (fileExtension === 'JSON' || fileExtension === 'XML') {
+        // Additional logic for handling specific file extensions or content
+        if (directory.includes('FHIR')) return false; // Example condition
         try {
-            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
-            if (json.resourceType != undefined) return false;
+            const json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')));
+            if (json.resourceType !== undefined) return false;
             else {
-                console.info('File ignored : ' + file)
+                console.info(`File ignored: ${file}`);
             }
         } catch (e) {
-            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
-    } return true;
+    }
+
+    // If none of the conditions for ignoring the file are met, return false
+    return true;
 }
 
-export function isDefinition(fileNameOriginal : string) : boolean {
-   // console.info(fileNameOriginal);
-    let fileName = fileNameOriginal.toUpperCase();
+export function isDefinition(fileNameOriginal: string): boolean {
+    const validPrefixes = [
+        'CapabilityStatement',
+        'ConceptMap',
+        'CodeSystem',
+        'MessageDefinition',
+        'NamingSystem',
+        'ObservationDefinition',
+        'OperationDefinition',
+        'Questionnaire',
+        'SearchParameter',
+        'StructureDefinition',
+        'ValueSet',
+        'StructureMap'
+    ];
 
-    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
-    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
-    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
-    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
-
-    return false;
+    const fileName = fileNameOriginal.toUpperCase();
+    return validPrefixes.some(prefix => fileName.startsWith(prefix.toUpperCase()));
 }
 
 export function testFileValidator(testDescription,file) {
@@ -694,7 +779,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
                 // Disable profile check for Parameters
                 if (json.meta != undefined && json.resourceType !== 'Parameters') {
-                    if (failOnWarning == true) {
+                    if (ErrorIfMetaProfilePresent == true) {
                       expect(json.meta.profile == undefined).toBeTruthy()
                     }
                 }
@@ -704,7 +789,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                         for (let entry of bundle.entry) {
                             // Disable profile check for Parameters
                             if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
-                              if (failOnWarning == true) {
+                              if (ErrorIfMetaProfilePresent == true) {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
                               }
                             }

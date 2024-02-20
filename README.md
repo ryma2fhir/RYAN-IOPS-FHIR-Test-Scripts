@@ -62,6 +62,23 @@ Examples of use within a workflow can be found:
 - https://github.com/NHSDigital/NHSDigital-FHIR-ImplementationGuide/blob/master/.github/workflows/FHIRValidation.yml
 - https://github.com/NHSDigital/NHSDigital-FHIR-Medicines-ImplementationGuide/blob/master/.github/workflows/integration.yml
 
+## Options
+It is possible to set the following options within your FHIR repository:  
+**strict-validation** - *Boolean (default:false)*: set to true for all warnings to be promoted to errors, false to allow validation to pass with warnings present.  
+**igonore-folders** - *list (default:[])*: a list of all folders to ignore that do not contain FHIR resources. All folders starting with `.` will be automatically ignored.  
+**igonore-files** - *list (default:[])*: a list of all json or xml files to be ignored. `fhirpkg.lock.json`, `package.json`, `options.json` will be automatically ignored.  
+**error-if-metaProfile-present** - *Boolean (default:true)*: [IG best practice](https://build.fhir.org/ig/FHIR/ig-guidance/best-practice.html#examples) states *"Avoid declaring meta.profile in your examples unless there’s an expectation..."*. Setting this attribute to true will cause the validator to error if meta.profile is found within an example.
+The file created will need to be named `options.json` and contain the following:
+```json
+{
+    "strict-validation": false,
+    "ignore-folders": [],
+    "ignore-files": [],
+	"error-if-metaProfile-present": true
+}
+```
+
+
 
 # Simplifier IG Content Checker
 This action checks a Simplifier implementation guide for spelling, http errors and invalid links. More information can be found within the [IGPageContentValidator](https://github.com/NHSDigital/IOPS-FHIR-Test-Scripts/tree/main/IGPageContentValidator) folder.

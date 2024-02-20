@@ -1,5 +1,5 @@
 import {
-    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile
+    getFhirClientJSON, isIgnoreFile, isIgnoreFolder, NEW_LINE, testFile, getStrictValidation
 } from "./common.js";
 import * as fs from "fs";
 import {describe, expect, jest} from "@jest/globals";
@@ -18,10 +18,9 @@ const args = require('minimist')(process.argv.slice(2))
     let source = '../'
     let examples: string
 
-    let failOnWarning = false;
-    if (process.env.FAILONWARNING != undefined && process.env.FAILONWARNING == 'FAILONWARNING') {
-        failOnWarning = true;
-    }
+const failOnWarning = getStrictValidation();
+console.log(`failOnWarning: ${failOnWarning}`);
+
     gitHubSummary += 'Strict validation: ' + failOnWarning + NEW_LINE;
 
     if (args!= undefined) {
@@ -119,13 +118,3 @@ function testFolderContent(dir : string, source: string) {
             }
         })
     }
-
-
-
-
-
-
-
-
-
-
