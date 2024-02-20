@@ -78,6 +78,7 @@ The file created will need to be named `options.json` and contain the following:
 }
 ```
 
+**Important**: The `options.json` will need to be excluded within the Simplifier project. See [Simplifier GitHub Integration](https://docs.simplifier.net/projects/Simplifier/data_governance_and_quality_control/simplifierGithub.html#github-include-exclude) for more details.
 
 
 # Simplifier IG Content Checker
