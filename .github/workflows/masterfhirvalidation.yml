@@ -28,6 +28,11 @@ jobs:
         with:
           submodules: true
       
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      
       - name: Check out IOPS-Validation
         uses: actions/checkout@master
         with:
