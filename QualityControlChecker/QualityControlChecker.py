@@ -196,3 +196,11 @@ if error == True:
     sys.exit(2)
 else:
     print("\n\nCheck Complete!")
+
+''' TODO
+
+Move main variables for UK Core / NHSE into separate file
+Move checks into own definitions
+Set Ensure checks are one on python lists, not on XML
+Create variables if file is JSON
+Ensure go through each file and send to XML or JSON defintion as needed.
