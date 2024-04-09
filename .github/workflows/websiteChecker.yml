@@ -63,4 +63,4 @@ jobs:
         run: INPUT_STORE=${{ github.event.inputs.websiteurl }} python ./IGPageContentValidator/relToAbsLinks.py
             
       - name: Execute Spell Check
-        run: cat OutputLinks.txt | while read p; do wget -nv -O - $p | aspell list -H  --camel-case --lang en_GB --add-html-skip=nocheck -p ./IGPageContentValidator/.aspell.en.pws |sort| uniq -c; echo -e '\n'; done;
+        run: cat OutputLinks.txt | while read p; do wget -nv -O - $p | aspell list -H  --ignore 2 --camel-case --lang en_GB --add-html-skip=nocheck -p ./IGPageContentValidator/.aspell.en.pws |sort| uniq -c; echo -e '\n'; done;
