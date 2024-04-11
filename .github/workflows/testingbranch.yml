@@ -17,68 +17,39 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Check out validation-service-fhir-r4
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/validation-service-fhir-r4
-          ref: main2
+          repository: NHSDigital/IOPS-FHIR-Validation-Service
+          ref: main
           path: validation-service-fhir-r4
         
-      - name: Install Python 3.8
-        uses: actions/setup-python@v4
+      - name: Cache Maven packages
+        uses: actions/cache@v4
         with:
-          python-version: 3.8
-
-      - name: Upgrade python packaging tools
-        run: python -m pip install --upgrade pip setuptools wheel
-
-      - name: Install poetry and requests
-        run: pip install poetry requests
-
-      - name: Install dependencies
-        run: poetry install
-
-      - name: Set SPEC_VERSION env var
-        run: echo ::set-env name=SPEC_VERSION::$(poetry run python scripts/calculate_version.py)
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-
-      - name: Install node
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-cache-npm-packages-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
           
       - name: Install npm
         run: npm ci
-        
-      - name: Update FHIR Validator install
-        run: make -C validation-service-fhir-r4 install
-        
+          
       - name: Update FHIR Validator build
-        run: make -C validation-service-fhir-r4 build
+        run: cd validation-service-fhir-r4; mvn clean package
 
       - name: Run FHIR Validator
         run: 
           nohup java -jar validation-service-fhir-r4/target/fhir-validator.jar --terminology.url=https://ontology.nhs.uk/production1/fhir --terminology.authorization.tokenUrl=https://ontology.nhs.uk/authorisation/auth/realms/nhs-digital-terminology/protocol/openid-connect/token --terminology.authorization.clientId=${{ secrets.ONTO_CLIENT_ID }} --terminology.authorization.clientSecret=${{ secrets.ONTO_CLIENT_SECRET }} &
-          sleep 120
+          sleep 60
         
       - name: Run Test
         run: npm run integration-test

@@ -252,82 +252,53 @@ function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
 }
 function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
+    
+        //THESE WARNINGS SHOULD ALWAYS ERROR
         if (issue.diagnostics.includes('incorrect type for element')) {
             return true;
         }
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
-        if (issue.diagnostics.includes('Could not confirm that the codes provided are in the value set')) {
-            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/usage-context-type')) return false;
+        
+        // THESE WARNINGS SHOULD ALWAYS BE SILENTLY IGNORED
+        //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+        if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
+            return false
         }
-        /*
-        if (issue.diagnostics.includes('Error HTTP 404')) {
-            // THis is issues with the Terminology Server not containig UKCore and NHSDigita CocdeSystems
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/Workflow-Code')) return false;
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDataModelAndDictionary-treatment-function')) return false;
-        }
-         */
-        if (issue.diagnostics.includes("None of the codings provided are in the value set 'IdentifierType'")) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/organisation-role')) return false;
-        }
-        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
-
-        // LOINC Related warnings
+                
+        // LOINC Related warnings can be ignored
         if (issue.diagnostics.includes('http://loinc.org')) return false;
-        if (issue.diagnostics.includes('The markdown contains content that appears to be an embedded HTML tag starting at')) return false;
         if (issue.diagnostics.includes('LOINC is not indexed!')) return false;
-        if (issue.diagnostics.includes('Error HTTP 403 Forbidden validating CodeableConcept')) return false;
-
-        if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-/*
-        if (issue.diagnostics.includes('http://snomed.info/sct')) {
-            if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode')) return false
-            if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-VaccineCode')) return false
-        }
-*/
-        if (issue.diagnostics.includes('Unknown code')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-        }
-        if (issue.diagnostics.includes('None of the codings provided are in the value set')) {
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false
-            if (issue.diagnostics.includes('http://snomed.info/sct')) {
-                // Not defined in UKCore and valueset is extensible
-                return !issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/observation-methods');
-
-            }
-        }
-        if (issue.diagnostics.includes('must be of the format')) {
-            return true;
-        }
+        
+        //DICOM warnings can be ignored
+        if (issue.diagnostics.includes('ValueSet http://dicom.nema.org/')) return false;
+        
+        //Fragment codesystems can't be checked
+        if (issue.diagnostics.includes('Unknown code in fragment CodeSystem')) return false;
     }
 
-    // TODO this needs to be turned to true 1/8/2022 Warnings not acceptable on NHS Digital resources
-
+    // if error not handled above, return error if FailOnWarning is true 
     return failOnWarning;
 }
 function raiseError(issue: OperationOutcomeIssue) : boolean {
     if (issue != undefined) {
         if (issue.diagnostics != undefined) {
-            // List of errors to ignore
-            if (issue.diagnostics.includes('could not be resolved, so has not been checked')) return false;
-
-            // Ignore LOINC Errors for now
-            if (issue.diagnostics.includes('http://loinc.org')) return false;
-            // fault with current 5.5.1 validation
-            if (issue.diagnostics.includes('http://hl7.org/fhir/ValueSet/units-of-time')) return false;
-            if (issue.diagnostics.includes('NHSNumberVerificationStatus')) return false;
-            if (issue.diagnostics.includes('Validation failed for \'http://example.org/fhir')) return false;
-            if (issue.diagnostics.includes('Unrecognised property \'@fhir_comments')) return false;
-            if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
-            if (issue.diagnostics.includes('http://read.info/ctv3')) {
-                if (issue.diagnostics.includes('https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode')) return false
-            }
-            if (issue.diagnostics.includes('https://fhir.nhs.uk/CodeSystem/NHSDigital-SDS-JobRoleCode')) return false;
-            if (issue.diagnostics.includes('java.net.SocketTimeoutException')) {
-                console.error(issue.diagnostics)
+            // List of errors to ALWAYS ignore
+            
+            // languages, known issue!
+            if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
                 return false
             }
+            
+            // Ignore LOINC Errors for now
+            if (issue.diagnostics.includes('http://loinc.org')) return false;
+            
+            // ignore readctv3 errors
+            if (issue.diagnostics.includes('http://read.info/ctv3')) return false
+            
+            // ignore ods codesystems
+            if (issue.diagnostics.includes('https://digital.nhs.uk/services/organisation-data-service/CodeSystem/ODS')) return false
         }
         if (issue.location !== undefined && issue.location.length>0) {
             if (issue.location[0].includes('StructureMap.group')) return false;
@@ -408,9 +379,85 @@ export function testFileWarning(testDescription, file,message) {
     });
 }
 
-export function isIgnoreFolder(folderName : string) : boolean {
+// Read attributes from options.json
+interface Options {
+    strictValidation: boolean;
+    ErrorIfMetaProfilePresent: boolean;
+    ignoreFolders: string[];
+    ignoreFiles: string[];
+}
 
+export function setOptions(filePath: string): Options {
+    let strictValidation: boolean = false;
+    let ErrorIfMetaProfilePresent: boolean = true;
+    let ignoreFolders: string[] = [];
+    let ignoreFiles: string[] = [];
+
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        const options = JSON.parse(data);
+
+        if (options) {
+            if (typeof options['strict-validation'] === 'boolean') {
+                strictValidation = options['strict-validation'];
+            } else if ('strict-validation' in options) {
+                console.log(`Error: Attribute "strict-validation" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "strict-validation" not found in options.json');
+            }
+
+            if (typeof options['error-if-metaProfile-present'] === 'boolean') {
+                ErrorIfMetaProfilePresent = options['error-if-metaProfile-present'];
+            } else if ('error-if-metaProfile-present' in options) {
+                console.log(`Error: Attribute "error-if-metaProfile-present" is not a boolean in ${filePath}.`);
+            } else {
+            console.warn('Warning: Attribute "error-if-metaProfile-present" not found in options.json');
+            }
+
+            ignoreFolders = options['ignore-folders'] || [];
+            ignoreFiles = options['ignore-files'] || [];
+
+            if (!options.hasOwnProperty('ignore-folders')) {
+                console.warn('Warning: The "ignore-folders" attribute is missing in options.json');
+            }
+            if (!options.hasOwnProperty('ignore-files')) {
+                console.warn('Warning: The "ignore-files" attribute is missing in options.json');
+            }
+        } else {
+            console.log(`Error: Options file ${filePath} is empty or not valid JSON.`);
+        }
+    } catch (error) {
+        console.log(`Error: File ${filePath} not found or invalid JSON.`);
+    }
+
+    return { strictValidation, ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles };
+}
+
+// used for failOnWarning
+export function getStrictValidation() {
+    const optionsFilePath = '../options.json';
+    const { strictValidation } = setOptions(optionsFilePath);
+    return strictValidation;
+}
+
+const optionsFilePath = '../options.json';
+const { ErrorIfMetaProfilePresent, ignoreFolders, ignoreFiles } = setOptions(optionsFilePath);
+console.log('Error if Meta.Profile element is present:', ErrorIfMetaProfilePresent);
+console.log('Ignore Folders:', ignoreFolders);
+console.log('Ignore Files:', ignoreFiles);
+
+
+// Ignores folders from options.json within the FHIR repo and hardcoded foldernames within this function
+export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName.startsWith('.')) return true;
+	// This project needs to avoid these folders
+    if (folderName == 'validation') return true;
+    if (folderName == 'validation-service-fhir-r4') return true;
+	
+    // For BARS
+    if (folderName == 'guides') return true;
+	
+	// legacy items, need to check if being used in other repos    
     if (folderName == 'node_modules') return true;
     if (folderName == 'Diagrams') return true;
     if (folderName == 'Diagams') return true;
@@ -423,52 +470,62 @@ export function isIgnoreFolder(folderName : string) : boolean {
     if (folderName == 'UKCore') return true;
     if (folderName == 'apim') return true;
     if (folderName == 'Supporting Information') return true;
-    // This project needs to avoid these folders
-    if (folderName == 'validation') return true;
-    if (folderName == 'validation-service-fhir-r4') return true;
-    // For BARS
-    if (folderName == 'guides') return true;
+
+	if (ignoreFolders.includes(folderName)) return true;
     return false;
 }
 
-export function isIgnoreFile(directory : string, fileName : string) : boolean {
-    var fileExtension = fileName.split('.').pop().toUpperCase();
-    let file = directory +'/'+ fileName
-    if (fileName == 'fhirpkg.lock.json') return true;
-    if (fileName == 'package.json') return true;
-    if (fileExtension == 'JSON' || fileExtension == 'XML') {
-        let json = undefined
-        if (directory.indexOf('FHIR') > 0) return false;
+// Ignores files from options.json within the FHIR repo and hardcoded filenames within this function
+export function isIgnoreFile(directory: string, fileName: string): boolean {
+    const fileExtension = fileName.split('.').pop()?.toUpperCase();
+    const file = `${directory}/${fileName}`;
+
+    // Hardcoded file names to be ignored
+    const hardcodedIgnoreFiles = ['fhirpkg.lock.json', 'package.json', 'options.json'];
+
+    // Check if the file is in the hardcoded list of files to ignore
+    if (hardcodedIgnoreFiles.includes(fileName)) return true;
+
+    // Check if the file should be ignored based on the ignoreFiles list
+    if (ignoreFiles.includes(fileName)) return true;
+
+    // Additional conditions for ignoring based on file extension and content
+    if (fileExtension === 'JSON' || fileExtension === 'XML') {
+        // Additional logic for handling specific file extensions or content
+        if (directory.includes('FHIR')) return false; // Example condition
         try {
-            json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')))
-            if (json.resourceType != undefined) return false;
+            const json = JSON.parse(getJson(file, fs.readFileSync(file, 'utf8')));
+            if (json.resourceType !== undefined) return false;
             else {
-                console.info('File ignored : ' + file)
+                console.info(`File ignored: ${file}`);
             }
         } catch (e) {
-            console.info('Ignoring file ' + file + ' Error message ' + (e as Error).message)
+            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
-    } return true;
+    }
+
+    // If none of the conditions for ignoring the file are met, return false
+    return true;
 }
 
-export function isDefinition(fileNameOriginal : string) : boolean {
-   // console.info(fileNameOriginal);
-    let fileName = fileNameOriginal.toUpperCase();
+export function isDefinition(fileNameOriginal: string): boolean {
+    const validPrefixes = [
+        'CapabilityStatement',
+        'ConceptMap',
+        'CodeSystem',
+        'MessageDefinition',
+        'NamingSystem',
+        'ObservationDefinition',
+        'OperationDefinition',
+        'Questionnaire',
+        'SearchParameter',
+        'StructureDefinition',
+        'ValueSet',
+        'StructureMap'
+    ];
 
-    if (fileName.startsWith('CapabilityStatement'.toUpperCase())) return true;
-    if (fileName.startsWith('ConceptMap'.toUpperCase())) return true;
-    if (fileName.startsWith('CodeSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('MessageDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('NamingSystem'.toUpperCase())) return true;
-    if (fileName.startsWith('ObservationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('OperationDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('Questionnaire'.toUpperCase())) return true;
-    if (fileName.startsWith('SearchParameter'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureDefinition'.toUpperCase())) return true;
-    if (fileName.startsWith('ValueSet'.toUpperCase())) return true;
-    if (fileName.startsWith('StructureMap'.toUpperCase())) return true;
-
-    return false;
+    const fileName = fileNameOriginal.toUpperCase();
+    return validPrefixes.some(prefix => fileName.startsWith(prefix.toUpperCase()));
 }
 
 export function testFileValidator(testDescription,file) {
@@ -695,10 +752,7 @@ export function buildCapabilityStatement(dir: string, file, api: any | void) {
     }
 }
 
-
-
-
-export function testFile( folderName: string, fileName: string, failOnWarning :boolean, isUKore: boolean)
+export function testFile( folderName: string, fileName: string, failOnWarning :boolean)
 {
     let client: AxiosInstance;
     let file = folderName + "/" + fileName;
@@ -723,15 +777,21 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             });
             test('Check profiles are not present in resource (Implementation Guide Best Practice)', () => {
-                if (json.meta != undefined) {
-                    expect(json.meta.profile == undefined).toBeTruthy()
+                // Disable profile check for Parameters
+                if (json.meta != undefined && json.resourceType !== 'Parameters') {
+                    if (ErrorIfMetaProfilePresent == true) {
+                      expect(json.meta.profile == undefined).toBeTruthy()
+                    }
                 }
                 if (json.resourceType === 'Bundle') {
                     let bundle : Bundle = json
                     if (bundle.entry != undefined) {
                         for (let entry of bundle.entry) {
-                            if (entry.resource !== undefined && entry.resource.meta != undefined) {
+                            // Disable profile check for Parameters
+                            if (entry.resource !== undefined && entry.resource.meta != undefined && entry.resource.resourceType !== 'Parameters') {
+                              if (ErrorIfMetaProfilePresent == true) {
                                 expect(entry.resource.meta.profile == undefined).toBeTruthy()
+                              }
                             }
                         }
                     }
@@ -761,6 +821,7 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 describe('FHIR CapabilityStatement', () => {
                     let capabilityStatement: CapabilityStatement = json
                     if (capabilityStatement != undefined
+                        && (capabilityStatement.kind !== undefined && capabilityStatement.kind !== "instance")
                         && capabilityStatement.rest != undefined
                         && capabilityStatement.rest.length > 0
                         && capabilityStatement.rest[0].resource != undefined) {
@@ -811,27 +872,20 @@ export function testFile( folderName: string, fileName: string, failOnWarning :b
                 }
             }
             if (validate) {
-                if (!isUKore) {
-                    test('FHIR Validation', async () => {
-                        const response = await client.post('/$validate', resource).catch(function (error) {
-                            return error.response
-                        })
-                        expect(response.status === 200 || response.status === 400).toBeTruthy()
-                        resourceChecks(response, failOnWarning)
-                        expect(response.status).toEqual(200)
-                    });
-                } else {
-
-                    test('FHIR Validation - UKCore', async () => {
-                        const response = await client.post('/$validate?profile=https://fhir.hl7.org.uk/StructureDefinition/UKCore-' + json.resourceType, resource).catch(function (error) {
-                            return error.response
-                        })
-                        expect(response.status === 200 || response.status === 400).toBeTruthy()
-                        resourceChecks(response, failOnWarning)
-                        expect(response.status).toEqual(200)
+                test('FHIR Validation', async () => {
+                    const response = await client.post('/$validate', resource).catch(function (error) {
+                        return error.response
                     })
-                }
-
+                    expect(response.status === 200 || response.status === 400).toBeTruthy()
+                    
+                    //we can ignore warnings on retired resources - these would not be in a balloted package
+                    if (json.status == 'retired') {
+                      resourceChecks(response, false)
+                    } else {
+                      resourceChecks(response, failOnWarning)
+                    }
+                    expect(response.status).toEqual(200)
+                });
             }
         }
     )

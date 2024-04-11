@@ -13,7 +13,9 @@ The following software are required but are preinstalled on the GitHub ubuntu ru
 - [Maven](https://maven.apache.org/)
 - [node-js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-- Running instance of the `IOPS-FHIR-Validation-Service`
+
+Running instance of the [IOPS-FHIR-Validation-Service](https://github.com/NHSDigital/IOPS-FHIR-Validation-Service)
+
 
 ## Tests
 
@@ -21,7 +23,7 @@ The following software are required but are preinstalled on the GitHub ubuntu ru
 
 Create a directory for your tests. 
 Create a folder for you tests called `Examples`.
-Clone this repo `git clone https://github.com/NHSDigital/IOPS-Validation.git`
+Clone this repo `git clone git@github.com:NHSDigital/IOPS-FHIR-Test-Scripts.git`
 Run the tests via `npm test`
 
 ### Test files in another folder
@@ -38,7 +40,7 @@ The tests can also be run against a series of folders laid out in a set way. Thi
 
 This parameter with search for the following sub folders in the supplied path.
 
-- CapabilityStatement
+- CapabilityStatement - **Note: To test against specific profiles, e.g. UK Core, this needs to be present. See UK Core for the [Asset](https://github.com/NHSDigital/FHIR-R4-UKCORE-STAGING-MAIN/blob/develop/CapabilityStatement/CapabilityStatement-UKCore.xml)** 
 - CodeSystem
 - ConceptMap
 - Examples
@@ -55,14 +57,30 @@ This parameter with search for the following sub folders in the supplied path.
 
 The validation-service-fhir-r4 can also be configured using this project. At present this is designed to be used in the testing of NHS Digital HL7 FHIR Implementation Guides using github workflows. This is done via 
 
-`make -C validation configure-validation`
-
-Which calls `npm start`
+`cd validation && npm start`
 
 Examples of use within a workflow can be found:
 
 - https://github.com/NHSDigital/NHSDigital-FHIR-ImplementationGuide/blob/master/.github/workflows/FHIRValidation.yml
 - https://github.com/NHSDigital/NHSDigital-FHIR-Medicines-ImplementationGuide/blob/master/.github/workflows/integration.yml
+
+## Options
+It is possible to set the following options within your FHIR repository:  
+**strict-validation** - *Boolean (default:false)*: set to true for all warnings to be promoted to errors, false to allow validation to pass with warnings present.  
+**igonore-folders** - *list (default:[])*: a list of all folders to ignore that do not contain FHIR resources. All folders starting with `.` will be automatically ignored.  
+**igonore-files** - *list (default:[])*: a list of all json or xml files to be ignored. `fhirpkg.lock.json`, `package.json`, `options.json` will be automatically ignored.  
+**error-if-metaProfile-present** - *Boolean (default:true)*: [IG best practice](https://build.fhir.org/ig/FHIR/ig-guidance/best-practice.html#examples) states *"Avoid declaring meta.profile in your examples unless there’s an expectation..."*. Setting this attribute to true will cause the validator to error if meta.profile is found within an example.
+The file created will need to be named `options.json` and contain the following:
+```json
+{
+    "strict-validation": false,
+    "ignore-folders": [],
+    "ignore-files": [],
+	"error-if-metaProfile-present": true
+}
+```
+
+**Important**: The `options.json` will need to be excluded within the Simplifier project. See [Simplifier GitHub Integration](https://docs.simplifier.net/projects/Simplifier/data_governance_and_quality_control/simplifierGithub.html#github-include-exclude) for more details.
 
 
 # Simplifier IG Content Checker
