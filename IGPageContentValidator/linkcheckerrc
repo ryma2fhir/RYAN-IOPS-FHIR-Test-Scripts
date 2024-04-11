@@ -208,7 +208,7 @@ maxrequestspersecond=4
 # recognized warnings). Add a comma-separated list of warnings here
 # that prevent a valid URL from being logged. Note that the warning
 # will be logged for invalid URLs. Example:
-#ignorewarnings=url-unicode-domain
+ignorewarnings=http-redirected
 # Regular expression to add more URLs recognized as internal links.
 # Default is that URLs given on the command line are internal.
 #internlinks=^http://www\.example\.net/
