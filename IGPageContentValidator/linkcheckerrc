@@ -193,8 +193,10 @@ maxrequestspersecond=4
 [filtering]
 ignore=
   \.png
-  \@
-  ^(?!.*http).*html.*$
+#  \@
+  r"^@+$"
+#  ^(?!.*http).*html.*$
+  r"^(?!.*http).*html.*$"
 # ignore everything with 'lconline' in the URL name
 #  lconline
 # and ignore everything with 'bookmark' in the URL name
