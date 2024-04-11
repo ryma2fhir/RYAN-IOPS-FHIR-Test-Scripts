@@ -42,7 +42,7 @@ jobs:
           curl ${{ github.event.inputs.websiteurl }} -s -f -o /dev/null
       - name: Execute Link Check
         run: >
-          linkchecker -r 2 --check-extern -f
+          linkchecker -r 2 --check-extern --no-status -v -f
           ./IGPageContentValidator/linkcheckerrc ${{ github.event.inputs.websiteurl }} || test $? = 1;
   job3:
     name: spell checker
