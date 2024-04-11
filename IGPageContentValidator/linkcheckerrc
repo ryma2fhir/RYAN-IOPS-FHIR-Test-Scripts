@@ -192,8 +192,8 @@ maxrequestspersecond=4
 ##################### filtering options ##########################
 [filtering]
 ignore=
-png
-@
+  png
+  @
 # ignore everything with 'lconline' in the URL name
 #  lconline
 # and ignore everything with 'bookmark' in the URL name
