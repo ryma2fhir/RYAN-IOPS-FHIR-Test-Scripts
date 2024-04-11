@@ -32,6 +32,7 @@ This is set up to only output the errors for each individual page. Uses the conf
   - setup so that it will check any pages <50mb in size. 
   - ignores any link that contains png or @
   - ignores any http-redirected warnings
+  - ignores any links that does not contain `http` but does `html`. This is a workarond to ignore internal markdown links, which HL7 have many which only works on their website and not within the asset renders.
 
 ### LinkCheckerError: File size too large
 If the reponse is `[url-error-getting-content] could not get content:` `LinkCheckerError: File size too large` the page size is larger than what the maximum has been set. To fix this increase the `maxfilesizedownload` (line 177) within the `linkcheckerrc` file accordingly.
