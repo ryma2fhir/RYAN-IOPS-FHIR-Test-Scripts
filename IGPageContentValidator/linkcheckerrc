@@ -194,7 +194,7 @@ maxrequestspersecond=4
 ignore=
   \.png
 #  \@
-  r"^@+$"
+  [@]
 #  ^(?!.*http).*html.*$
   r"^(?!.*http).*html.*$"
 # ignore everything with 'lconline' in the URL name
