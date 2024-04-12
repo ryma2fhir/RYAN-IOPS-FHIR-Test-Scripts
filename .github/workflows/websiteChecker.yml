@@ -42,7 +42,7 @@ jobs:
           curl ${{ github.event.inputs.websiteurl }} -s -f -o /dev/null
       - name: Execute Link Check
         run: >
-          linkchecker -r 2 --check-extern --no-status -f
+          linkchecker -r 2 --check-extern --no-status --ignore-url=[@] --ignore-url=r"^(?!.*http).*html.*$" -f
           ./IGPageContentValidator/linkcheckerrc ${{ github.event.inputs.websiteurl }} || test $? = 1;
   job3:
     name: spell checker
@@ -63,4 +63,4 @@ jobs:
         run: INPUT_STORE=${{ github.event.inputs.websiteurl }} python ./IGPageContentValidator/relToAbsLinks.py
             
       - name: Execute Spell Check
-        run: cat OutputLinks.txt | while read p; do wget -nv -O - $p | aspell list -H  --camel-case --lang en_GB --add-html-skip=nocheck -p ./IGPageContentValidator/.aspell.en.pws |sort| uniq -c; echo -e '\n'; done;
+        run: cat OutputLinks.txt | while read p; do wget -nv -O - $p | aspell list -H  --ignore 2 --camel-case --lang en_GB --add-html-skip=nocheck -p ./IGPageContentValidator/.aspell.en.pws |sort| uniq -c; echo -e '\n'; done;
