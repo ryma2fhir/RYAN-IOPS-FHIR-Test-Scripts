@@ -80,13 +80,13 @@ def getJSONCoreElements(jsonFile,warnings):
             elements = {}
             return elements,warnings
     except:
-        warnings.append("\t"+file+" - The element 'status' is missing")
+        warnings.append("\t\tThe element 'status' is missing")
         
     for k in fileKeys:
         try:
             elements.update({k:jsonFile[k]})
         except:
-            warnings.append("\t"+file+" - The element '"+k+"' is missing")
+            warnings.append("\t\tThe element '"+k+"' is missing")
     return elements,warnings
 
 def checkElementNamingConvention(elements, warnings, file):
