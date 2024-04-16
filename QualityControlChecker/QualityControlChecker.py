@@ -57,7 +57,7 @@ def getXMLCoreElements(path,file,warnings):
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
             elements = {}
             return elements,warnings
-    except IndexError:
+    except:
         warnings.append("\t"+file+" - The element 'status' is missing")   
 
     '''check for missing elements'''
