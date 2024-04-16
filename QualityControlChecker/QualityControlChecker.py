@@ -68,7 +68,6 @@ def getXMLCoreElements(path,file,warnings):
         try:
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
         except:
-            elements.update({k:None})
             warnings.append("\t"+file+" - The element '"+k+"' is missing")
     return elements,warnings
         
