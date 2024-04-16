@@ -85,12 +85,12 @@ def getJSONCoreElements(jsonFile,warnings):
     except KeyError as e:
         warnings.append("\t",file," - The element 'status' is missing")
         
-    for k in fileKeys:
-        try:
-            elements.update({k:jsonFile[k]})
-        except:
-            elements.update({k:None})
-            #warnings.append("\t",file," - The element '"+key+"' is missing")
+    #for k in fileKeys:
+     #   try:
+     #       elements.update({k:jsonFile[k]})
+     #   except:
+    #        elements.update({k:None})
+    #        warnings.append("\t",file," - The element '"+key+"' is missing")
     return elements,warnings
 
 def checkElementNamingConvention(elements, warnings, file):
