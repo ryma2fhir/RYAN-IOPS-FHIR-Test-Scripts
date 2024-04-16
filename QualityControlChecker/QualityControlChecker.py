@@ -93,6 +93,8 @@ def checkElementNamingConvention(elements, warnings, file):
     fileName = os.path.splitext(os.path.basename(file))[0]
     assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
     '''check elements naming convention are correct'''
+    print(file)
+    print(elements)
     if elements == {}:
         return warnings
     if path == 'codesystems' or path == 'valuesets':
