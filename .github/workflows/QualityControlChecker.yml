@@ -24,7 +24,7 @@ jobs:
       - name: Check out test_script
         uses: actions/checkout@master
         with:
-          repository: NHSDigital/IOPS-FHIR-Test-Scripts
+          repository: ryma2fhir/RYAN-IOPS-FHIR-Test-Scripts/
           ref: main
           path: test_scripts
 
