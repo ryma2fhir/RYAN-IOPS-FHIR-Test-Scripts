@@ -59,7 +59,7 @@ def getXMLCoreElements(path,file,warnings):
             elements = {}
             return elements,warnings
     except IndexError:
-        warnings.append("\t",file," - The element 'status' is missing")   
+        warnings.append("\t"+file+" - The element 'status' is missing")   
 
     '''check for missing elements'''
     stop = 0
@@ -71,7 +71,7 @@ def getXMLCoreElements(path,file,warnings):
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
         except:
             elements.update({k:None})
-            #warnings.append("\t",file," - The element '"+k+"' is missing")
+            warnings.append("\t"+file+" - The element '"+k+"' is missing")
     return elements,warnings
         
 def getJSONCoreElements(jsonFile,warnings):
@@ -90,7 +90,7 @@ def getJSONCoreElements(jsonFile,warnings):
             elements.update({k:jsonFile[k]})
         except:
             elements.update({k:None})
-            warnings.append("\t",file," - The element '"+k+"' is missing")
+            warnings.append("\t"+file+" - The element '"+k+"' is missing")
     return elements,warnings
 
 def checkElementNamingConvention(elements, warnings, file):
