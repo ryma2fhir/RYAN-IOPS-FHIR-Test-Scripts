@@ -156,7 +156,7 @@ def checkContactDetailsXML(root,path,warnings):
 def checkContactDetailsJSON(jsonFile,warnings):
     try:
         if not jsonFile['contact'][0]['name'] == mainVar['org']:
-            warnings.append("\t\t contact.name - This SHALL be '"+mainVar['org']+"'")
+            warnings.append("\t\tcontact.name - This SHALL be '"+mainVar['org']+"'")
     except:
         warnings.append("\t\tcontact.name - This SHALL be '"+mainVar['org']+"'")
         
