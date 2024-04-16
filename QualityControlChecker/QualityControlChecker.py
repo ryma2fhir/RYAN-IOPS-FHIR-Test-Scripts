@@ -100,7 +100,7 @@ def checkElementNamingConvention(elements, warnings, file):
     try:    
         if not fileName == elements['id']:
             warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
-    except as e:
+    except Exception as e:
             print(e)
             print(file)
             print(elements)
