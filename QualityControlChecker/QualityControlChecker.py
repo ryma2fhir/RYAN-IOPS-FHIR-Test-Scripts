@@ -20,8 +20,7 @@ def getRepoVariables():
     repoName = os.path.basename(repoParent).lower()
     
     '''Creates main variables for use with UKCore and NHSE assets'''
-    #if 'ukcore' in repoName:
-    if 'ukcore' in repoPath.lower(): # USED FOR TESTIMG ____________________DELETE_____________________
+    if 'ukcore' in repoName.lower():
         from repoVariables import ukcoreVar as mainVar
     else:
         from repoVariables import nhseVar as mainVar
@@ -94,7 +93,6 @@ def getJSONCoreElements(jsonFile,warnings):
 def checkElementNamingConvention(elements, warnings, file):
     fileName = os.path.splitext(os.path.basename(file))[0]
     assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
-    print(elements)
     '''check elements naming convention are correct'''
     if elements == {}:
         return warnings
