@@ -95,6 +95,7 @@ def getJSONCoreElements(jsonFile,warnings):
 def checkElementNamingConvention(elements, warnings, file):
     fileName = os.path.splitext(os.path.basename(file))[0]
     assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
+    print(elements)
     '''check elements naming convention are correct'''
     if elements == {}:
         return warnings
