@@ -84,7 +84,7 @@ def getJSONCoreElements(jsonFile,warnings):
         if jsonFile['status']=='retired':
             elements = {}
             return elements,warnings
-    except:
+    except KeyError:
         warnings.append("\t",file," - The element 'status' is missing")
     for k in fileKeys:
         try:
