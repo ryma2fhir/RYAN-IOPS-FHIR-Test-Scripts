@@ -88,7 +88,6 @@ def getJSONCoreElements(jsonFile,warnings):
         try:
             elements.update({k:jsonFile[k]})
         except:
-            elements.update({k:None})
             warnings.append("\t"+file+" - The element '"+k+"' is missing")
     return elements,warnings
 
