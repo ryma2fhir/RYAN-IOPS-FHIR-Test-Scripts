@@ -93,14 +93,18 @@ def checkElementNamingConvention(elements, warnings, file):
     fileName = os.path.splitext(os.path.basename(file))[0]
     assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
     '''check elements naming convention are correct'''
-    print(file)
-    print(elements)
     if elements == {}:
         return warnings
     if path == 'codesystems' or path == 'valuesets':
         fileName = '-'.join(fileName.split('-')[1:])
-    if not fileName == elements['id']:
-        warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
+    try:    
+        if not fileName == elements['id']:
+            warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
+    except as e:
+            print(e)
+            print(file)
+            print(elements)
+        
     '''Check all url's unless they starts with one in the ignore list'''
     uriCheck=True
     for elem in mainVar['ignoreURLPrefix']:
