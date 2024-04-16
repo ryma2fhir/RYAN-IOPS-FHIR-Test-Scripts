@@ -90,6 +90,7 @@ def getJSONCoreElements(jsonFile,warnings):
     return elements,warnings
 
 def checkElementNamingConvention(elements, warnings, file):
+    '''############# add try & except ##########################################################################################################################'''
     fileName = os.path.splitext(os.path.basename(file))[0]
     assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
     '''check elements naming convention are correct'''
@@ -97,13 +98,8 @@ def checkElementNamingConvention(elements, warnings, file):
         return warnings
     if path == 'codesystems' or path == 'valuesets':
         fileName = '-'.join(fileName.split('-')[1:])
-    try:    
-        if not fileName == elements['id']:
+    if not fileName == elements['id']:
             warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
-    except Exception as e:
-            print(e)
-            print(file)
-            print(elements)
         
     '''Check all url's unless they starts with one in the ignore list'''
     uriCheck=True
