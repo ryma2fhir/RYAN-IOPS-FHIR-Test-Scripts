@@ -86,7 +86,7 @@ def getJSONCoreElements(jsonFile,warnings):
             return elements,warnings
     except:
         warnings.append("\t",file," - The element 'status' is missing")
-    for k in FileKeys:
+    for k in fileKeys:
         try:
             elements.update({k:jsonFile[k]})
         except:
