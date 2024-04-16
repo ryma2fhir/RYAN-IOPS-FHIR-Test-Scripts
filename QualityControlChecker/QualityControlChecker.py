@@ -64,7 +64,6 @@ def getXMLCoreElements(path,file,warnings):
     '''check for missing elements'''
     stop = 0
     elements = {}
-    #elements = {'id':'id','url':'url','name':'name','title':'title','version':'version','status':'status','date':'date','description':'description','copyright':'copyright'}
     fileKeys = ['id','url','name','title','version','status','date','description','copyright']
     for k in fileKeys:
         try:
@@ -76,13 +75,13 @@ def getXMLCoreElements(path,file,warnings):
         
 def getJSONCoreElements(jsonFile,warnings):
     '''Gets all elements from the json file that needs to be checked. Will return empty on any retired elemets'''
-    fileKeys = ['id','url','name','title','version','status','date','description','copyright']
+    fileKeys = ['id','url','name','title','version','date','description','copyright']
     elements = {}
     try:
         if jsonFile['status']=='retired':
             elements = {}
             return elements,warnings
-    except KeyError as e:
+    except KeyError:
         warnings.append("\t"+file+" - The element 'status' is missing")
         
     for k in fileKeys:
