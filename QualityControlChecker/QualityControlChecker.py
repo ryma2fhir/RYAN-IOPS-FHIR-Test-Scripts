@@ -58,7 +58,7 @@ def getXMLCoreElements(path,file,warnings):
             elements = {}
             return elements,warnings
     except:
-        warnings.append("\t"+file+" - The element 'status' is missing")   
+        warnings.append("\t\tThe element 'status' is missing")   
 
     '''check for missing elements'''
     stop = 0
