@@ -203,7 +203,7 @@ def checkAssets(file, warnings):
     return warnings
 
 
-def checkExamples():
+def checkExamples(exampleWarnings):
     fileName = os.path.splitext(example)[0]
     if not fileName.endswith("-Example") :
         exampleWarnings.append("\t The filename is does not have the suffix '-Example'")
