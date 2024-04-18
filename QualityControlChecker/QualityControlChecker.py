@@ -112,7 +112,11 @@ def checkElementNamingConvention(elements, warnings, file, path):
     elementsCheck['url suffix'] = fileName      
     elementsCheck['name'] = ''.join(fileName.split('-'))    
     elementsCheck['title'] = fileName.replace('-','')
-    print('title:',elements['title'],' check:',elementsCheck['title'])
+    try:
+        print('title:',elements['title'],' check:',elementsCheck['title'])
+    except:
+        pass
+    
 
     for key,value in elementsCheck.items():
         try:
