@@ -256,7 +256,7 @@ for path in paths:
     error
     try:
         files = os.listdir('./'+path)
-        print("\033[1m"+path+"\033[0m")
+        print("\033[1m"+path.title()+"\033[0m")
     except:
         continue
     for file in files:
@@ -302,7 +302,7 @@ if repoName == 'FHIR-R4-UKCORE-STAGING-MAIN' or repoName == 'NHSEngland-FHIR-Imp
 
 ''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
-    print("\nPlease fix the errors found above")
+    print("\n\033[1mPlease fix the errors found above\033[0m")
     sys.exit(2)
 else:
-    print("\n\nCheck Complete!")
+    print("\n\n\033[1mCheck Complete!\033[0m")
