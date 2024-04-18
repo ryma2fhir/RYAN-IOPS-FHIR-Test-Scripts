@@ -296,7 +296,9 @@ for example in examplesPath:
         for x in exampleWarnings:
             print(x)
 
-CheckCapabilityStatementProfiles(error)
+''' Checks Capability for missing profiles for UK Core or NHSE IG only '''
+if repoName == 'FHIR-R4-UKCORE-STAGING-MAIN' or repoName == 'NHSEngland-FHIR-ImplementationGuide':
+    CheckCapabilityStatementProfiles(error)
 
 ''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
