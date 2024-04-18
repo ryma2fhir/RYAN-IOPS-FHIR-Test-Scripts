@@ -256,7 +256,7 @@ for path in paths:
     error
     try:
         files = os.listdir('./'+path)
-        print(path)
+        print("\033[1m"+path+"\033[0m")
     except:
         continue
     for file in files:
@@ -284,7 +284,7 @@ for path in paths:
 ''' Check Examples. Prints outcome if issues found and sets error to True.'''
 try:
     examplesPath = os.listdir('./examples')
-    print('\033[1mExamples\033[0m')
+    print("\033[1mExamples\033[0m")
 except:
     examplesPath = []
 for example in examplesPath:
@@ -296,7 +296,7 @@ for example in examplesPath:
         for x in exampleWarnings:
             print(x)
 
-CheckCapabilityStatementProfiles()
+CheckCapabilityStatementProfiles(error)
 
 ''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
