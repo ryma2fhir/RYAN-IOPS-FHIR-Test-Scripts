@@ -61,7 +61,7 @@ def getXMLCoreElements(path,file,warnings):
             elements = {}
             return elements,warnings
     except:
-        warnings.append("\t\tThe element 'status' is missing")   
+        warnings.append("\t\tstatus - This eleent is missing")   
 
     '''check for missing elements'''
     stop = 0
@@ -71,7 +71,7 @@ def getXMLCoreElements(path,file,warnings):
         try:
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
         except:
-            warnings.append("\t\tThe element '"+k+"' is missing")
+            warnings.append("\t\t"+k+" - This element is missing")
     return elements,warnings
         
 
@@ -84,13 +84,13 @@ def getJSONCoreElements(jsonFile,warnings):
             elements = {}
             return elements,warnings
     except:
-        warnings.append("\t\tThe element 'status' is missing")
+        warnings.append("\t\tstatus - This element is missing")
         
     for k in fileKeys:
         try:
             elements.update({k:jsonFile[k]})
         except:
-            warnings.append("\t\tThe element '"+k+"' is missing")
+            warnings.append("\t\t"+k+" - This element is missing")
     return elements,warnings
 
 
