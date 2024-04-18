@@ -172,6 +172,7 @@ def checkContactDetailsJSON(jsonFile,warnings):
     for key,value in contact.items():
         try:
             if not jsonFile['contact'][0]['telecom'][0][key] == value:
+                print(key,value,jsonFile['contact'][0]['telecom'][0][key])
                 warnings.append("\t\tcontact.telecom."+key+" - This SHALL be '"+value+"'")
         except:
             warnings.append("\t\tcontact.telecom."+key+" - This element is missing")
