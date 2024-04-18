@@ -216,20 +216,23 @@ def checkExamples():
             error=True
             print("\t",example," - The filename is does not have the suffix '-Example'")
         '''open file to find element values'''
-        if example.endswith("xml"):
-            root = openXMLFile("examples",example)
-            if not root.findall('.//{*}id')[0].get('value') == example.replace('.xml',''):
-                error=True
-                print("\t",example,"The 'id' element is incorrect")
-        elif example.endswith("json"):
-            elements = openJSONFile("examples",example)
-            if not elements['id'] == fileName:
-                print(elements['id'])
-                print( example.replace('.xml',''))
-                error=True
-                print("\t",example,"The 'id' value '"+elements['id']+"' does not match filname '"+fileName+"'")
-        else:
-            print("\t",example,"The 'file extension' is incorrect")
+        try:
+            if example.endswith("xml"):
+                root = openXMLFile("examples",example)
+                if not root.findall('.//{*}id')[0].get('value') == fileName:
+                    error=True
+                    print("\t",example,"The 'id' element is incorrect")
+            elif example.endswith("json"):
+                elements = openJSONFile("examples",example)
+                if not elements['id'] == fileName:
+                    print(elements['id'])
+                    print( example.replace('.xml',''))
+                    error=True
+                    print("\t",example,"The 'id' value '"+elements['id']+"' does not match filname '"+fileName+"'")
+            else:
+                print("\t",example,"The 'file extension' is incorrect")
+        except:
+            print("\t",example,"id - This element is missing")
             
 
 def CheckCapabilityStatementProfiles():
