@@ -98,13 +98,17 @@ def checkElementNamingConvention(elements, warnings, file, path):
     '''checks the elements id, url prefix (base), url suffix (asset name), name, and title are correct, compared to the FileName. If any are missing from elements dict then passes as the issue will be picked up elsewhere.'''
     fileName = os.path.splitext(os.path.basename(file))[0]
 
+    elementsCheck = []
     if (path == 'codesystems' or path == 'valuesets'):
         fileName = '-'.join(fileName.split('-')[1:])
     elementsCheck['id'] = fileName
-    elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
-    if elements['url prefix'] not in mainVar['ignoreURLPrefix']:
-            elementsCheck['urlPrefix'] = mainVar['urlPrefix']+assets[path]
-    elements['url suffix'] = elements['url'].split('/')[-1]
+    try:
+        elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
+        if elements['url prefix'] not in mainVar['ignoreURLPrefix']:
+                elementsCheck['urlPrefix'] = mainVar['urlPrefix']+assets[path]
+        elements['url suffix'] = elements['url'].split('/')[-1]
+    except:
+        pass
     elementsCheck['url suffix'] = fileName      
     elementsCheck['name'] = ''.join(fileName.split('-'))    
     elementsCheck['title'] = fileName.replace('-','')
