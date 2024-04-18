@@ -41,7 +41,6 @@ def openXMLFile(path,file,warnings):
    
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-            elements = {}
             testFile = False
     except:
         warnings.append("\t\tstatus - This element is missing")
@@ -67,6 +66,7 @@ def getXMLCoreElements(path,file,root,warnings):
     '''adds elements from the xml file that needs to be checked and present, warn if missing.'''
     elements = {}
     fileKeys = ['id','url','name','title','version','date','description','copyright']
+    print(root)
     for k in fileKeys:
         try:
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
