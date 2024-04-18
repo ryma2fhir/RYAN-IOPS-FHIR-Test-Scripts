@@ -31,6 +31,7 @@ def getRepoVariables():
 def openXMLFile(path,file,warnings):
     '''Open file. Will return testFile = False if file canot be opened or retired assets, True if status is missing or not retired'''
     testFile = True
+    root = {}
     try:
         tree = ET.parse("./"+path+"/"+file)
         root = tree.getroot()
@@ -62,7 +63,7 @@ def openJSONFile(path, file):
     return contents
 
 
-def getXMLCoreElements(path,file,warnings):
+def getXMLCoreElements(path,file,root,warnings):
     '''adds elements from the xml file that needs to be checked and present, warn if missing.'''
     elements = {}
     fileKeys = ['id','url','name','title','version','date','description','copyright']
@@ -264,7 +265,7 @@ for path in paths:
             if testFile:
                 print(testFile)
                 warnings = checkContactDetailsXML(root, path, warnings)
-                elements,warnings = getXMLCoreElements(path, file, warnings)
+                elements,warnings = getXMLCoreElements(path, file,root, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
             warnings = checkContactDetailsJSON(jsonFile, warnings)
