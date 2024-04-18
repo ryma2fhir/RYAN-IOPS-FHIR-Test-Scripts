@@ -36,14 +36,15 @@ def openXMLFile(path,file,warnings):
     except ET.ParseError as e:
         warnings.append("\t\t - The XML code has an error that needs to be fixed before it can be checked:",e)
         root, testFile = [], False
+    root = tree.getroot()
     
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
             elements = {}
-            root, testFile = [], False
+            testFile = False
     except:
         warnings.append("\t\tstatus - This element is missing")
-        root, testFile = [], True
+    
     return root,testFile,warnings
 
 
