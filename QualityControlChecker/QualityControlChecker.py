@@ -25,7 +25,7 @@ def getRepoVariables():
         from repoVariables import ukcoreVar as mainVar
     else:
         from repoVariables import nhseVar as mainVar
-    return mainVar
+    return mainVar, repoName
 
 
 def openXMLFile(path,file):        
@@ -225,7 +225,7 @@ def checkExamples(exampleWarnings):
     return exampleWarnings
         
             
-def CheckCapabilityStatementProfiles(error):
+def CheckCapabilityStatementProfiles(error,repoName):
     '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
     root = openXMLFile("CapabilityStatements","CapabilityStatement-"+mainVar['project']+".xml")
     print('CapabilityStatement')
@@ -298,7 +298,7 @@ for example in examplesPath:
 
 ''' Checks Capability for missing profiles for UK Core or NHSE IG only '''
 if repoName == 'FHIR-R4-UKCORE-STAGING-MAIN' or repoName == 'NHSEngland-FHIR-ImplementationGuide':
-    CheckCapabilityStatementProfiles(error)
+    CheckCapabilityStatementProfiles(error,repoName)
 
 ''' If any QC issues found within the script, cause the action to fail''' 
 if error == True:
