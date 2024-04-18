@@ -225,7 +225,7 @@ def checkExamples(exampleWarnings):
     return exampleWarnings
         
             
-def CheckCapabilityStatementProfiles():
+def CheckCapabilityStatementProfiles(error):
     '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
     root = openXMLFile("CapabilityStatements","CapabilityStatement-"+mainVar['project']+".xml")
     print('CapabilityStatement')
@@ -236,8 +236,9 @@ def CheckCapabilityStatementProfiles():
 
         for p in currentProfiles:
             if p not in capabilityStatement:
+                print("\t",root,"\n",p,"is missing from the CapabilityStatement")
                 error=True
-                print("\t",p,"is missing from the CapabilityStatement")
+    return error
 
 
 
@@ -296,3 +297,10 @@ for example in examplesPath:
             print(x)
 
 CheckCapabilityStatementProfiles()
+
+''' If any QC issues found within the script, cause the action to fail''' 
+if error == True:
+    print("\nPlease fix the errors found above")
+    sys.exit(2)
+else:
+    print("\n\nCheck Complete!")
