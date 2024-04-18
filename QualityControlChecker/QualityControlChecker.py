@@ -228,7 +228,7 @@ def checkExamples():
                     print(elements['id'])
                     print( example.replace('.xml',''))
                     error=True
-                    print("\t",example,"\n\t\tid - The element is incorrect)
+                    print("\t",example,"\n\t\tid - The element is incorrect")
             else:
                 print("\t",example,"The file extension SHALL be .xml or .json")
         except:
