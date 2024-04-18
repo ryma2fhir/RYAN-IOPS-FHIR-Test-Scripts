@@ -26,6 +26,7 @@ def getRepoVariables():
         from repoVariables import nhseVar as mainVar
     return mainVar
 
+
 def openXMLFile(path,file):        
     try:
         tree = ET.parse("./"+path+"/"+file)
@@ -37,6 +38,7 @@ def openXMLFile(path,file):
         return None
     root = tree.getroot()
     return root
+
 
 def openJSONFile(path, file):
     ''' loads JSON File returns dict named contents '''
@@ -50,6 +52,7 @@ def openJSONFile(path, file):
     except Exception as error:
         print("error found whilst trying to open",file,":",error)
     return contents
+
 
 def getXMLCoreElements(path,file,warnings):
     '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
@@ -71,6 +74,7 @@ def getXMLCoreElements(path,file,warnings):
             warnings.append("\t\tThe element '"+k+"' is missing")
     return elements,warnings
         
+
 def getJSONCoreElements(jsonFile,warnings):
     '''Gets all elements from the json file that needs to be checked. Will return empty on any retired elemets'''
     fileKeys = ['id','url','name','title','version','date','description','copyright']
@@ -89,33 +93,28 @@ def getJSONCoreElements(jsonFile,warnings):
             warnings.append("\t\tThe element '"+k+"' is missing")
     return elements,warnings
 
-def checkElementNamingConvention(elements, warnings, file):
-    '''############# add try & except ##########################################################################################################################'''
+
+def checkElementNamingConvention(elements, warnings, file, path):
+    '''checks the elements id, url prefix (base), url suffix (asset name), name, and title are correct, compared to the FileName. If any are missing from elements dict then passes as the issue will be picked up elsewhere.'''
     fileName = os.path.splitext(os.path.basename(file))[0]
-    assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
-    '''check elements naming convention are correct'''
-    if elements == {}:
-        return warnings
-    if path == 'codesystems' or path == 'valuesets':
+
+    if (path == 'codesystems' or path == 'valuesets'):
         fileName = '-'.join(fileName.split('-')[1:])
-    if not fileName == elements['id']:
-            warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
-        
-    '''Check all url's unless they starts with one in the ignore list'''
-    uriCheck=True
-    for elem in mainVar['ignoreURLPrefix']:
-        if elements['url'].startswith(elem):
-            uriCheck=False
-            break
-    if uriCheck == True:        
-        if not fileName == elements['url'].split('/')[-1]:
-            warnings.append("\t\t"+elements['url']+" - The 'url' element is incorrect")
-        if not elements['url'].startswith(mainVar['urlPrefix']+assets[path]):
-            warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
-    if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
-        warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
-    if not fileName.replace('-','') == elements['title'].replace(' ',''):
-        warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
+    elementsCheck['id'] = fileName
+    elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
+    if elements['url prefix'] not in mainVar['ignoreURLPrefix']
+            elementsCheck['urlPrefix'] = mainVar['urlPrefix']+assets[path]
+    elements['url suffix'] = elements['url'].split('/')[-1]
+    elementsCheck['url suffix'] = fileName      
+    elementsCheck['name'] = ''.join(fileName.split('-'))    
+    elementsCheck['title'] = fileName.replace('-','')
+
+    for key,value in elementsCheck.items():
+        try:
+            if value != elements[key]
+                warnings.append("\t\t"+elements[key]+" - The "+key+" element is incorrect")
+        except:
+            pass
     return warnings
     
 
@@ -127,12 +126,14 @@ def checkXMLStructureDefinitionElements(root,path,warnings):
         warnings.append("\t\tpurpose - This element is missing'")
     return warnings
 
+
 def checkJSONStructureDefinitionElements(jsonFile, warnings):
     try:
         jsonFile['purpose']
     except:
         warnings.append("\t\tpurpose - This element is missing'")
     return warnings
+
 
 def checkContactDetailsXML(root,path,warnings):            
     ''' Check Contact Details '''
@@ -155,6 +156,7 @@ def checkContactDetailsXML(root,path,warnings):
             warnings.append("\t\tcontact.telecom."+key+" - This element is missing")
     return warnings
 
+
 def checkContactDetailsJSON(jsonFile,warnings):
     try:
         if not jsonFile['contact'][0]['name'] == mainVar['org']:
@@ -170,6 +172,7 @@ def checkContactDetailsJSON(jsonFile,warnings):
         except:
             warnings.append("\t\tcontact.telecom."+key+" - This element is missing")
     return warnings
+
 
 def checkAssets(file, warnings):
     '''Check files are in correct folder '''
@@ -193,6 +196,7 @@ def checkAssets(file, warnings):
         warnings.append("\t\tThe file has either an incorrect prefix or in the wrong folder '"+path+"'")
         error=True
     return warnings
+
 
 def checkExamples():
     '''check example filenames'''
@@ -222,6 +226,7 @@ def checkExamples():
         else:
             print("\t",example,"The 'file extension' is incorrect")
             
+
 def CheckCapabilityStatementProfiles():
     '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
     root = openXMLFile("CapabilityStatements","CapabilityStatement-"+mainVar['project']+".xml")
@@ -254,18 +259,18 @@ for path in paths:
         warnings = []
         if file.endswith("xml"):
             root = openXMLFile(path,file)
-            warnings = checkContactDetailsXML(root,path,warnings)
-            elements,warnings = getXMLCoreElements(path,file,warnings)
+            warnings = checkContactDetailsXML(root, path, warnings)
+            elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
-            warnings = checkContactDetailsJSON(jsonFile,warnings)
-            elements,warnings = getJSONCoreElements(jsonFile,warnings)
+            warnings = checkContactDetailsJSON(jsonFile, warnings)
+            elements,warnings = getJSONCoreElements(jsonFile, warnings)
         else:
             print('\t',file,'is neither in xml or json format and has not been checked')
             continue
 
         warnings = checkAssets(file, warnings)
-        warnings = checkElementNamingConvention(elements, warnings, file)    
+        warnings = checkElementNamingConvention(elements, warnings, file, path)    
         if warnings:
             error=True
             print("\t",file)
