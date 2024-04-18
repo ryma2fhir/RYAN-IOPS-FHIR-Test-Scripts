@@ -94,31 +94,32 @@ def getJSONCoreElements(jsonFile,warnings):
             #warnings.append("\t",file," - The element '"+key+"' is missing")
     return elements,warnings
 
-def checkElementNamingConvention(elements, warnings, file):
+
+def checkElementNamingConvention(elements, warnings, file, path):
+    '''checks the elements id, url prefix (base), url suffix (asset name), name, and title are correct, compared to the FileName. If any are missing from elements dict then passes as the issue will be picked up elsewhere.'''
     fileName = os.path.splitext(os.path.basename(file))[0]
-    assets = {"valuesets":"ValueSet","codesystems":"CodeSystem","structuredefinitions":"StructureDefinition"}
-    '''check elements naming convention are correct'''
-    if elements == {}:
-        return warnings
-    if path == 'codesystems' or path == 'valuesets':
+
+    if (path == 'codesystems' or path == 'valuesets'):
         fileName = '-'.join(fileName.split('-')[1:])
-    if not fileName == elements['id']:
-        warnings.append("\t\t"+elements['id']+" - the 'id' is incorrect")
-    '''Check all url's unless they starts with one in the ignore list'''
-    uriCheck=True
-    for elem in mainVar['ignoreURLPrefix']:
-        if elements['url'].startswith(elem):
-            uriCheck=False
-            break
-    if uriCheck == True:        
-        if not fileName == elements['url'].split('/')[-1]:
-            warnings.append("\t\t"+elements['url']+" - The 'url' element is incorrect")
-        if not elements['url'].startswith(mainVar['urlPrefix']+assets[path]):
-            warnings.append("\t\t"+elements['url']+" - The 'url' element prefix is incorrect")
-    if not ''.join(fileName.split('-')) == elements['name'].split('/')[-1]:
-        warnings.append("\t\t"+elements['name']+" - The 'name' element is incorrect")
-    if not fileName.replace('-','') == elements['title'].replace(' ',''):
-        warnings.append("\t\t"+elements['title']+" - The 'title' element is incorrect")
+    elementsCheck['id'] = fileName
+
+    elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
+    if elements['url prefix'] not in mainVar['ignoreURLPrefix']
+            elementsCheck['urlPrefix'] = mainVar['urlPrefix']+assets[path]
+    
+    elements['url suffix'] = elements['url'].split('/')[-1]
+    elementsCheck['url suffix'] = fileName
+      
+    elementsCheck['name'] = ''.join(fileName.split('-'))
+    
+    elementsCheck['title'] = fileName.replace('-','')
+
+    for key,value in elementsCheck.items():
+        try:
+            if value != elements[key]
+                warnings.append("\t\t"+elements[key]+" - The "+key+" element is incorrect")
+        except:
+            pass
     return warnings
     
 
@@ -268,7 +269,7 @@ for path in paths:
             continue
 
         warnings = checkAssets(file, warnings)
-        warnings = checkElementNamingConvention(elements, warnings, file)    
+        warnings = checkElementNamingConvention(elements, warnings, file, path)    
         if warnings:
             error=True
             print("\t",file)
