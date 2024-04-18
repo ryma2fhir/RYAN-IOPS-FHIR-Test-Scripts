@@ -204,37 +204,27 @@ def checkAssets(file, warnings):
 
 
 def checkExamples():
-    '''check example filenames'''
+    fileName = os.path.splitext(example)[0]
+    if not fileName.endswith("-Example") :
+        exampleWarnings.append("\t The filename is does not have the suffix '-Example'")
+    
+    '''open file to find element values'''
     try:
-        examplesPath = os.listdir('./examples')
-        print('examples')
+        if example.endswith("xml"):
+            root = openXMLFile("examples",example)
+            if not root.findall('.//{*}id')[0].get('value') == fileName:
+                exampleWarnings.append("\t\tid - This element is incorrect")
+        elif example.endswith("json"):
+            elements = openJSONFile("examples",example)
+            if not elements['id'] == fileName:
+                exampleWarnings.append("\t\tid - The element is incorrect")
+        else:
+            exampleWarnings.append("\t\tThe file extension SHALL be .xml or .json")
     except:
-        examplesPath = []
-    for example in examplesPath:
-        fileName = os.path.splitext(example)[0]
-        if not fileName.endswith("-Example") :
-            error=True
-            print("\t",example," - The filename is does not have the suffix '-Example'")
-        '''open file to find element values'''
-        try:
-            if example.endswith("xml"):
-                root = openXMLFile("examples",example)
-                if not root.findall('.//{*}id')[0].get('value') == fileName:
-                    error=True
-                    print("\t",example,"\n\t\tid - This element is incorrect")
-            elif example.endswith("json"):
-                elements = openJSONFile("examples",example)
-                if not elements['id'] == fileName:
-                    print(elements['id'])
-                    print( example.replace('.xml',''))
-                    error=True
-                    print("\t",example,"\n\t\tid - The element is incorrect")
-            else:
-                print("\t",example,"The file extension SHALL be .xml or .json")
-        except:
-            print("\t",example,"\n\t\tid - This element is missing")
+        exampleWarnings.append("\t\tid - This element is missing")
+    return exampleWarnings
+        
             
-
 def CheckCapabilityStatementProfiles():
     '''CapabilityStatement Checker - checks if all Profiles are in the CapabilityStatement'''
     root = openXMLFile("CapabilityStatements","CapabilityStatement-"+mainVar['project']+".xml")
@@ -249,6 +239,10 @@ def CheckCapabilityStatementProfiles():
                 error=True
                 print("\t",p,"is missing from the CapabilityStatement")
 
+
+
+
+
 '''Creates an error state, if any of the checks fails it will cause the action to fail'''
 error=False
 mainVar = getRepoVariables()
@@ -258,6 +252,7 @@ paths = ['structuredefinitions','valuesets','codesystems']
 
 ''' Find each file within paths and check for Quality Control. Prints outcome if issues found and sets error to True.'''
 for path in paths:
+    error
     try:
         files = os.listdir('./'+path)
         print(path)
@@ -285,5 +280,19 @@ for path in paths:
             for x in warnings:
                 print(x)
 
-checkExamples()
+''' Check Examples. Prints outcome if issues found and sets error to True.''''
+try:
+    examplesPath = os.listdir('./examples')
+    print('\033[1mExamples\033[0m')
+except:
+    examplesPath = []
+for example in examplesPath:
+    exampleWarnings = []
+    checkExamples(exampleWarnings)
+    if exampleWarnings:
+        error=True
+        print("\t",example)
+        for x in exampleWarnings:
+            print(x)
+
 CheckCapabilityStatementProfiles()
