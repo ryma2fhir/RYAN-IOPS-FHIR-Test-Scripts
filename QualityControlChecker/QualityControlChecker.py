@@ -62,12 +62,11 @@ def getXMLCoreElements(path,file,warnings):
             elements = {}
             return elements,warnings
     except:
-        warnings.append("\t\tstatus - This eleent is missing")   
+        warnings.append("\t\tstatus - This element is missing")   
 
     '''check for missing elements'''
-    stop = 0
     elements = {}
-    fileKeys = ['id','url','name','title','version','status','date','description','copyright']
+    fileKeys = ['id','url','name','title','version','date','description','copyright']
     for k in fileKeys:
         try:
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
