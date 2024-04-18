@@ -280,7 +280,7 @@ for path in paths:
             for x in warnings:
                 print(x)
 
-''' Check Examples. Prints outcome if issues found and sets error to True.''''
+''' Check Examples. Prints outcome if issues found and sets error to True.'''
 try:
     examplesPath = os.listdir('./examples')
     print('\033[1mExamples\033[0m')
