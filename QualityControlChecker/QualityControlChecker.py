@@ -47,7 +47,7 @@ def openJSONFile(path, file):
         with open(f"./{path}/{file}", 'r') as j:
             contents = json.loads(j.read())
     except json.JSONDecodeError as e:
-        print(f"\t{file} - The JSON code has an error that needs to be fixed before it can be checked: {e}")
+        print(f"\t {file} - The JSON code has an error that needs to be fixed before it can be checked: {e}")
         error = True  # Assuming you handle errors similarly to the XML case
         return None  # Return None to signify error
     except Exception as error:
