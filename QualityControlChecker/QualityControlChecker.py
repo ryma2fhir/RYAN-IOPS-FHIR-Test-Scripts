@@ -33,11 +33,11 @@ def openXMLFile(path,file,warnings):
     testFile = True
     try:
         tree = ET.parse("./"+path+"/"+file)
+        root = tree.getroot()
     except ET.ParseError as e:
         warnings.append("\t\t - The XML code has an error that needs to be fixed before it can be checked:",e)
-        root, testFile = [], False
-    root = tree.getroot()
-    
+        testFile = False
+   
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
             elements = {}
@@ -262,6 +262,7 @@ for path in paths:
         if file.endswith("xml"):
             root,testFile,warnings = openXMLFile(path,file,warnings)
             if testFile:
+                print(testFile)
                 warnings = checkContactDetailsXML(root, path, warnings)
                 elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
