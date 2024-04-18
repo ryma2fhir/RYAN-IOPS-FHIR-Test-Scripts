@@ -221,18 +221,18 @@ def checkExamples():
                 root = openXMLFile("examples",example)
                 if not root.findall('.//{*}id')[0].get('value') == fileName:
                     error=True
-                    print("\t",example,"The 'id' element is incorrect")
+                    print("\t",example,"\n\t\tid - This element is incorrect")
             elif example.endswith("json"):
                 elements = openJSONFile("examples",example)
                 if not elements['id'] == fileName:
                     print(elements['id'])
                     print( example.replace('.xml',''))
                     error=True
-                    print("\t",example,"The 'id' value '"+elements['id']+"' does not match filname '"+fileName+"'")
+                    print("\t",example,"\n\t\tid - The element is incorrect)
             else:
-                print("\t",example,"The 'file extension' is incorrect")
+                print("\t",example,"The file extension SHALL be .xml or .json")
         except:
-            print("\t",example,"id - This element is missing")
+            print("\t",example,"\n\t\tid - This element is missing")
             
 
 def CheckCapabilityStatementProfiles():
