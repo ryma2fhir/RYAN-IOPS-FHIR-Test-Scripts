@@ -25,7 +25,7 @@ def getRepoVariables():
         from repoVariables import ukcoreVar as mainVar
     else:
         from repoVariables import nhseVar as mainVar
-    return mainVar, repoName
+    return mainVar,repoName
 
 
 def openXMLFile(path,file):        
@@ -246,7 +246,7 @@ def CheckCapabilityStatementProfiles(error,repoName):
 
 '''Creates an error state, if any of the checks fails it will cause the action to fail'''
 error=False
-mainVar = getRepoVariables()
+mainVar,repoName = getRepoVariables()
 currentProfiles = [] #Used for checking against CapabilityStatement
 
 paths = ['structuredefinitions','valuesets','codesystems']
