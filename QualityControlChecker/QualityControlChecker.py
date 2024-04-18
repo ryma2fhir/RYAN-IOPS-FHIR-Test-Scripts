@@ -206,7 +206,7 @@ def checkAssets(file, warnings):
 def checkExamples(exampleWarnings):
     fileName = os.path.splitext(example)[0]
     if not fileName.endswith("-Example") :
-        exampleWarnings.append("\t The filename is does not have the suffix '-Example'")
+        exampleWarnings.append("\t\tThe filename is does not have the suffix '-Example'")
     
     '''open file to find element values'''
     try:
