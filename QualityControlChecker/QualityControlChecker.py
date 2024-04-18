@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 import json
 import os
 import sys
+import re
 
 def getRepoVariables():
     '''Returns the repo name in lower case'''
@@ -111,7 +112,7 @@ def checkElementNamingConvention(elements, warnings, file, path):
         pass
     elementsCheck['url suffix'] = fileName      
     elementsCheck['name'] = ''.join(fileName.split('-'))    
-    elementsCheck['title'] = fileName.replace('-','')
+    elementsCheck['title'] = re.sub(r'(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', ' ', fileName)
     try:
         print('title:',elements['title'],' check:',elementsCheck['title'])
     except:
