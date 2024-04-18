@@ -102,7 +102,7 @@ def checkElementNamingConvention(elements, warnings, file, path):
         fileName = '-'.join(fileName.split('-')[1:])
     elementsCheck['id'] = fileName
     elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
-    if elements['url prefix'] not in mainVar['ignoreURLPrefix']
+    if elements['url prefix'] not in mainVar['ignoreURLPrefix']:
             elementsCheck['urlPrefix'] = mainVar['urlPrefix']+assets[path]
     elements['url suffix'] = elements['url'].split('/')[-1]
     elementsCheck['url suffix'] = fileName      
