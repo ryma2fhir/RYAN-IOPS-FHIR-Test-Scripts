@@ -39,7 +39,7 @@ def openXMLFile(path,file):
         return None
     root = tree.getroot()
 
-        '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
+    '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
             return None
