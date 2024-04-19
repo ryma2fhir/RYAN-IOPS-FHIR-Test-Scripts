@@ -95,7 +95,7 @@ def getJSONCoreElements(jsonFile,warnings):
     return elements,warnings
 
 
-def checkElementNamingConvention(elements, warnings, file, path):
+def checkElementNamingConvention(mainVar, elements, warnings, file, path):
     '''checks the elements id, url prefix (base), url suffix (asset name), name, and title are correct, compared to the FileName. If any are missing from elements dict then passes as the issue will be picked up elsewhere.'''
     fileName = os.path.splitext(os.path.basename(file))[0]
 
@@ -103,6 +103,7 @@ def checkElementNamingConvention(elements, warnings, file, path):
     if (path == 'codesystems' or path == 'valuesets'):
         fileName = '-'.join(fileName.split('-')[1:])
     elementsCheck['id'] = fileName
+    tr
     print(elements)
     try:
         elements['url prefix'] = '/'.join(elements['url'].split('/')[:-1])
@@ -120,7 +121,7 @@ def checkElementNamingConvention(elements, warnings, file, path):
     for key,value in elementsCheck.items():
         try:
             if value != elements[key]:
-                warnings.append("\t\t"+key+" - The element is incorrect ("+value+")")
+                warnings.append("\t\t"+key+" - The element is incorrect, it should be '"+value+"'")
         except:
             pass
     return warnings
@@ -281,7 +282,7 @@ for path in paths:
             continue
 
         warnings = checkAssets(file, warnings)
-        warnings = checkElementNamingConvention(elements, warnings, file, path)    
+        warnings = checkElementNamingConvention(mainVar, elements, warnings, file, path)    
         if warnings:
             error=True
             print("\t",file)
