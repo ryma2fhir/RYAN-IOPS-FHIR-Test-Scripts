@@ -42,6 +42,7 @@ def openXMLFile(path,file):
     '''Will return None for any retired assets'''
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
+            print(file,"retired")
             return None
     except:
         warnings.append("\t\tstatus - This element is missing")   
