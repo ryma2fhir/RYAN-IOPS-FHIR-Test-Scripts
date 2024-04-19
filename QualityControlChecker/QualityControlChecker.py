@@ -271,7 +271,7 @@ for path in paths:
             elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
-            if root == None:
+            if jsonFile == None:
                 continue
             warnings = checkContactDetailsJSON(jsonFile, warnings)
             elements,warnings = getJSONCoreElements(jsonFile, warnings)
