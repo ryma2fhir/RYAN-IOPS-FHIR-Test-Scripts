@@ -117,7 +117,7 @@ def checkElementNamingConvention(elements, warnings, file, path):
     for key,value in elementsCheck.items():
         try:
             if value != elements[key]:
-                warnings.append("\t\t"+elements[key]+" - The "+key+" element is incorrect")
+                warnings.append("\t\t"+key+" - The element is incorrect ("+value+")")
         except:
             pass
     return warnings
