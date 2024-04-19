@@ -262,6 +262,8 @@ for path in paths:
         warnings = []
         if file.endswith("xml"):
             root = openXMLFile(path,file)
+            if root == None:
+                break
             warnings = checkContactDetailsXML(root, path, warnings)
             elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
