@@ -53,7 +53,7 @@ def openJSONFile(path, file):
     ''' loads JSON File returns dict named contents '''
     try:
         with open(f"./{path}/{file}", 'r') as j:
-            contents = json.loads(j.read())
+            jsonFile = json.loads(j.read())
     except json.JSONDecodeError as e:
         print(f"\t {file} - The JSON code has an error that needs to be fixed before it can be checked: {e}")       
         return None 
@@ -68,7 +68,7 @@ def openJSONFile(path, file):
             return None
     except:
         warnings.append("\t\tstatus - This element is missing")   
-    return contents
+    return jsonFile
 
 
 def getXMLCoreElements(path,file,warnings):
