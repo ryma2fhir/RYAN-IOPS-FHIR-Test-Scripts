@@ -28,24 +28,17 @@ def getRepoVariables():
     return mainVar,repoName
 
 
-def openXMLFile(path,file,warnings):
-    '''Open file. Will return testFile = False if file canot be opened or retired assets, True if status is missing or not retired'''
-    testFile = True
-    root = {}
+def openXMLFile(path,file):        
     try:
         tree = ET.parse("./"+path+"/"+file)
-        root = tree.getroot()
     except ET.ParseError as e:
-        warnings.append("\t\t - The XML code has an error that needs to be fixed before it can be checked:",e)
-        testFile = False
-   
-    try:
-        if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-            testFile = False
+        print("\t",file,"- The XML code has an error that needs to be fixed before it can be checked:",e)
+        error=True
+        return None
     except:
-        warnings.append("\t\tstatus - This element is missing")
-    
-    return root,testFile,warnings
+        return None
+    root = tree.getroot()
+    return root
 
 
 def openJSONFile(path, file):
@@ -62,11 +55,18 @@ def openJSONFile(path, file):
     return contents
 
 
-def getXMLCoreElements(path,file,root,warnings):
-    '''adds elements from the xml file that needs to be checked and present, warn if missing.'''
+def getXMLCoreElements(path,file,warnings):
+    '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
+    try:
+        if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
+            elements = {}
+            return elements,warnings
+    except:
+        warnings.append("\t\tstatus - This element is missing")   
+
+    '''check for missing elements'''
     elements = {}
     fileKeys = ['id','url','name','title','version','date','description','copyright']
-    print(root)
     for k in fileKeys:
         try:
             elements.update({k:root.findall('.//{*}'+str(k))[0].get('value')}) 
@@ -261,11 +261,9 @@ for path in paths:
     for file in files:
         warnings = []
         if file.endswith("xml"):
-            root,testFile,warnings = openXMLFile(path,file,warnings)
-            if testFile:
-                print(testFile)
-                warnings = checkContactDetailsXML(root, path, warnings)
-                elements,warnings = getXMLCoreElements(path, file,root, warnings)
+            root = openXMLFile(path,file)
+            warnings = checkContactDetailsXML(root, path, warnings)
+            elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
             warnings = checkContactDetailsJSON(jsonFile, warnings)
