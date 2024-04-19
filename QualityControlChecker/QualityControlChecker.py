@@ -42,7 +42,6 @@ def openXMLFile(path,file):
     '''Will return None for any retired assets'''
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-            print(file,"retired")
             return None
     except:
         warnings.append("\t\tstatus - This element is missing")   
@@ -56,20 +55,19 @@ def openJSONFile(path, file):
         with open(f"./{path}/{file}", 'r') as j:
             contents = json.loads(j.read())
     except json.JSONDecodeError as e:
-        print(f"\t {file} - The JSON code has an error that needs to be fixed before it can be checked: {e}")
-        error = True  # Assuming you handle errors similarly to the XML case
-        return None  # Return None to signify error
+        print(f"\t {file} - The JSON code has an error that needs to be fixed before it can be checked: {e}")       
+        return None 
     except Exception as error:
         print("error found whilst trying to open",file,":",error)
+        return None
         
     '''Will return None for any retired assets'''
     try:
+        print(file,jsonFile['status'])
         if jsonFile['status']=='retired':
-            elements = {}
             return None
     except:
-        warnings.append("\t\tstatus - This element is missing")
-        
+        warnings.append("\t\tstatus - This element is missing")   
     return contents
 
 
@@ -266,7 +264,6 @@ for path in paths:
         warnings = []
         if file.endswith("xml"):
             root = openXMLFile(path,file)
-            print(root)
             if root == None:
                 continue
             warnings = checkContactDetailsXML(root, path, warnings)
