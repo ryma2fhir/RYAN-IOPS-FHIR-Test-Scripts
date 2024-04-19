@@ -111,7 +111,7 @@ def checkElementNamingConvention(mainVar, elements, warnings, file, path):
             elements['url suffix'] = elements['url'].split('/')[-1]
             elementsCheck['url suffix'] = fileName 
     except:
-        print("url - could not check prefix and suffix\nmainVar:",mainVar,"\nelements:",elements,"\nsuffix:",elements['url'])
+        print("url - could not check prefix and suffix\nmainVar:",mainVar,"\nelements:",elements,"\nsuffix:",elements['url'].split('/')[-1])
         pass
      
     elementsCheck['name'] = ''.join(fileName.split('-'))    
