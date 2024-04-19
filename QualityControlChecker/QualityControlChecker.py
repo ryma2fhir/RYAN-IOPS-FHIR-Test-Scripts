@@ -62,8 +62,8 @@ def openJSONFile(path, file):
         return None
         
     '''Will return None for any retired assets'''
-    try:
-        print(file,jsonFile['status'])
+    print(file,jsonFile['status'])
+    try:    
         if jsonFile['status']=='retired':
             return None
     except:
