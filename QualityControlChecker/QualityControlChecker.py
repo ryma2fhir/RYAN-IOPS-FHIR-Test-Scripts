@@ -265,6 +265,7 @@ for path in paths:
         warnings = []
         if file.endswith("xml"):
             root = openXMLFile(path,file)
+            print(root)
             if root == None:
                 continue
             warnings = checkContactDetailsXML(root, path, warnings)
