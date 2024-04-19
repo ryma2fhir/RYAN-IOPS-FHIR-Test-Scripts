@@ -39,7 +39,7 @@ def openXMLFile(path,file):
         return None
     root = tree.getroot()
 
-    '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
+    '''Will return None for any retired assets'''
     try:
         if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
             return None
@@ -60,11 +60,20 @@ def openJSONFile(path, file):
         return None  # Return None to signify error
     except Exception as error:
         print("error found whilst trying to open",file,":",error)
+        
+    '''Will return None for any retired assets'''
+    try:
+        if jsonFile['status']=='retired':
+            elements = {}
+            return None
+    except:
+        warnings.append("\t\tstatus - This element is missing")
+        
     return contents
 
 
 def getXMLCoreElements(path,file,warnings):
-    '''check for missing elements'''
+    '''check for missing elements, returns a list of key elements if present'''
     elements = {}
     fileKeys = ['id','url','name','title','version','date','description','copyright']
     for k in fileKeys:
@@ -76,15 +85,9 @@ def getXMLCoreElements(path,file,warnings):
         
 
 def getJSONCoreElements(jsonFile,warnings):
-    '''Gets all elements from the json file that needs to be checked. Will return empty on any retired elemets'''
+    '''check for missing elements, returns a list of key elements if present'''
     fileKeys = ['id','url','name','title','version','date','description','copyright']
     elements = {}
-    try:
-        if jsonFile['status']=='retired':
-            elements = {}
-            return elements,warnings
-    except:
-        warnings.append("\t\tstatus - This element is missing")
         
     for k in fileKeys:
         try:
@@ -268,6 +271,8 @@ for path in paths:
             elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
+            if root == None:
+                continue
             warnings = checkContactDetailsJSON(jsonFile, warnings)
             elements,warnings = getJSONCoreElements(jsonFile, warnings)
         else:
