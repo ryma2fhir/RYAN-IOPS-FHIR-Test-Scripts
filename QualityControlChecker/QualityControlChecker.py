@@ -38,6 +38,14 @@ def openXMLFile(path,file):
     except:
         return None
     root = tree.getroot()
+
+        '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
+    try:
+        if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
+            return None
+    except:
+        warnings.append("\t\tstatus - This element is missing")   
+        
     return root
 
 
@@ -56,14 +64,6 @@ def openJSONFile(path, file):
 
 
 def getXMLCoreElements(path,file,warnings):
-    '''Gets all elements from the xml file that needs to be checked. Will return empty key value pairs on any retired assets'''
-    try:
-        if root.findall('.//{*}'+str('status'))[0].get('value') == 'retired':
-            elements = {}
-            return elements,warnings
-    except:
-        warnings.append("\t\tstatus - This element is missing")   
-
     '''check for missing elements'''
     elements = {}
     fileKeys = ['id','url','name','title','version','date','description','copyright']
