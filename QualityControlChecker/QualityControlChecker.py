@@ -240,7 +240,13 @@ def CheckCapabilityStatementProfiles(error,repoName):
                 error=True
     return error
 
-
+def printWarnings(warnings, file):
+    if warnings:
+        error=True
+        print("\t",file)
+        for x in warnings:
+            print(x)
+    return error
 
 
 
@@ -264,12 +270,14 @@ for path in paths:
         if file.endswith("xml"):
             root = openXMLFile(path,file)
             if root == None:
+            printWarnings(warnings, file)
                 continue
             warnings = checkContactDetailsXML(root, path, warnings)
             elements,warnings = getXMLCoreElements(path, file, warnings)
         elif file.endswith("json"):
             jsonFile = openJSONFile(path,file)
             if jsonFile == None:
+            printWarnings(warnings, file)
                 continue
             warnings = checkContactDetailsJSON(jsonFile, warnings)
             elements,warnings = getJSONCoreElements(jsonFile, warnings)
@@ -279,11 +287,7 @@ for path in paths:
 
         warnings = checkAssets(file, warnings)
         warnings = checkElementNamingConvention(mainVar, elements, warnings, file, path)    
-        if warnings:
-            error=True
-            print("\t",file)
-            for x in warnings:
-                print(x)
+        printWarnings(warnings, file)
 
 ''' Check Examples. Prints outcome if issues found and sets error to True.'''
 try:
@@ -294,11 +298,7 @@ except:
 for example in examplesPath:
     exampleWarnings = []
     checkExamples(exampleWarnings)
-    if exampleWarnings:
-        error=True
-        print("\t",example)
-        for x in exampleWarnings:
-            print(x)
+    printWarnings(exampleWarnings, examplesPath)
 
 ''' Checks Capability for missing profiles for UK Core or NHSE IG only '''
 if repoName == 'FHIR-R4-UKCORE-STAGING-MAIN' or repoName == 'NHSEngland-FHIR-ImplementationGuide':
