@@ -144,8 +144,11 @@ def checkContactDetailsXML(root,path,warnings):
             warnings.append("\t\tcontact.name - This SHALL be '"+mainVar['org']+"'")
     except:
         print("\t\tcontact.name - This element is missing")
-
-    contact = {'system':'email','value':mainVar['email'],'use':'work','rank':'1'}
+    if 'value' in mainVar:
+        contact = {'system':'email','value':mainVar['email'],'use':'work','rank':'1'}
+    else:
+        contact = {'system':'email','use':'work','rank':'1'}
+        
     for key,value in contact.items():
         try:
             if not root.findall('.//{*}'+str(key))[0].get('value') == value:
@@ -166,7 +169,11 @@ def checkContactDetailsJSON(jsonFile,warnings):
     except:
         warnings.append("\t\tcontact.name - This SHALL be '"+mainVar['org']+"'")
         
-    contact = {'system':'email','value':mainVar['email'],'use':'work','rank':1}
+    if 'value' in mainVar:
+        contact = {'system':'email','value':mainVar['email'],'use':'work','rank':'1'}
+    else:
+        contact = {'system':'email','use':'work','rank':'1'}
+        
     for key,value in contact.items():
         try:
             if not jsonFile['contact'][0]['telecom'][0][key] == value:
