@@ -1,4 +1,4 @@
-name: IOPS-FHIR-Validation-QualityControlChecker
+name: Package Comparison Tool
 
 # Controls when the workflow will run
 on:
