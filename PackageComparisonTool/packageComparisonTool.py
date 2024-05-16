@@ -18,19 +18,21 @@ def extract_tar_gz(tar_gz_file, extract_path):
     except Exception as e:
         print(f"Extraction failed: {e}")
 
-directory = './packages'
+directory = './PackageComparisonTool/packages'
 extract_package_path = './extracted_packages/'
 
 def find_tgz_packages(directory):
-    tgz_files = glob.glob('./packages/*.tgz')
+    tgz_files = glob.glob(directory+'/*.tgz')
     return tgz_files
 
 tgz_packages = find_tgz_packages(directory)
 
 # Extract each .tgz package
+print("Packages Extracted")
 for tgz_package in tgz_packages:
     extract_path = extract_package_path+os.path.splitext(os.path.basename(tgz_package))[0]
     extract_tar_gz(tgz_package, extract_path)
+    print(tgz_package)
     
     ''' open each file '''
 def openJSONFile(path, warnings):
