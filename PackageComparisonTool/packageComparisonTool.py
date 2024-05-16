@@ -122,7 +122,7 @@ for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
         if Type not in table.keys():
             table[Type] = []
         ''' add filename to dict '''
-        attribute_dict = find_attributes(jsonFile, attribute)
+        attribute_dict = find_attributes(jsonFile, Type)
         dic = {}
         dic[name]=attribute_dict
         table[Type].append(dic) 
@@ -191,7 +191,7 @@ html_file.write('''
 <body>
 <h1></h1>
 ''')
-html_file.write(f"<title>Table for the {attribute} element</title>")
+#html_file.write(f"<title>Table for the {attribute} element</title>")
 for key, df in dataframes.items():
     
     html_file.write(f"<h1>{key}</h1>\n")
