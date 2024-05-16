@@ -57,7 +57,7 @@ def checkIfProfile(jsonFile):
         return None
 
 '''Finds all values with key not equal to 0 (also add *??) '''
-def find_attributes(json_data, attribute_dict=None, parent_keys=""):
+def find_attributes(json_data, Type, attribute_dict=None, parent_keys=""):
     element_input = 'min'
     if element_input == 'min':
         ignore = 0
@@ -71,25 +71,25 @@ def find_attributes(json_data, attribute_dict=None, parent_keys=""):
     if isinstance(json_data, dict):
         element = ''
         for key, value in json_data.items():
-            if key == 'path':
+            if key == 'path' and Type in value:
                 element = value
-            elif key == element_input and value!=ignore:
+            elif key == 'max' and value !='*':
                 attribute_path = f"{parent_keys}.{key}" if parent_keys else key
                 attribute_dict[element] = str(value)
             elif isinstance(value, (dict, list)):
                 if parent_keys:
-                    find_attributes(value, attribute_dict, f"{parent_keys}.{key}")
+                    find_attributes(value, Type, attribute_dict, f"{parent_keys}.{key}")
                 else:
-                    find_attributes(value, attribute_dict, key)
+                    find_attributes(value, Type, attribute_dict, key)
     elif isinstance(json_data, list):
         for index, item in enumerate(json_data):
             if parent_keys:
-                find_attributes(item, attribute_dict, f"{parent_keys}[{index}]")
+                find_attributes(item, Type, attribute_dict, f"{parent_keys}[{index}]")
             else:
-                find_attributes(item, attribute_dict, f"[{index}]")
+                find_attributes(item, Type, attribute_dict, f"[{index}]")
 
     return attribute_dict
-
+    
 def checkIfSTU3(path,jsonFile):
     url = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/STU3/$convertR4'
 
