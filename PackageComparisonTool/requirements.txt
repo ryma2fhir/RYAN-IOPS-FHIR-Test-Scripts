@@ -1,8 +1,1 @@
-os
-requests
-glob
-json
-pandas
-numpy
-functools
-IPython
+
