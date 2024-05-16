@@ -147,7 +147,7 @@ dataframes = dict_to_dataframe(table)
 html_file = open("index.html","w")
 
 #HTML(dataframes.to_html(classes='table table-stripped'))
-html_file.write("
+html_file.write('''
 <html>
 <head>
 <style>
@@ -181,7 +181,7 @@ html_file.write("
 </head>
 <body>
 <h1></h1>
-")
+''')
 html_file.write(f"<title>Table for the {attibute} element</title>")
 for key, df in dataframes.items():
     
