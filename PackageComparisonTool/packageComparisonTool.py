@@ -68,7 +68,12 @@ def find_attributes(json_data, attribute, attribute_dict=None, parent_keys=""):
                 element = value
             elif key == attribute:
                 attribute_path = f"{parent_keys}.{key}" if parent_keys else key
-                attribute_dict[element] = str(value)
+                try:
+                    attribute_dict[element] = str(value)
+                except:
+                    pass
+                    #print(attribute_dict[element])
+                    #print(value)
             elif isinstance(value, (dict, list)):
                 if parent_keys:
                     find_attributes(value, attribute_dict, f"{parent_keys}.{key}")
