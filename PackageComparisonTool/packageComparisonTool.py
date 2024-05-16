@@ -57,7 +57,14 @@ def checkIfProfile(jsonFile):
         return None
 
 '''Finds all values with key not equal to 0 (also add *??) '''
-def find_attributes(json_data, attribute, attribute_dict=None, parent_keys=""):
+def find_attributes(json_data, attribute_dict=None, parent_keys=""):
+    element_input = 'min'
+    if element_input == 'min':
+        ignore = 0
+    elif element_input == 'max':
+        ignore = '*'
+    else:
+        ignore = ''
     if attribute_dict is None:
         attribute_dict = {}
 
@@ -66,14 +73,9 @@ def find_attributes(json_data, attribute, attribute_dict=None, parent_keys=""):
         for key, value in json_data.items():
             if key == 'path':
                 element = value
-            elif key == attribute:
+            elif key == element_input and value!=ignore:
                 attribute_path = f"{parent_keys}.{key}" if parent_keys else key
-                try:
-                    attribute_dict[element] = str(value)
-                except:
-                    pass
-                    #print(attribute_dict[element])
-                    #print(value)
+                attribute_dict[element] = str(value)
             elif isinstance(value, (dict, list)):
                 if parent_keys:
                     find_attributes(value, attribute_dict, f"{parent_keys}.{key}")
