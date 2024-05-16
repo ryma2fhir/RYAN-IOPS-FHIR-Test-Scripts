@@ -28,7 +28,11 @@ This is set up to only output the errors for each individual page. Uses the conf
 - `-r 2` - Sets the recursion level at 2. All links within the webpage within websites.txt and any internal webapges linked from this are scraped for links and checked. 
 - `--check-extern` - check external links are valid.
 - `--no-status` - do not show status apart from errors.
-- `-f linkcheckerrc` - use config file - setup so that it will check any pages <50mb in size. 
+- `-f linkcheckerrc` - use config file 
+  - setup so that it will check any pages <50mb in size. 
+  - ignores any link that contains png or @
+  - ignores any http-redirected warnings
+  - ignores any links that does not contain `http` but does `html`. This is a workarond to ignore internal markdown links, which HL7 have many which only works on their website and not within the asset renders.
 
 ### LinkCheckerError: File size too large
 If the reponse is `[url-error-getting-content] could not get content:` `LinkCheckerError: File size too large` the page size is larger than what the maximum has been set. To fix this increase the `maxfilesizedownload` (line 177) within the `linkcheckerrc` file accordingly.
@@ -40,6 +44,7 @@ Uses [Aspell](https://www.gnu.org/software/wget/manual/wget.html#Option-Syntax).
 #### wget
 - `-nv` - Turn off verbose without being completely quiet (use ‘-q’ for that), which means that error messages and basic information still get printed. 
 - `-O` - The documents will not be written to the appropriate files, but all will be concatenated together and written to file. If ‘-’ is used as file, documents will be printed to standard output, disabling link conversion.
+- `--ignore 2` - Ignores any words contain 2 or less letters
 
 #### Aspell
 - `-H` - Sets mode to HTML
