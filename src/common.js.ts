@@ -250,6 +250,7 @@ function getErrorOrWarningFull(issue: OperationOutcomeIssue) {
     }
     return error;
 }
+// raiseWarning function allows the custom raising (true) or ignoring (false) of warnings when testing files
 function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): boolean {
     if (issue != undefined && issue.diagnostics != undefined) {
     
@@ -257,12 +258,14 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
         if (issue.diagnostics.includes('incorrect type for element')) {
             return true;
         }
+	// unauthorised requests
         if (issue.diagnostics.includes('Error HTTP 401')) {
             return true;
         }
         
         // THESE WARNINGS SHOULD ALWAYS BE SILENTLY IGNORED
         //if (issue.diagnostics.includes('Code system https://dmd.nhs.uk/ could not be resolved.')) return false
+	// Issue with hapi giving incorrect error when one code is from the valueset, but another is not. See https://github.com/hapifhir/hapi-fhir/issues/4152
         if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
             return false
         }
@@ -281,12 +284,13 @@ function raiseWarning(issue: OperationOutcomeIssue, failOnWarning:boolean): bool
     // if error not handled above, return error if FailOnWarning is true 
     return failOnWarning;
 }
+// raiseError function allows the custom raising (true) or ignoring (false) of errors when testing files
 function raiseError(issue: OperationOutcomeIssue) : boolean {
     if (issue != undefined) {
         if (issue.diagnostics != undefined) {
             // List of errors to ALWAYS ignore
             
-            // languages, known issue!
+            // Issue with hapi giving incorrect error when one code is from the valueset, but another is not. See https://github.com/hapifhir/hapi-fhir/issues/4152
             if (issue.diagnostics.includes('Inappropriate CodeSystem URL') && issue.diagnostics.includes('for ValueSet: http://hl7.org/fhir/ValueSet/all-languages')) {
                 return false
             }
@@ -500,7 +504,7 @@ export function isIgnoreFile(directory: string, fileName: string): boolean {
                 console.info(`File ignored: ${file}`);
             }
         } catch (e) {
-            throw new Error(`Error with ${file}. Error message: ${(e as Error).message}`);
+            console.info(`Ignoring file ${file}. Error message: ${(e as Error).message}`);
         }
     }
 
