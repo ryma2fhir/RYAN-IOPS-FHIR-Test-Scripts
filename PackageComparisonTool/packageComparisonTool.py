@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from functools import reduce
 from IPython.display import HTML
+import pathlib
 
 pd.show_versions()
 np.show_versions()
@@ -154,7 +155,7 @@ def dict_to_dataframe(data_dict):
 # Convert each dictionary into a DataFrame
 dataframes = dict_to_dataframe(table)
 
-
+pathlib.Path("./index.html").unlink(missing_ok=True)
 ''' HTML FILE CREATION '''
 html_file = open("index.html","w")
 
