@@ -111,7 +111,7 @@ def checkIfSTU3(path,jsonFile):
 table = {}
 attribute = os.environ['INPUT_ELEMENT']
 for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
-    name = path.split('\\')[-1].split('.')[0]
+    name = path.split('/')[-1].split('.')[0]
     print(f"PATH: {path}\nNAME: {name}")
     warnings = []
     if 'examples' in name or name == "package":
