@@ -9,8 +9,6 @@ from functools import reduce
 from IPython.display import HTML
 import pathlib
 
-pd.show_versions()
-np.show_versions()
 def extract_tar_gz(tar_gz_file, extract_path):
     try:
         # Open the tar.gz file
