@@ -57,11 +57,10 @@ def checkIfProfile(jsonFile):
         return None
 
 '''Finds all values with key not equal to 0 (also add *??) '''
-def find_attributes(json_data, Type, attribute_dict=None, parent_keys=""):
-    element_input = 'min'
-    if element_input == 'min':
+def find_attributes(json_data, Type, attribute, attribute_dict=None, parent_keys=""):
+    if attribute == 'min':
         ignore = 0
-    elif element_input == 'max':
+    elif attribute == 'max':
         ignore = '*'
     else:
         ignore = ''
@@ -78,15 +77,15 @@ def find_attributes(json_data, Type, attribute_dict=None, parent_keys=""):
                 attribute_dict[element] = str(value)
             elif isinstance(value, (dict, list)):
                 if parent_keys:
-                    find_attributes(value, Type, attribute_dict, f"{parent_keys}.{key}")
+                    find_attributes(value, Type, attribute, attribute_dict, f"{parent_keys}.{key}")
                 else:
-                    find_attributes(value, Type, attribute_dict, key)
+                    find_attributes(value, Type, attribute, attribute_dict, key)
     elif isinstance(json_data, list):
         for index, item in enumerate(json_data):
             if parent_keys:
-                find_attributes(item, Type, attribute_dict, f"{parent_keys}[{index}]")
+                find_attributes(item, Type, attribute, attribute_dict, f"{parent_keys}[{index}]")
             else:
-                find_attributes(item, Type, attribute_dict, f"[{index}]")
+                find_attributes(item, Type, attribute, attribute_dict, f"[{index}]")
 
     return attribute_dict
     
@@ -122,7 +121,7 @@ for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
         if Type not in table.keys():
             table[Type] = []
         ''' add filename to dict '''
-        attribute_dict = find_attributes(jsonFile, Type)
+        attribute_dict = find_attributes(jsonFile, Type, attribute)
         dic = {}
         dic[name]=attribute_dict
         table[Type].append(dic) 
