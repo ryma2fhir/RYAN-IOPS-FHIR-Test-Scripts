@@ -154,7 +154,9 @@ def dict_to_dataframe(data_dict):
 # Convert each dictionary into a DataFrame
 dataframes = dict_to_dataframe(table)
 
-pathlib.Path("./index.html").unlink(missing_ok=True)
+if os.path.exists("index.html"):
+    os.remove("index.html")
+    
 ''' HTML FILE CREATION '''
 html_file = open("index.html","w")
 
