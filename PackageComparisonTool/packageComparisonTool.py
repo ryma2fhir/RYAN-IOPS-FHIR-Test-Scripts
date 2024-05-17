@@ -130,7 +130,9 @@ for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
         print(os.path.splitext(os.path.basename(tgz_package))[0])
         for x in warnings:
             print(x)
-            
+
+print(table)
+
 def dict_to_dataframe(data_dict):
     dfs = {}
     for key, value in data_dict.items():
