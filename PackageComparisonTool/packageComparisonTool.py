@@ -112,7 +112,6 @@ table = {}
 attribute = os.environ['INPUT_ELEMENT']
 for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
     name = path.split('/')[-1].split('.')[0]
-    print(f"PATH: {path}\nNAME: {name}")
     warnings = []
     if 'examples' in name or name == "package":
         continue
@@ -127,13 +126,10 @@ for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
         dic = {}
         dic[name]=attribute_dict
         table[Type].append(dic) 
-    ''' get min for file '''
     if warnings:
         print(os.path.splitext(os.path.basename(tgz_package))[0])
         for x in warnings:
             print(x)
-
-#print(table)
 
 def dict_to_dataframe(data_dict):
     dfs = {}
@@ -196,7 +192,7 @@ html_file.write('''
 <body>
 <h1></h1>
 ''')
-#html_file.write(f"<title>Table for the {attribute} element</title>")
+html_file.write(f"<title>Table for the element: '{attribute}'</title>")
 for key, df in dataframes.items():
     
     html_file.write(f"<h1>{key}</h1>\n")
