@@ -192,10 +192,10 @@ html_file.write('''
 <body>
 <h1></h1>
 ''')
-html_file.write(f"<title>Table for the element: '{attribute}'</title>")
+html_file.write(f"<title>Table for the element: '{attribute}'</title><h1>Table for the element: '{attribute}'</h1>")
 for key, df in dataframes.items():
     
-    html_file.write(f"<h1>{key}</h1>\n")
+    html_file.write(f"<h2>{key}</h2>\n")
     html_file.write(df.to_html(classes=["table-bordered", "table-striped", "table-hover"]))
 html_file.write("</body></html>")
 html_file.close()
