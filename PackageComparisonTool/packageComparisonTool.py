@@ -133,7 +133,7 @@ for path in glob.glob(extract_package_path+'**/package/*.json', recursive=True):
         for x in warnings:
             print(x)
 
-print(table)
+#print(table)
 
 def dict_to_dataframe(data_dict):
     dfs = {}
